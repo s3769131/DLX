@@ -1,0 +1,11 @@
+LIBRARY_PATH=../work
+
+VHDL_COMPILER=vcom
+VHDL_COMPILER_OPT=-work $(LIBRARY_PATH) -2002 -bindAtCompile -check_synthesis
+CREATE_LIBRARY=vlib
+
+PACKAGES=ALU_pkg.vhd
+
+all :
+	if [ ! -d $(LIBRARY_PATH) ]; then $(CREATE_LIBRARY) $(LIBRARY_PATH);fi
+	$(VHDL_COMPILER) $(VHDL_COMPILER_OPT) $(PACKAGES)
