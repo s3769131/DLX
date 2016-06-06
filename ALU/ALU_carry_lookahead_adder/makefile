@@ -21,3 +21,7 @@ all : $(TESTBENCHES) $(SOURCES) $(DEPENDENCIES) $(PACKAGES)
 sources : $(SOURCES) $(DEPENDENCIES) $(PACKAGES)
 	if [ ! -d $(LIBRARY_PATH) ]; then $(CREATE_LIBRARY) $(LIBRARY_PATH);fi
 	$(VHDL_COMPILER) $(VHDL_COMPILER_OPT) $(SOURCES)
+
+synthesis : $(SOURCES) $(DEPENDENCIES) $(PACKAGES)
+  if [ ! -d analyze.tcl ]; then touch analyze.tcl ;fi
+	echo analyze -format vhdl -library WORK { $(SOURCES) } >> analyze.tcl
