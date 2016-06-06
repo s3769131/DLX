@@ -13,4 +13,4 @@ all :
 
 synthesis : $(SOURCES) $(DEPENDENCIES) $(PACKAGES)
 			if [ ! -d $(SYNTHESIS_ANALYSIS) ]; then touch $(SYNTHESIS_ANALYSIS); fi
-			echo analyze -format vhdl -library WORK { $(SOURCES) } >> $(SYNTHESIS_ANALYSIS)
+			echo analyze -format vhdl -library WORK { $(PACKAGES) } >> $(SYNTHESIS_ANALYSIS)
