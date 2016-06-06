@@ -23,5 +23,5 @@ sources : $(SOURCES) $(DEPENDENCIES) $(PACKAGES)
 	$(VHDL_COMPILER) $(VHDL_COMPILER_OPT) $(SOURCES)
 
 synthesis : $(SOURCES) $(DEPENDENCIES) $(PACKAGES)
-  if [ ! -d analyze.tcl ]; then touch analyze.tcl ;fi
+	if [ ! -d analyze.tcl ]; then touch analyze.tcl; fi
 	echo analyze -format vhdl -library WORK { $(SOURCES) } >> analyze.tcl
