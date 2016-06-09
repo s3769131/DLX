@@ -28,9 +28,17 @@ architecture STR of FETCH is
   	);
   end component;
 
-  component MUX is
-
+  component mux_2to1 is
+    generic (
+        MUX_2to1_NBIT :  integer  := 4);
+    port (
+        MUX_2to1_in0  :  in  std_logic_vector(MUX_2to1_NBIT-1 downto 0);
+        MUX_2to1_in1  :  in  std_logic_vector(MUX_2to1_NBIT-1 downto 0);
+        MUX_2to1_sel  :  in  std_logic;
+        MUX_2to1_out  :  out std_logic_vector(MUX_2to1_NBIT-1 downto 0)
+    );
   end component;
+
 begin
 
 end architecture STR;
