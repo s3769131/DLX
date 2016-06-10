@@ -6,10 +6,11 @@ entity REGISTER is
 		RGS_NBIT: integer := 4
 	);
 	port(
-		RGS_D	:	in	std_logic_vector(RGS_NBIT-1 downto 0);
-		CLK 	:	in	std_logic;
-		RST 	:	in	std_logic;
-		RGS_Q	:	out	std_logic_vector(RGS_NBIT-1 downto 0)
+		RGS_D	 :	in	std_logic_vector(RGS_NBIT-1 downto 0);
+    RGS_EN :  in  std_logic;  --! Active high
+		CLK 	 :	in	std_logic;
+		RST 	 :	in	std_logic;
+		RGS_Q	 :	out	std_logic_vector(RGS_NBIT-1 downto 0)
 	);
 end REGISTER;
 
@@ -21,7 +22,9 @@ begin
       if(RST = '1') then
         RGS_Q <= (others => '0');
       else
-        RGS_Q <= RGS_D;
+        if(RGS_EN = '1') then
+          RGS_Q <= RGS_D;
+        end if;
       end if;
     end if;
 	end process;
