@@ -26,7 +26,7 @@ architecture STR of FETCH is
   		RST 	:	in	std_logic;
   		RGS_Q	:	out	std_logic_vector(RGS_NBIT-1 downto 0)
   	);
-  end component;
+  end component REGISTER;
 
   component mux_2to1 is
     generic (
@@ -37,8 +37,53 @@ architecture STR of FETCH is
         MUX_2to1_sel  :  in  std_logic;
         MUX_2to1_out  :  out std_logic_vector(MUX_2to1_NBIT-1 downto 0)
     );
-  end component;
+  end component mux_2to1;
+
+  component ALU_carry_lookahead_adder is
+     generic(
+        ALU_CLA_NBIT    :  integer  := 16);   --!   parallelism of the operands.
+     port(
+        ALU_CLA_op1     :  in    std_logic_vector(ALU_CLA_NBIT-1 downto 0);  --!   first operand of the sum.
+        ALU_CLA_op2     :  in    std_logic_vector(ALU_CLA_NBIT-1 downto 0);  --!   second operand of the sum.
+        ALU_CLA_add     :  in    std_logic;                                  --!   carries.
+        ALU_CLA_res     :  out   std_logic_vector(ALU_CLA_NBIT-1 downto 0);  --!   result of the operation.
+        ALU_CLA_cout    :  out   std_logic;                                  --!   carry out of the overall operation.
+        ALU_CLA_ovflow  :  out   std_logic);                                 --!   report if an overflow is detected.
+  end component ALU_carry_lookahead_adder;
+
+signal
 
 begin
-
+  ADDER : ALU_carry_lookahead_adder
+    generic map (
+      ALU_CLA_NBIT => 32
+    )
+    port map(
+       ALU_CLA_op1     => ,
+       ALU_CLA_op2     => "000000000000000000000000000000100",
+       ALU_CLA_add     => '0',
+       ALU_CLA_res     => ,
+       ALU_CLA_cout    => open,
+       ALU_CLA_ovflow  => open)
+    ;
+  MUX : mux_2to1
+    generic map(
+      MUX_2to1_NBIT => 32
+    )
+    port map(
+      MUX_2to1_in0  => ,
+      MUX_2to1_in1  => ,
+      MUX_2to1_sel  => FTC_ZERO,
+      MUX_2to1_out  =>
+  );
+  PC : REGISTER
+  generic map(
+    RGS_NBIT => 32
+  )
+  port(
+    RGS_D	=> ,
+    CLK 	=> ,
+    RST 	=> ,
+    RGS_Q	=>
+  );
 end architecture STR;
