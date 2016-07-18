@@ -8,11 +8,14 @@
 --! In this package are stored some definition and functions usefull in the ALU definition.
 library ieee;
 use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
 
 package ALU_pkg is
    function log2ceil (constant n : in integer) return integer;
    function divide2  (constant dividend : in integer) return integer;
    function to_int   (constant vett : in std_logic_vector) return integer;
+   type bus_array is array(natural range <>, natural range <>) of std_logic;
 end ALU_pkg;
 
 package body ALU_pkg is
@@ -59,12 +62,13 @@ package body ALU_pkg is
       variable int   :  integer  := 0;
       variable len   :  integer  := vett'length;
    begin
-      MAIN_LOOP : for i in 0 to len-1 loop
-         if vett(i) = '1' then
-            int := int + 2**i;
-         end if;
-      end loop MAIN_LOOP;
-      return int;
+      --MAIN_LOOP : for i in 0 to len-1 loop
+      --   if vett(i) = '1' then
+      --      int := int + 2**i;
+      --   end if;
+      --end loop MAIN_LOOP;
+      --return int;
+      return to_integer(unsigned(vett));
    end;
 
 end ALU_pkg;

@@ -1,5 +1,6 @@
 library ieee;
 use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
 use work.ALU_pkg.all;
 
 --!   \brief   Select a mask from those provided by the mask generator.
@@ -17,10 +18,21 @@ entity SHF_mask_selector is
 end SHF_mask_selector;
 
 architecture dflow of SHF_mask_selector is
-   constant MASK_LEN :  integer  := SHF_MS_NBIT+SHF_MS_GRAN;
+  constant MASK_LEN :  integer  := SHF_MS_NBIT+SHF_MS_GRAN;
+  
+  signal tmp_bus : bus_array((SHF_MS_NBIT / SHF_MS_GRAN - 1) downto 0, (SHF_MS_NBIT + SHF_MS_GRAN - 1) downto 0 );
 begin
+  TRANSLATION_ROW : for i in 0 to (SHF_MS_NBIT / SHF_MS_GRAN - 1) generate
+    TRANSLATTION_COL : for j in 0 to (SHF_MS_NBIT + SHF_MS_GRAN - 1) generate 
+      tmp_bus(i, j) <= SHF_MS_masks_in (i * (SHF_MS_NBIT / SHF_MS_GRAN - 1) + j);
+    end generate;
+  end generate;
+  
+MUX : for i in 0 to (SHF_MS_NBIT + SHF_MS_GRAN - 1) generate
+  SHF_MS_mask_out(i) <= tmp_bus(to_integer(unsigned(SHF_MS_addr)), i);
+end generate; 
 
-   SHF_MS_mask_out   <= SHF_MS_masks_in((to_int(SHF_MS_addr)+1)*MASK_LEN-1 downto to_int(SHF_MS_addr)*MASK_LEN);
+ --  SHF_MS_mask_out   <= SHF_MS_masks_in ( ( to_integer( unsigned(SHF_MS_addr) ) + 1) * MASK_LEN-1 downto to_integer(unsigned(SHF_MS_addr))*MASK_LEN);
 
 end dflow;
 
