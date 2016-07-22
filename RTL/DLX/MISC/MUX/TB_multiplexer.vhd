@@ -2,12 +2,12 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity TB_REGF_multiplexer is
-end TB_REGF_multiplexer;
+entity TB_multiplexer is
+end TB_multiplexer;
 
-architecture TEST of TB_REGF_multiplexer is
+architecture TEST of TB_multiplexer is
 
-    component REGF_multiplexer is
+    component multiplexer is
         generic(
             MUX_NBIT    :   integer :=  4;
             MUX_NSEL    :   integer :=  3);
@@ -26,7 +26,7 @@ architecture TEST of TB_REGF_multiplexer is
 
 begin
 
-    UUT : REGF_multiplexer
+    UUT : multiplexer
         generic map(
             MUX_NBIT    =>  c_MUX_NBIT,
             MUX_NSEL    =>  c_MUX_NSEL)
