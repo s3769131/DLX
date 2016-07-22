@@ -18,7 +18,7 @@ signal tmp_bus : bus_array (2**MUX_NSEL - 1 downto 0, MUX_NBIT - 1 downto 0);
 begin
   TRANSLATION_ROW : for i in 0 to 2**MUX_NSEL - 1 generate
     TRANSLATTION_COL : for j in 0 to MUX_NBIT generate
-      tmp_bus(i, j) <= MUX_inputs (i * (SHF_MS_NBIT / SHF_MS_GRAN - 1) + j);
+      tmp_bus(i, j) <= MUX_inputs (i * (2**MUX_NSEL - 1) + j);
     end generate;
   end generate;
 
