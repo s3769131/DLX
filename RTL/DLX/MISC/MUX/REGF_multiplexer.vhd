@@ -5,8 +5,8 @@ use work.REGF_pkg.all;
 
 entity REGF_multiplexer is
     generic(
-        MUX_NBIT    :   integer :=  2;
-        MUX_NSEL    :   integer :=  1);
+        MUX_NBIT    :   integer :=  4;
+        MUX_NSEL    :   integer :=  3);
     port(
         MUX_inputs  :   in  std_logic_vector(2**MUX_NSEL * MUX_NBIT - 1 downto 0);
         MUX_select  :   in  std_logic_vector(MUX_NSEL-1 downto 0);
@@ -17,8 +17,8 @@ architecture dflow of REGF_multiplexer is
 signal tmp_bus : bus_array (2**MUX_NSEL - 1 downto 0, MUX_NBIT - 1 downto 0);
 begin
   TRANSLATION_ROW : for i in 0 to 2**MUX_NSEL - 1 generate
-    TRANSLATTION_COL : for j in 0 to MUX_NBIT generate
-      tmp_bus(i, j) <= MUX_inputs (i * (2**MUX_NSEL - 1) + j);
+    TRANSLATTION_COL : for j in 0 to MUX_NBIT - 1 generate
+      tmp_bus(i, j) <= MUX_inputs (i * (MUX_NBIT) + j);
     end generate;
   end generate;
 
