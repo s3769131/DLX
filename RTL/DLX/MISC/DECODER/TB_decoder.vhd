@@ -2,12 +2,12 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity TB_REGF_decoder is
-end TB_REGF_decoder;
+entity TB_decoder is
+end TB_decoder;
 
-architecture TEST of TB_REGF_decoder is
+architecture TEST of TB_decoder is
 
-    component REGF_decoder is
+    component decoder is
         generic(
             DEC_NBIT    :   integer :=  5);
         port(
@@ -24,7 +24,7 @@ architecture TEST of TB_REGF_decoder is
 
 begin
 
-    UUT : REGF_decoder
+    UUT : decoder
         generic map(
             DEC_NBIT    =>  c_DEC_NBIT)
         port map(
