@@ -29,7 +29,7 @@ begin  -- architecture BHV
 
 end architecture BHV;
 
-configuration CGF_TFF_BHV of T_FF is
+configuration CGF_TFF_BHV of TFF is
   for BHV
   end for;
 end configuration CGF_TFF_BHV;
