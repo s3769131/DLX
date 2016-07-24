@@ -16,7 +16,7 @@ architecture TEST of TB_sat_counter is
       SAT_OUT : out std_logic_vector(SAT_NBIT - 1 downto 0)
     );
   end component sat_counter;
- constant c_NBIT : integer := 4;
+ constant c_NBIT : integer := 2;
   constant c_tck  : time    := 1 ns;
 
   signal s_EN  : std_logic := '0';

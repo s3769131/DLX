@@ -27,8 +27,8 @@ architecture STR of sat_counter is
   end component UD_COUNTER;
 
   signal s_out        : std_logic_vector(SAT_NBIT - 1 downto 0) := (others => '0');
-  signal s_or_red     : std_logic;
-  signal s_nand_red   : std_logic;
+  signal s_or         : std_logic;
+  signal s_nand       : std_logic;
   signal s_stop_count : std_logic;
 begin
   COUNTER : UD_COUNTER
@@ -40,11 +40,12 @@ begin
       UDC_CLK => SAT_CLK,
       UDC_RST => SAT_RST,
       UDC_OUT => s_out);
-  s_or_red     <= or_reduce(s_out);
-  s_nand_red   <= not AND_REDUCE(s_out);
-  s_stop_count <= SAT_EN and (s_or_red and s_nand_red);
+  s_or   <= or_reduce(s_out);
+  s_nand <= NAND_REDUCE(s_out);
+  s_stop_count <= SAT_EN and ((or_reduce(s_out) and (not SAT_UP)) or (nand_reduce(s_out) and SAT_UP));
 
   SAT_OUT <= s_out;
+
 end architecture STR;
 
 configuration CFG_SAT_COUNTER_STR of SAT_COUNTER is

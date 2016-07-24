@@ -74,7 +74,7 @@ begin  -- architecture STR
       s_en_dec(i) <= s_en_dec(i-1) and s_nq(i);
     end generate OTHERS_FF;
 
-    s_toggle(i+1) <= s_en_dec(i) or s_en_inc(i);
+    s_toggle(i+1) <= UDC_EN and (s_en_dec(i) or s_en_inc(i));
 
   end generate MAIN_GEN;
 

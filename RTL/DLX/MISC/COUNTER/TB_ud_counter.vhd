@@ -17,7 +17,7 @@ architecture TEST of TB_ud_counter is
       UDC_OUT : out std_logic_vector(UDC_NBIT - 1 downto 0));
   end component UD_COUNTER;
 
-  constant c_NBIT : integer := 4;
+  constant c_NBIT : integer := 3;
   constant c_tck  : time    := 1 ns;
 
   signal s_EN  : std_logic := '0';
@@ -51,7 +51,11 @@ begin
     s_EN  <= '1';
     s_UP  <= '1';
     wait for 4 ns;
+    s_EN <= '0';
+    wait for 1 ns;
+    s_EN <= '1';
     s_UP <= '0';
+    
     wait;
   end process STIM;
 end architecture TEST;
