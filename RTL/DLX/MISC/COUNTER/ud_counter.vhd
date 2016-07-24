@@ -37,31 +37,48 @@ architecture STR of UD_COUNTER is
   signal s_en_inc : std_logic_vector (UDC_NBIT - 1 downto 0) := (others => '0');  -- enable to count up
   signal s_en_dec : std_logic_vector(UDC_NBIT - 1 downto 0)  := (others => '0');  -- enable to count down
 
-  signal s_out : std_logic_vector(UDC_NBIT downto 0) := (others => '0');  --internal out
+  signal s_toggle : std_logic_vector(UDC_NBIT downto 0) := (others => '0');  --internal out
   
 begin  -- architecture STR
-
-  s_out(0) <= UDC_EN;
 
   s_up   <= UDC_UP;
   s_down <= not UDC_UP;
 
   MAIN_GEN : for i in 0 to UDC_NBIT - 1 generate
-    FF : TFF
-      port map(
-        FF_T   => s_out(i),
-        FF_CLK => UDC_CLK,
-        FF_RST => UDC_RST,
-        FF_Q   => s_q(i),
-        FF_NQ  => s_nq(i));
 
-    s_en_inc(i) <= s_up and s_q(i);
-    s_en_dec(i) <= s_down and s_nq(i);
+    FIRST_FF : if i = 0 generate
 
-    s_out(i+1) <= s_en_dec(i) or s_en_inc(i);
+      FF0 : TFF
+        port map(
+          FF_T   => UDC_EN,
+          FF_CLK => UDC_CLK,
+          FF_RST => UDC_RST,
+          FF_Q   => s_q(i),
+          FF_NQ  => s_nq(i));
+      s_en_inc(i) <= s_up and s_q(i);
+      s_en_dec(i) <= s_down and s_nq(i);
+      
+    end generate FIRST_FF;
+
+    OTHERS_FF : if i > 0 generate
+
+      FFN : TFF
+        port map(
+          FF_T   => s_toggle(i),
+          FF_CLK => UDC_CLK,
+          FF_RST => UDC_RST,
+          FF_Q   => s_q(i),
+          FF_NQ  => s_nq(i));
+      
+      s_en_inc(i) <= s_en_inc(i-1) and s_q(i);
+      s_en_dec(i) <= s_en_dec(i-1) and s_nq(i);
+    end generate OTHERS_FF;
+
+    s_toggle(i+1) <= s_en_dec(i) or s_en_inc(i);
+
   end generate MAIN_GEN;
 
-  UDC_OUT <= s_out(UDC_NBIT downto 1);
+  UDC_OUT <= s_q;
 
 end architecture STR;
 
@@ -69,7 +86,7 @@ configuration CFG_UD_COUNTER_STR of UD_COUNTER is
 
   for STR
     for MAIN_GEN
-      for FF : TFF
+      for all : TFF
         use configuration work.CFG_TFF_BHV;
       end for;
     end for;
