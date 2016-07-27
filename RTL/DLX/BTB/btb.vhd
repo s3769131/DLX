@@ -70,10 +70,10 @@ architecture STR of BTB is
     );
   end component REGF_register;
 
-  constant nbit_tag : integer := log2ceil(BTB_ENTRIES);
+  constant nbit_tag : integer := BTB_NBIT - log2ceil(BTB_ENTRIES);
   constant nbit_mem : integer := BTB_NBIT + nbit_tag;
 
-  signal s_mem_out      : std_logic_vector(BTB_NBIT * BTB_ENTRIES - 1 downto 0);
+  signal s_mem_out      : std_logic_vector(nbit_mem * BTB_ENTRIES - 1 downto 0);
   signal s_mem_data_out : std_logic_vector(nbit_mem - 1 downto 0);
   signal s_mem_tag      : std_logic_vector(nbit_tag - 1 downto 0);
   signal s_mem_target   : std_logic_vector(BTB_NBIT - 1 downto 0);
@@ -92,18 +92,18 @@ begin
         REG_rst      => BTB_RST,
         REG_enable   => '0',            ---
         REG_data_in  => (others => '0'), ---
-        REG_data_out => s_mem_out(i * BTB_NBIT to (i + 1) * BTB_NBIT - 1)
+        REG_data_out => s_mem_out((i + 1) * nbit_mem - 1 downto i * nbit_mem)
       );
   end generate MEMORY_BLOCK;
 
   MUX_OUT_MEM : multiplexer
     generic map(
       MUX_NBIT => nbit_mem,
-      MUX_NSEL => BTB_ENTRIES
+      MUX_NSEL => log2ceil(BTB_ENTRIES)
     )
     port map(
       MUX_inputs => s_mem_out,
-      MUX_select => BTB_PC(nbit_tag + 2 downto 2),
+      MUX_select => BTB_PC(log2ceil(BTB_ENTRIES) + 1 downto 2),
       MUX_output => s_mem_data_out
     );
 
@@ -112,10 +112,10 @@ begin
 
   COMPARATOR : EQ_COMPARATOR
     generic map(
-      COMP_NBIT => BTB_NBIT - nbit_tag - 2
+      COMP_NBIT => nbit_tag
     )
     port map(
-      COMP_A   => BTB_PC(BTB_NBIT - 1 downto nbit_tag + 2),
+      COMP_A   => BTB_PC(BTB_NBIT - 1 downto BTB_NBIT - nbit_tag),
       COMP_B   => s_mem_tag,
       COMP_RES => s_tag_equality(0)
     );
