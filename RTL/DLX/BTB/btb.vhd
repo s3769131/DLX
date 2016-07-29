@@ -103,7 +103,7 @@ begin
       DEC_NBIT => log2ceil(BTB_ENTRIES)
     )
     port map(
-      DEC_address => BTB_PC(log2ceil(BTB_ENTRIES) + 1 downto 2),
+      DEC_address => BTB_CALCULATED_PC(log2ceil(BTB_ENTRIES) + 1 downto 2),
       DEC_enable  => BTB_EN,
       DEC_output  => s_row_selection
     );

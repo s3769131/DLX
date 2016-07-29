@@ -26,7 +26,7 @@ architecture TEST of TB_btb is
   end component BTB;
 
   constant c_NBIT    : integer := 32;
-  constant c_ENTRIES : integer := 4;
+  constant c_ENTRIES : integer := 1024;
   constant c_TCLK    : time    := 1 ns;
 
   signal s_CALCULATED_PC     : std_logic_vector(c_NBIT - 1 downto 0) := (others => '0');
@@ -68,7 +68,17 @@ begin
 
   STIM : process
   begin
-    wait for 
+    wait for 1.1 ns;
+    s_RST <= '1';
+    wait for 1 ns;
+    s_EN <= '1';
+    s_CALCULATED_PC <= x"0F0000F0";
+    s_CALCULATED_TARGET <= x"FFFFFFFF";
+    s_CALCULATED_CONDITION <= '1';
+    wait for 3 ns;
+    s_EN <= '0';
+    wait for 1 ns;
+    s_PC <= x"0F0000F0";
     wait;
   end process STIM;
 
