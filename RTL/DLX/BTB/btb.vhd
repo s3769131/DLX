@@ -11,6 +11,7 @@ entity BTB is
     BTB_TARGET_PC            : out std_logic_vector(BTB_NBIT - 1 downto 0);
     BTB_BRANCH_PREDICTION    : out std_logic;
     BTB_CALCULATED_PC        : in  std_logic_vector(BTB_NBIT - 1 downto 0);
+    BTB_CALCULATED_TARGET    : in  std_logic_vector(BTB_NBIT - 1 downto 0);
     BTB_CALCULATED_CONDITION : in  std_logic;
     BTB_CLR                  : in  std_logic;
     BTB_EN                   : in  std_logic;
@@ -88,13 +89,27 @@ architecture STR of BTB is
   signal s_mem_target   : std_logic_vector(BTB_NBIT - 1 downto 0);
   signal s_tag_equality : std_logic_vector(0 downto 0);
 
+  signal s_row_selection         : std_logic_vector(BTB_ENTRIES - 1 downto 0);
+  signal s_data_to_store         : std_logic_vector(nbit_mem - 1 downto 0);
   signal s_preditions_from_count : std_logic_vector(2 * BTB_ENTRIES - 1 downto 0);
 
   signal s_target_mux_input   : std_logic_vector(2 * BTB_NBIT - 1 downto 0);
   signal s_decision_mux_input : std_logic_vector(3 downto 0);
-  signal s_prediction : std_logic_vector(1 downto 0);
-  
-  begin
+  signal s_prediction         : std_logic_vector(1 downto 0);
+
+begin
+  DEC : decoder
+    generic map(
+      DEC_NBIT => log2ceil(BTB_ENTRIES)
+    )
+    port map(
+      DEC_address => BTB_PC(log2ceil(BTB_ENTRIES) + 1 downto 2),
+      DEC_enable  => BTB_EN,
+      DEC_output  => s_row_selection
+    );
+
+  s_data_to_store <= BTB_CALCULATED_PC(BTB_NBIT - 1 downto BTB_NBIT - nbit_tag) & BTB_CALCULATED_TARGET;
+
   MEMORY_BLOCK : for i in 0 to BTB_ENTRIES - 1 generate
     REG : REGF_register
       generic map(
@@ -103,8 +118,8 @@ architecture STR of BTB is
       port map(
         REG_clk      => BTB_CLK,
         REG_rst      => BTB_RST,
-        REG_enable   => '0',            ---
-        REG_data_in  => (others => '0'), ---
+        REG_enable   => s_row_selection(i), ---
+        REG_data_in  => s_data_to_store, ---
         REG_data_out => s_mem_out((i + 1) * nbit_mem - 1 downto i * nbit_mem)
       );
   end generate MEMORY_BLOCK;
@@ -155,7 +170,7 @@ architecture STR of BTB is
       port map(
         SAT_CLK => BTB_CLK,
         SAT_RST => BTB_RST,
-        SAT_EN  => '0',                 --
+        SAT_EN  => s_row_selection(i),  --
         SAT_UP  => BTB_CALCULATED_CONDITION,
         SAT_OUT => s_preditions_from_count((i + 1) * 2 - 1 downto i * 2));
   end generate SAT_COUNT_GEN;
@@ -171,17 +186,17 @@ architecture STR of BTB is
       MUX_output => s_decision_mux_input(3 downto 2)
     );
   s_decision_mux_input(1 downto 0) <= (others => '0');
- 
- PREDICTION_OUT : multiplexer
-   generic map(
-     MUX_NBIT => 2,
-     MUX_NSEL => 1
-   )
-   port map(
-     MUX_inputs => s_decision_mux_input,
-     MUX_select => s_tag_equality,
-     MUX_output => s_prediction
-   );
-   
-   BTB_BRANCH_PREDICTION  <= s_prediction(1);
+
+  PREDICTION_OUT : multiplexer
+    generic map(
+      MUX_NBIT => 2,
+      MUX_NSEL => 1
+    )
+    port map(
+      MUX_inputs => s_decision_mux_input,
+      MUX_select => s_tag_equality,
+      MUX_output => s_prediction
+    );
+
+  BTB_BRANCH_PREDICTION <= s_prediction(1);
 end architecture STR;
