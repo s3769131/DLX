@@ -3,4 +3,6 @@ RTL/.library_mapping.xml
 
 RTL/.project
 
+.DS_Store
+
 RTL/.settings/org.eclipse.core.resources.prefs
