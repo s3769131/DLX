@@ -70,6 +70,15 @@ architecture STR of BTB is
     );
   end component REGF_register;
 
+  component bit_multiplexer
+    generic(BIT_MUX_NSEL : integer := 3);
+    port(
+      BIT_MUX_inputs : in  std_logic_vector(2 ** BIT_MUX_NSEL - 1 downto 0);
+      BIT_MUX_select : in  std_logic_vector(BIT_MUX_NSEL - 1 downto 0);
+      BIT_MUX_output : out std_logic
+    );
+  end component bit_multiplexer;
+
   constant nbit_tag : integer := BTB_NBIT - log2ceil(BTB_ENTRIES);
   constant nbit_mem : integer := BTB_NBIT + nbit_tag;
 
@@ -79,9 +88,13 @@ architecture STR of BTB is
   signal s_mem_target   : std_logic_vector(BTB_NBIT - 1 downto 0);
   signal s_tag_equality : std_logic_vector(0 downto 0);
 
-  signal s_target_mux_input : std_logic_vector(2 * BTB_NBIT - 1 downto 0);
+  signal s_preditions_from_count : std_logic_vector(2 * BTB_ENTRIES - 1 downto 0);
 
-begin
+  signal s_target_mux_input   : std_logic_vector(2 * BTB_NBIT - 1 downto 0);
+  signal s_decision_mux_input : std_logic_vector(3 downto 0);
+  signal s_prediction : std_logic_vector(1 downto 0);
+  
+  begin
   MEMORY_BLOCK : for i in 0 to BTB_ENTRIES - 1 generate
     REG : REGF_register
       generic map(
@@ -134,4 +147,41 @@ begin
       MUX_output => BTB_TARGET_PC
     );
 
+  SAT_COUNT_GEN : for i in 0 to BTB_ENTRIES - 1 generate
+    COUNT : sat_counter
+      generic map(
+        SAT_NBIT => 2
+      )
+      port map(
+        SAT_CLK => BTB_CLK,
+        SAT_RST => BTB_RST,
+        SAT_EN  => '0',                 --
+        SAT_UP  => BTB_CALCULATED_CONDITION,
+        SAT_OUT => s_preditions_from_count((i + 1) * 2 - 1 downto i * 2));
+  end generate SAT_COUNT_GEN;
+
+  PREDICTION_MUX : multiplexer
+    generic map(
+      MUX_NBIT => 2,
+      MUX_NSEL => log2ceil(BTB_ENTRIES)
+    )
+    port map(
+      MUX_inputs => s_preditions_from_count,
+      MUX_select => BTB_PC(log2ceil(BTB_ENTRIES) + 1 downto 2),
+      MUX_output => s_decision_mux_input(3 downto 2)
+    );
+  s_decision_mux_input(1 downto 0) <= (others => '0');
+ 
+ PREDICTION_OUT : multiplexer
+   generic map(
+     MUX_NBIT => 2,
+     MUX_NSEL => 1
+   )
+   port map(
+     MUX_inputs => s_decision_mux_input,
+     MUX_select => s_tag_equality,
+     MUX_output => s_prediction
+   );
+   
+   BTB_BRANCH_PREDICTION  <= s_prediction(1);
 end architecture STR;
