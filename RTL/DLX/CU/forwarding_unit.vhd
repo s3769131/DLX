@@ -130,8 +130,10 @@ begin
     );
 
   ALU_TOP_FORWARD : process(s_comp_result, FU_IT_SOURCE)
+    variable v_comp_result : integer;
   begin
-    case s_comp_result is
+    v_comp_result := to_integer(unsigned(s_comp_result));
+    case v_comp_result is
       when 1 | 16 =>
         FU_TOP_ALU <= "01";
       when 4 =>
@@ -150,8 +152,11 @@ begin
   end process ALU_TOP_FORWARD;
 
   ALU_BOT_FORWARD : process(s_comp_result, FU_IT_SOURCE)
+    variable v_comp_result : integer;
   begin
-    case s_comp_result is
+    v_comp_result := to_integer(unsigned(s_comp_result));
+    
+    case v_comp_result is
       when 2 | 32 =>
         FU_BOT_ALU <= "01";
       when 8 =>

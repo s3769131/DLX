@@ -30,7 +30,7 @@ architecture TEST of TB_forwarding_unit is
   signal s_TOP_ALU      : std_logic_vector(1 downto 0) := (others => '0');
   signal s_BOT_ALU      : std_logic_vector(1 downto 0) := (others => '0');
 
-  constant c_fake_reg : std_logic_vector(3 downto 0) := "0101";
+  constant c_fake_reg : std_logic_vector(3 downto 0) := "1111";
 
 begin
   UUT : forwarding_unit
