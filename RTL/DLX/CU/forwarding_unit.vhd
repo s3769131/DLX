@@ -139,7 +139,7 @@ begin
       when 4 =>
         FU_TOP_ALU <= "10";
 
-      when 64 | 256 =>
+      when 320  =>
         if FU_IT_SOURCE = "10" then
           FU_TOP_ALU <= "10";
         else
@@ -155,14 +155,13 @@ begin
     variable v_comp_result : integer;
   begin
     v_comp_result := to_integer(unsigned(s_comp_result));
-    
     case v_comp_result is
       when 2 | 32 =>
         FU_BOT_ALU <= "01";
       when 8 =>
         FU_BOT_ALU <= "10";
 
-      when 128 | 512 =>
+      when 640 =>
         if FU_IT_SOURCE = "10" then
           FU_BOT_ALU <= "10";
         else
@@ -170,6 +169,7 @@ begin
             FU_BOT_ALU <= "11";
           end if;
         end if;
+        
       when others => FU_BOT_ALU <= "00";
     end case;
   end process ALU_BOT_FORWARD;
