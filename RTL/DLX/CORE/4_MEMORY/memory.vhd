@@ -41,7 +41,7 @@ begin
  -- s_internal_data <= MEM_INTERFACE;
  -- MEM_INTERFACE <= s_internal_data;
   
-  MEM_DATA_OUT <= s_internal_data;
+ -- MEM_DATA_OUT <= s_internal_data;
   
   MEM_INTERFACE <= MEM_DATA_IN when MEM_CU_READNOTWRITE = '0' ELSE (OTHERS => 'Z');
   MEM_DATA_OUT  <= MEM_INTERFACE;
