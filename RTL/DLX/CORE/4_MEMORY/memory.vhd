@@ -39,6 +39,7 @@ begin
   MEM_ADDRESS_OUT    <= s_internal_address;
   
   s_internal_data <= MEM_INTERFACE;
+  MEM_INTERFACE <= s_internal_data;
   MEM_DATA_OUT <= s_internal_data;
   
   TRI_STATE : process(MEM_DATA_IN, MEM_CU_READNOTWRITE)
