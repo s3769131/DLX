@@ -38,17 +38,21 @@ begin
   s_internal_address <= MEM_ADDRESS_IN;
   MEM_ADDRESS_OUT    <= s_internal_address;
   
-  s_internal_data <= MEM_INTERFACE;
-  MEM_INTERFACE <= s_internal_data;
+ -- s_internal_data <= MEM_INTERFACE;
+ -- MEM_INTERFACE <= s_internal_data;
+  
   MEM_DATA_OUT <= s_internal_data;
   
-  TRI_STATE : process(MEM_DATA_IN, MEM_CU_READNOTWRITE)
-  begin
-    if MEM_CU_READNOTWRITE = '0' then
-      s_internal_data <= MEM_DATA_IN;
-    else
-      s_internal_data <= (others  => 'Z');
-    end if;
-  end process TRI_STATE;
+  MEM_INTERFACE <= MEM_DATA_IN when MEM_CU_READNOTWRITE = '0' ELSE (OTHERS => 'Z');
+  MEM_DATA_OUT  <= MEM_INTERFACE;
+  
+ -- TRI_STATE : process(MEM_DATA_IN, MEM_CU_READNOTWRITE)
+ -- begin
+ --   if MEM_CU_READNOTWRITE = '0' then
+ --     s_internal_data <= MEM_DATA_IN;
+ --   else
+ --     s_internal_data <= (others  => 'Z');
+ --   end if;
+ -- end process TRI_STATE;
 
 end architecture STR;
