@@ -28,6 +28,11 @@ architecture STR of memory is
 
   signal s_internal_data : std_logic_vector(MEM_NBIT-1 downto 0);
 
+  signal  a  : STD_LOGIC_VECTOR (MEM_NBIT -1  DOWNTO 0);  -- DFF that stores 
+                                             -- value from input.
+SIGNAL  b  : STD_LOGIC_VECTOR (MEM_NBIT - 1 DOWNTO 0);  -- DFF that stores 
+                                        -- feedback value.
+  
 begin
   s_internal_ir <= MEM_IR_IN;
   MEM_IR_OUT    <= s_internal_ir;
@@ -43,8 +48,8 @@ begin
   
  -- MEM_DATA_OUT <= s_internal_data;
   
-  MEM_INTERFACE <= MEM_DATA_IN when MEM_CU_READNOTWRITE = '0' ELSE (OTHERS => 'Z');
-  MEM_DATA_OUT  <= MEM_INTERFACE;
+ -- MEM_INTERFACE <= MEM_DATA_IN when MEM_CU_READNOTWRITE = '0' else (others => 'Z');
+ -- MEM_DATA_OUT  <= MEM_INTERFACE;
   
  -- TRI_STATE : process(MEM_DATA_IN, MEM_CU_READNOTWRITE)
  -- begin
@@ -55,4 +60,19 @@ begin
  --   end if;
  -- end process TRI_STATE;
 
+  a <= MEM_DATA_IN;                    
+  MEM_DATA_OUT <= b;                  
+   
+    PROCESS (MEM_CU_READNOTWRITE, MEM_INTERFACE)          -- Behavioral representation 
+        BEGIN                    -- of tri-states.
+        IF( MEM_CU_READNOTWRITE = '1') THEN
+            MEM_INTERFACE <= (others => 'Z');
+            b <= MEM_INTERFACE;
+        ELSE
+            MEM_INTERFACE <= a; 
+            b <= MEM_INTERFACE;
+        END IF;
+    END PROCESS;
+
+    
 end architecture STR;

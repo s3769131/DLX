@@ -28,7 +28,7 @@ architecture TEST of TB_memory is
   signal s_NPC_OUT         : std_logic_vector(c_NBIT - 1 downto 0);
   signal s_ADDRESS_IN      : std_logic_vector(c_NBIT - 1 downto 0) := (others => '0');
   signal s_ADDRESS_OUT     : std_logic_vector(c_NBIT - 1 downto 0);
-  signal s_INTERFACE       : std_logic_vector(c_NBIT - 1 downto 0) :=(others => '0');
+  signal s_INTERFACE       : std_logic_vector(c_NBIT - 1 downto 0) :=(others => '1');
   signal s_DATA_IN         : std_logic_vector(c_NBIT - 1 downto 0) := (others => '0');
   signal s_CU_READNOTWRITE : std_logic := '1';       
   signal s_DATA_OUT        : std_logic_vector(c_NBIT - 1 downto 0);
@@ -49,4 +49,15 @@ UUT : memory
     MEM_CU_READNOTWRITE => s_CU_READNOTWRITE,
     MEM_DATA_OUT        => s_DATA_OUT
   );
+
+process
+begin 
+wait for 1 ns;
+s_INTERFACE <= (others => '1');
+wait for 1 ns;
+s_DATA_IN <= (others => '0');
+s_CU_READNOTWRITE <= '0';
+wait;
+end process;
+
 end architecture TEST;
