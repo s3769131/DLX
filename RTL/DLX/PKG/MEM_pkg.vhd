@@ -10,7 +10,7 @@ package MEM_pkg is
 
   function log2ceil(constant n : in integer) return integer;
 
-  function initilize_mem_from_file(ENTRIES : integer; WORD_SIZE : integer; FILE_PATH : string) return MEMORY_TYPE;
+  impure function initilize_mem_from_file(ENTRIES : integer; WORD_SIZE : integer; FILE_PATH : string) return MEMORY_TYPE;
 end package MEM_pkg;
 
 package body MEM_pkg is
@@ -27,8 +27,8 @@ package body MEM_pkg is
     return m;
   end;
 
-  function initilize_mem_from_file(ENTRIES : integer; WORD_SIZE : integer; FILE_PATH : string) return MEMORY_TYPE is
-    signal tmp_mem : MEMORY_TYPE(ENTRIES - 1 downto 0, WORD_SIZE - 1 downto 0);
+  impure function initilize_mem_from_file(ENTRIES : integer; WORD_SIZE : integer; FILE_PATH : string) return MEMORY_TYPE is
+    variable tmp_mem : MEMORY_TYPE(ENTRIES - 1 downto 0, WORD_SIZE - 1 downto 0);
 
     variable file_line : line;
     variable index     : integer := 0;
@@ -43,7 +43,7 @@ package body MEM_pkg is
       readline(mem_fp, file_line);
       hread(file_line, tmp_data);
       for i in 0 to tmp_data'high loop
-        tmp_mem(index, i) <= tmp_data(i);
+        tmp_mem(index, i) := tmp_data(i);
       end loop;
       index := index + 1;
     end loop;
