@@ -11,8 +11,8 @@ architecture TEST of TB_rom is
     generic(
       ROM_FILE_PATH  : string;
       ROM_ENTRIES    : integer := 128;
-      ROM_WORD_SIZE  : integer := 32;
-      ROM_DATA_DELAY : natural := 2
+      ROM_WORD_SIZE  : integer := 32
+ --     ROM_DATA_DELAY : natural := 2
       );
     port(
       ROM_CLK        : in  std_logic;
@@ -42,8 +42,8 @@ begin
     generic map(
       ROM_FILE_PATH  => c_FILE_PATH,
       ROM_ENTRIES    => c_ENTRIES,
-      ROM_WORD_SIZE  => c_WORD_SIZE,
-      ROM_DATA_DELAY => c_DATA_DELAY
+      ROM_WORD_SIZE  => c_WORD_SIZE
+  --   ROM_DATA_DELAY => c_DATA_DELAY
       )
     port map(
       ROM_CLK        => s_CLK,

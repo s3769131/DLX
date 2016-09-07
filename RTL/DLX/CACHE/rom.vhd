@@ -28,7 +28,7 @@ end ROM;
 
 architecture BHV of ROM is
   
-  type MEMORY_TYPE is array (natural range <>, natural range <>) of std_logic;
+ -- type MEMORY_TYPE is array (natural range <>, natural range <>) of std_logic;
 
 
   signal ROM : MEMORY_TYPE(ROM_ENTRIES - 1 downto 0, ROM_WORD_SIZE - 1 downto 0) := initilize_mem_from_file(ROM_ENTRIES, ROM_WORD_SIZE, ROM_FILE_PATH);
