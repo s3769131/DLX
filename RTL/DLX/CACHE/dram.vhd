@@ -9,8 +9,9 @@ entity DRAM is
     DRAM_FILEPATH_DUMP : string;
     DRAM_FILEPATH_INIT : string;
     DRAM_WORDSIZE      : integer := 32;
-    DRAM_ENTRIES       : natural := 2 ** 32
-  );
+    DRAM_ENTRIES       : positive;
+    DRAM_DUMPTIME : time := 1 us
+    );
   port(
     DRAM_CLK          : in    std_logic;
     DRAM_RST          : in    std_logic;
@@ -19,7 +20,7 @@ entity DRAM is
     DRAM_READNOTWRITE : in    std_logic;
     DRAM_DATA_READY   : out   std_logic;
     DRAM_INOUT_DATA   : inout std_logic_vector(DRAM_WORDSIZE - 1 downto 0)
-  );
+    );
 end entity DRAM;
 
 architecture BHV of DRAM is
@@ -32,8 +33,8 @@ architecture BHV of DRAM is
 begin
   --write_process
   WR_PROCESS : process(DRAM_CLK, DRAM_RST)
-  begin                                 -- process
-    if DRAM_RST = '1' then                   -- asynchronous reset (active low)
+  begin  -- process
+    if DRAM_RST = '1' then              -- asynchronous reset (active low)
       for index in 0 to DRAM_ENTRIES - 1 loop
         for i in 0 to DRAM_WORDSIZE - 1 loop
           DRAM(index, i) <= '0';
@@ -49,6 +50,7 @@ begin
           for i in 0 to DRAM_WORDSIZE - 1 loop
             DRAM(to_integer(unsigned(DRAM_ADDRESS)), i) <= DRAM_INOUT_DATA(i);
           end loop;
+
           mem_ready <= '1';
         else
           for i in 0 to DRAM_WORDSIZE - 1 loop
@@ -62,9 +64,15 @@ begin
       end if;
     end if;
   end process;
-  rewrite_contenent(DRAM, DRAM_ENTRIES, DRAM_WORDSIZE, DRAM_FILEPATH_DUMP); -- refresh the file
-  DRAM_INOUT_DATA <= tmp_data when int_data_ready = '1' else (others => 'Z'); -- to cache
-  DRAM_DATA_READY <= int_data_ready or mem_ready; --delay add
+
+  DRAM_INOUT_DATA <= tmp_data when int_data_ready = '1' else (others => 'Z');  -- to cache
+  DRAM_DATA_READY <= int_data_ready or mem_ready;  --delay add
+
+  process
+  begin
+    wait for DRAM_DUMPTIME;
+    rewrite_contenent(DRAM, DRAM_ENTRIES, DRAM_WORDSIZE, DRAM_FILEPATH_DUMP);  -- refresh the file
+  end process;
 end architecture BHV;
 
 configuration CFG_DRAM_BHV of DRAM is

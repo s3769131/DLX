@@ -12,8 +12,9 @@ architecture RTL of TB_dram is
       DRAM_FILEPATH_DUMP : string;
       DRAM_FILEPATH_INIT : string;
       DRAM_WORDSIZE      : integer := 32;
-      DRAM_ENTRIES       : integer := 2 ** 32
-    );
+      DRAM_ENTRIES       : positive;
+      DRAM_DUMPTIME      : time    := 1 us
+      );
     port(
       DRAM_CLK          : in    std_logic;
       DRAM_RST          : in    std_logic;
@@ -22,13 +23,14 @@ architecture RTL of TB_dram is
       DRAM_READNOTWRITE : in    std_logic;
       DRAM_DATA_READY   : out   std_logic;
       DRAM_INOUT_DATA   : inout std_logic_vector(DRAM_WORDSIZE - 1 downto 0)
-    );
+      );
   end component DRAM;
 
-  constant c_FILEPATH_DUMP : string  := "./dram_dump.hex";
-  constant c_FILEPATH_INIT : string  := "./dram_init.hex";
-  constant c_WORDSIZE      : integer := 32;
-  constant c_ENTRIES       : integer := 2 ** 32;
+  constant c_FILEPATH_DUMP : string   := "./dram_dump.hex";
+  constant c_FILEPATH_INIT : string   := "./dram_init.hex";
+  constant c_WORDSIZE      : integer  := 32;
+  constant c_ENTRIES       : positive := 2 ** 16;
+  constant c_DUMPTIME      : time     := 1 us;
 
   signal s_CLK          : std_logic := '0';
   signal s_RST          : std_logic := '1';
@@ -45,8 +47,9 @@ begin
       DRAM_FILEPATH_DUMP => c_FILEPATH_DUMP,
       DRAM_FILEPATH_INIT => c_FILEPATH_INIT,
       DRAM_WORDSIZE      => c_WORDSIZE,
-      DRAM_ENTRIES       => c_ENTRIES
-    )
+      DRAM_ENTRIES       => c_ENTRIES,
+      DRAM_DUMPTIME      => c_DUMPTIME
+      )
     port map(
       DRAM_CLK          => s_CLK,
       DRAM_RST          => s_RST,
@@ -55,7 +58,7 @@ begin
       DRAM_READNOTWRITE => s_READNOTWRITE,
       DRAM_DATA_READY   => s_DATA_READY,
       DRAM_INOUT_DATA   => s_INOUT_DATA
-    );
+      );
 
   CLK_PROC : process
   begin
@@ -67,10 +70,10 @@ begin
   begin
     wait for 0.5 ns;
     s_RST <= '0';
-    for i in 0 to c_ENTRIES loop
+    for i in 0 to c_ENTRIES - 1 loop
       s_ENABLE       <= '1';
-      s_ADDRESS      <= std_logic_vector(i);
-      s_INOUT_DATA   <= std_logic_vector(i);
+      s_ADDRESS      <= std_logic_vector(to_unsigned(i, log2ceil(c_ENTRIES)));
+      s_INOUT_DATA   <= std_logic_vector(to_unsigned(i, c_WORDSIZE));
       s_READNOTWRITE <= '0';
       wait for 1 ns;
     end loop;
