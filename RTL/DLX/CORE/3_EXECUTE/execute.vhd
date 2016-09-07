@@ -214,7 +214,7 @@ configuration CFG_EXECUTE_STR of EXECUTE is
     end for;
 
     for ALU_inst : ALU
-      use configuration work.ALU;
+      use configuration work.CFG_ALU_STR;
     end for;
 
     for all : EQ_COMPARATOR
