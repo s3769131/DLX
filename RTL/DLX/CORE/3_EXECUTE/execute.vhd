@@ -4,28 +4,31 @@ use ieee.numeric_std.all;
 
 entity execute is
   generic(
-    EXE_NBIT : integer := 32);
+    EXE_PC_NBIT : integer := 32;
+    EXE_IR_NBIT : integer := 32;
+    EXE_ALU_NBIT: integer := 32
+   );
   port(
-    EXE_IR_IN           : in  std_logic_vector(EXE_NBIT - 1 downto 0); -- Instruction register in 
-    EXE_NPC_IN          : in  std_logic_vector(EXE_NBIT - 1 downto 0); -- Next program counter (it can be the speculated) 
+    EXE_IR_IN           : in  std_logic_vector(EXE_IR_NBIT - 1 downto 0); -- Instruction register in 
+    EXE_NPC_IN          : in  std_logic_vector(EXE_PC_NBIT - 1 downto 0); -- Next program counter (it can be the speculated) 
 
-    EXE_IR_OUT          : out std_logic_vector(EXE_NBIT - 1 downto 0); -- Instruction register out 
-    EXE_NPC_OUT         : out std_logic_vector(EXE_NBIT - 1 downto 0); -- Next program counter (it can be the speculated) 
+    EXE_IR_OUT          : out std_logic_vector(EXE_IR_NBIT - 1 downto 0); -- Instruction register out 
+    EXE_NPC_OUT         : out std_logic_vector(EXE_PC_NBIT - 1 downto 0); -- Next program counter (it can be the speculated) 
 
-    EXE_RF_IN1          : in  std_logic_vector(EXE_NBIT - 1 downto 0); -- Data coming from out port 1 of register file
-    EXE_IMM_IN          : in  std_logic_vector(EXE_NBIT - 1 downto 0); -- Immediated with sign extended
-    EXE_RF_IN2          : in  std_logic_vector(EXE_NBIT - 1 downto 0); -- Data coming from out port 2 of register file
+    EXE_RF_IN1          : in  std_logic_vector(EXE_ALU_NBIT - 1 downto 0); -- Data coming from out port 1 of register file
+    EXE_IMM_IN          : in  std_logic_vector(EXE_ALU_NBIT - 1 downto 0); -- Immediated with sign extended
+    EXE_RF_IN2          : in  std_logic_vector(EXE_ALU_NBIT - 1 downto 0); -- Data coming from out port 2 of register file
 
-    EXE_FW_ALU_FROM_MEM : in  std_logic_vector(EXE_NBIT - 1 downto 0); -- ALU data coming from MEM stage
-    EXE_FW_ALU_FROM_WB  : in  std_logic_vector(EXE_NBIT - 1 downto 0); -- ALU data coming from WB stage
-    EXE_FW_MEM_FROM_WB  : in  std_logic_vector(EXE_NBIT - 1 downto 0); -- MEM data coming from WB stage
+    EXE_FW_ALU_FROM_MEM : in  std_logic_vector(EXE_ALU_NBIT - 1 downto 0); -- ALU data coming from MEM stage
+    EXE_FW_ALU_FROM_WB  : in  std_logic_vector(EXE_ALU_NBIT - 1 downto 0); -- ALU data coming from WB stage
+    EXE_FW_MEM_FROM_WB  : in  std_logic_vector(EXE_ALU_NBIT - 1 downto 0); -- MEM data coming from WB stage
 
     EXE_BRANCH_TYPE     : in  std_logic; -- Identify the type of branch under execution (0 for bz, 1 for bnz)
     EXE_PRED_COND       : in  std_logic; -- Predicted condition of a branch (comes from BPU)
     EXE_CALC_COND       : out std_logic; -- Calculated condition of a branch
     EXE_WRONG_COND      : out std_logic; -- Signal to identify the condition in which the predicted branch condition is wrong (may be useless)
     EXE_WRONG_TARGET    : out std_logic; -- Signal to identify the condition in which the predicted branch target is wrong (may be useless)
-    EXE_ALU_OUT         : out std_logic_vector(EXE_NBIT - 1 downto 0); -- Output of ALU logic
+    EXE_ALU_OUT         : out std_logic_vector(EXE_ALU_NBIT - 1 downto 0); -- Output of ALU logic
 
     EXE_CU_ALU_CONTROL  : in  std_logic_vector(5 downto 0); -- Control signal for ALU operation selection
     EXE_CU_TOP_MUX      : in  std_logic; -- Signal from general CU for top multiplexer
@@ -86,13 +89,13 @@ architecture STR of execute is
     );
   end component EQ_COMPARATOR;
 
-  signal s_internal_ir       : std_logic_vector(EXE_NBIT - 1 downto 0); -- Internal replica of input IR_IN
-  signal s_internal_npc      : std_logic_vector(EXE_NBIT - 1 downto 0); -- Internal replica of input NPC_IN
-  signal s_top_mux_out       : std_logic_vector(EXE_NBIT - 1 downto 0); -- Out signal from TOP_MUX
-  signal s_bot_mux_out       : std_logic_vector(EXE_NBIT - 1 downto 0); -- Out signal from BOT_MUX
-  signal s_top_fw_mux_out    : std_logic_vector(EXE_NBIT - 1 downto 0); -- Out signal from TOP_FW_MUX
-  signal s_bot_fw_mux_out    : std_logic_vector(EXE_NBIT - 1 downto 0); -- Out signal from BOT_FW_MUX
-  signal s_alu_out           : std_logic_vector(EXE_NBIT - 1 downto 0); -- Out signal from ALU
+  signal s_internal_ir       : std_logic_vector(EXE_IR_NBIT - 1 downto 0); -- Internal replica of input IR_IN
+  signal s_internal_npc      : std_logic_vector(EXE_PC_NBIT - 1 downto 0); -- Internal replica of input NPC_IN
+  signal s_top_mux_out       : std_logic_vector(EXE_ALU_NBIT - 1 downto 0); -- Out signal from TOP_MUX
+  signal s_bot_mux_out       : std_logic_vector(EXE_ALU_NBIT - 1 downto 0); -- Out signal from BOT_MUX
+  signal s_top_fw_mux_out    : std_logic_vector(EXE_ALU_NBIT - 1 downto 0); -- Out signal from TOP_FW_MUX
+  signal s_bot_fw_mux_out    : std_logic_vector(EXE_ALU_NBIT - 1 downto 0); -- Out signal from BOT_FW_MUX
+  signal s_alu_out           : std_logic_vector(EXE_ALU_NBIT - 1 downto 0); -- Out signal from ALU
   signal s_zero_comp_out     : std_logic;
   signal s_zero_comp_out_inv : std_logic;
   signal s_cond_mux_out      : std_logic;
@@ -100,7 +103,7 @@ architecture STR of execute is
 begin
   TOP_MUX : mux_2to1
     generic map(
-      MUX_2to1_NBIT => EXE_NBIT
+      MUX_2to1_NBIT => EXE_ALU_NBIT
     )
     port map(
       MUX_2to1_in0 => s_internal_npc,
@@ -111,7 +114,7 @@ begin
 
   BOT_MUX : mux_2to1
     generic map(
-      MUX_2to1_NBIT => EXE_NBIT
+      MUX_2to1_NBIT => EXE_ALU_NBIT
     )
     port map(
       MUX_2to1_in0 => EXE_IMM_IN,
@@ -122,7 +125,7 @@ begin
 
   TOP_FW_MUX : mux_4to1
     generic map(
-      MUX_4to1_NBIT => EXE_NBIT
+      MUX_4to1_NBIT => EXE_ALU_NBIT
     )
     port map(
       MUX_4to1_in0 => s_top_mux_out,
@@ -135,7 +138,7 @@ begin
 
   BOT_FW_MUX : mux_4to1
     generic map(
-      MUX_4to1_NBIT => EXE_NBIT
+      MUX_4to1_NBIT => EXE_ALU_NBIT
     )
     port map(
       MUX_4to1_in0 => s_bot_mux_out,
@@ -148,7 +151,7 @@ begin
 
   ALU_inst : ALU
     generic map(
-      ALU_NBIT => EXE_NBIT
+      ALU_NBIT => EXE_ALU_NBIT
     )
     port map(
       ALU_command  => EXE_CU_ALU_CONTROL,
@@ -159,7 +162,7 @@ begin
 
   TARGET_COMP : EQ_COMPARATOR
     generic map(
-      COMP_NBIT => EXE_NBIT
+      COMP_NBIT => EXE_ALU_NBIT
     )
     port map(
       COMP_A   => s_alu_out,
@@ -169,7 +172,7 @@ begin
 
   ZERO_COMP : EQ_COMPARATOR
     generic map(
-      COMP_NBIT => EXE_NBIT
+      COMP_NBIT => EXE_ALU_NBIT
     )
     port map(
       COMP_A   => EXE_RF_IN1,
@@ -203,11 +206,11 @@ end architecture STR;
 configuration CFG_EXECUTE_STR of EXECUTE is
   for STR
     for all : mux_2to1
-      use configuration work.CFG_BIT_MUX_2to1_BHV;
+      use configuration work.CFG_MUX_2to1_BHV;
     end for;
 
     for all : mux_4to1
-      use configuration work.CFG_BIT_MUX_4to1_BHV;
+      use configuration work.CFG_MUX_4to1_BHV;
     end for;
 
     for ALU_inst : ALU
