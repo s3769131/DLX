@@ -1,7 +1,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use std.textio.all;
-use ieee.std_logic_textio.all;
+
 
 package MEM_pkg is
   -- First index: entry number
@@ -10,6 +10,10 @@ package MEM_pkg is
 
   function log2ceil(constant n : in integer) return integer;
 
+  procedure HEXTODUALBIT(C : Character; RESULT : out Bit_Vector(3 downto 0); GOOD : out Boolean; ISSUE_ERROR : in Boolean);
+  procedure HEX_TO_BITV(L : inout LINE; VALUE : out BIT_VECTOR);
+  procedure HEX_TO_UV(L : inout LINE; VALUE : out STD_ULOGIC_VECTOR);
+  procedure HEX_TO_LV(L : inout LINE; VALUE : out STD_LOGIC_VECTOR);
   impure function initilize_mem_from_file(ENTRIES : integer; WORD_SIZE : integer; FILE_PATH : string) return MEMORY_TYPE;
 end package MEM_pkg;
 
@@ -27,6 +31,114 @@ package body MEM_pkg is
     return m;
   end;
 
+  procedure HEXTODUALBIT(C : Character; RESULT : out Bit_Vector(3 downto 0); GOOD : out Boolean; ISSUE_ERROR : in Boolean) is
+  begin
+    case C is
+      when '0' => RESULT := x"0";
+        GOOD             := TRUE;
+      when '1' => RESULT := x"1";
+        GOOD             := TRUE;
+      when '2' => RESULT := x"2";
+        GOOD             := TRUE;
+      when '3' => RESULT := x"3";
+        GOOD             := TRUE;
+      when '4' => RESULT := x"4";
+        GOOD             := TRUE;
+      when '5' => RESULT := x"5";
+        GOOD             := TRUE;
+      when '6' => RESULT := x"6";
+        GOOD             := TRUE;
+      when '7' => RESULT := x"7";
+        GOOD             := TRUE;
+      when '8' => RESULT := x"8";
+        GOOD             := TRUE;
+      when '9' => RESULT := x"9";
+        GOOD             := TRUE;
+      when 'A' => RESULT := x"A";
+        GOOD             := TRUE;
+      when 'B' => RESULT := x"B";
+        GOOD             := TRUE;
+      when 'C' => RESULT := x"C";
+        GOOD             := TRUE;
+      when 'D' => RESULT := x"D";
+        GOOD             := TRUE;
+      when 'E' => RESULT := x"E";
+        GOOD             := TRUE;
+      when 'F' => RESULT := x"F";
+        GOOD             := TRUE;
+
+      when 'a' => RESULT := x"A";
+        GOOD             := TRUE;
+      when 'b' => RESULT := x"B";
+        GOOD             := TRUE;
+      when 'c' => RESULT := x"C";
+        GOOD             := TRUE;
+      when 'd' => RESULT := x"D";
+        GOOD             := TRUE;
+      when 'e' => RESULT := x"E";
+        GOOD             := TRUE;
+      when 'f' => RESULT := x"F";
+        GOOD             := TRUE;
+      when others =>
+        if ISSUE_ERROR then
+          assert FALSE report "HREAD Error: Read a '" & C & "', expected a Hex character (0-F).";
+        end if;
+        GOOD := FALSE;
+    end case;
+  end;
+
+  procedure HEX_TO_BITV(L : inout LINE; VALUE : out BIT_VECTOR) is
+    variable ok : boolean;
+    variable c  : character;
+    constant ne : integer := VALUE'length / 4;
+    variable bv : bit_vector(0 to VALUE'length - 1);
+    variable s  : string(1 to ne - 1);
+  begin
+    if VALUE'length mod 4 /= 0 then
+      assert FALSE report "HREAD Error: Trying to read vector " & "with an odd (non multiple of 4) length";
+      return;
+    end if;
+
+    loop                                -- skip white space
+      read(L, c);
+      exit when ((c /= ' ') and (c /= CR) and (c /= HT));
+    end loop;
+
+    HEXTODUALBIT(c, bv(0 to 3), ok, TRUE);
+    if not ok then
+      return;
+    end if;
+
+    read(L, s, ok);
+    if not ok then
+      assert FALSE
+        report "HREAD Error: Failed to read the STRING";
+      return;
+    end if;
+
+    for i in 1 to ne - 1 loop
+      HEXTODUALBIT(s(i), bv(4 * i to 4 * i + 3), ok, TRUE);
+      if not ok then
+        return;
+      end if;
+    end loop;
+    VALUE := bv;
+  end HEX_TO_BITV;
+
+  procedure HEX_TO_UV(L : inout LINE; VALUE : out STD_ULOGIC_VECTOR) is
+    variable tmp : bit_vector(VALUE'length - 1 downto 0);
+  begin
+    HEX_TO_BITV(L, tmp);
+    VALUE := To_X01(tmp);
+  end HEX_TO_UV;
+
+  procedure HEX_TO_LV(L : inout LINE; VALUE : out STD_LOGIC_VECTOR) is
+    variable tmp : STD_ULOGIC_VECTOR(VALUE'length - 1 downto 0);
+  begin
+    HEX_TO_UV(L, tmp);
+    VALUE := STD_LOGIC_VECTOR(tmp);
+  end HEX_TO_LV;
+
   impure function initilize_mem_from_file(ENTRIES : integer; WORD_SIZE : integer; FILE_PATH : string) return MEMORY_TYPE is
     variable tmp_mem : MEMORY_TYPE(ENTRIES - 1 downto 0, WORD_SIZE - 1 downto 0);
 
@@ -41,7 +153,7 @@ package body MEM_pkg is
 
     while (not endfile(mem_fp) and index < ENTRIES) loop
       readline(mem_fp, file_line);
-      hread(file_line, tmp_data);
+      HEX_TO_LV(file_line, tmp_data);
       for i in 0 to tmp_data'high loop
         tmp_mem(index, i) := tmp_data(i);
       end loop;

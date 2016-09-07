@@ -12,7 +12,7 @@ TESTBENCHES=TB_CLA_pg_network.vhd TB_CLA_upper_network_element.vhd TB_CLA_lower_
 DEP_DIR=../ALU_misc
 DEPENDENCIES=$(DEP_DIR)/bit_mux_2to1.vhd $(DEP_DIR)/mux_2to1.vhd $(DEP_DIR)/full_adder.vhd \
              $(DEP_DIR)/ripple_carry_adder.vhd $(DEP_DIR)/carry_select_adder.vhd
-PACKAGES=../ALU_packages/ALU_pkg.vhd
+PACKAGES=../ALU_packages/DLX_pkg.vhd
 
 all : $(TESTBENCHES) $(SOURCES) $(DEPENDENCIES) $(PACKAGES)
 	if [ ! -d $(LIBRARY_PATH) ]; then $(CREATE_LIBRARY) $(LIBRARY_PATH);fi

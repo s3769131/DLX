@@ -11,6 +11,7 @@ entity forwarding_unit is
     FU_IDEX_IR1006  : in  std_logic_vector(3 downto 0);
     FU_IDEX_IR1511  : in  std_logic_vector(3 downto 0);
     FU_IT_SOURCE    : in  std_logic_vector(1 downto 0);
+    
     FU_TOP_ALU      : out std_logic_vector(1 downto 0);
     FU_BOT_ALU      : out std_logic_vector(1 downto 0)
   );

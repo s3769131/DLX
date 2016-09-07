@@ -1,30 +1,28 @@
 library ieee;
 use ieee.std_logic_1164.all;
+use ieee.std_logic_misc.all;
 
 entity LU_bit_logic_unit is
-   port(
-      LU_BIT_LOGIC_UNIT_sel  :  in    std_logic_vector(0 to 3);
-      LU_BIT_LOGIC_UNIT_op1  :  in    std_logic;
-      LU_BIT_LOGIC_UNIT_op2  :  in    std_logic;
-      LU_BIT_LOGIC_UNIT_res  :  out   std_logic);
+    port(
+        LU_BIT_LOGIC_UNIT_sel   :   in  std_logic_vector(3 downto 0);
+        LU_BIT_LOGIC_UNIT_op1   :   in  std_logic;
+        LU_BIT_LOGIC_UNIT_op2   :   in  std_logic;
+        LU_BIT_LOGIC_UNIT_res   :   out std_logic);
 end LU_bit_logic_unit;
 
-architecture bhv of LU_bit_logic_unit is
+architecture dflow of LU_bit_logic_unit is
+    signal s_tmp    :   std_logic_vector(3 downto 0);
 begin
 
-   MAIN : process(LU_BIT_LOGIC_UNIT_op1, LU_BIT_LOGIC_UNIT_op2, LU_BIT_LOGIC_UNIT_sel)
-      variable tmp0, tmp1, tmp2, tmp3  :  std_logic;
-   begin
-      tmp0  := not (LU_BIT_LOGIC_UNIT_sel(0) and (not LU_BIT_LOGIC_UNIT_op1) and (not LU_BIT_LOGIC_UNIT_op2));
-      tmp1  := not (LU_BIT_LOGIC_UNIT_sel(1) and (not LU_BIT_LOGIC_UNIT_op1) and LU_BIT_LOGIC_UNIT_op2);
-      tmp2  := not (LU_BIT_LOGIC_UNIT_sel(2) and LU_BIT_LOGIC_UNIT_op1 and (not LU_BIT_LOGIC_UNIT_op2));
-      tmp3  := not (LU_BIT_LOGIC_UNIT_sel(3) and LU_BIT_LOGIC_UNIT_op1 and LU_BIT_LOGIC_UNIT_op2);
-      LU_BIT_LOGIC_UNIT_res  <= not (tmp0 and tmp1 and tmp2 and tmp3);
-   end process;
+    s_tmp(0)    <=  not (LU_BIT_LOGIC_UNIT_sel(0) and (not LU_BIT_LOGIC_UNIT_op1) and (not LU_BIT_LOGIC_UNIT_op2));
+    s_tmp(1)    <=  not (LU_BIT_LOGIC_UNIT_sel(1) and (not LU_BIT_LOGIC_UNIT_op1) and LU_BIT_LOGIC_UNIT_op2);
+    s_tmp(2)    <=  not (LU_BIT_LOGIC_UNIT_sel(2) and LU_BIT_LOGIC_UNIT_op1 and (not LU_BIT_LOGIC_UNIT_op2));
+    s_tmp(3)    <=  not (LU_BIT_LOGIC_UNIT_sel(3) and LU_BIT_LOGIC_UNIT_op1 and LU_BIT_LOGIC_UNIT_op2);
+    LU_BIT_LOGIC_UNIT_res   <=  nand_reduce(s_tmp);
 
-end bhv;
+end dflow;
 
-configuration CFG_LU_BIT_LOGIC_UNIT_BHV of LU_bit_logic_unit is
-   for bhv
+configuration CFG_LU_BIT_LOGIC_UNIT_DFLOW of LU_bit_logic_unit is
+   for dflow
    end for;
-end CFG_LU_BIT_LOGIC_UNIT_BHV;
+end CFG_LU_BIT_LOGIC_UNIT_DFLOW;

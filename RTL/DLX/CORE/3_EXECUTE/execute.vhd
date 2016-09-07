@@ -44,7 +44,7 @@ architecture STR of execute is
       BIT_MUX_2to1_out : out std_logic
     );
   end component bit_mux_2to1;
-  
+
   component mux_2to1
     generic(MUX_2to1_NBIT : integer := 4);
     port(
@@ -157,26 +157,26 @@ begin
       ALU_result   => s_alu_out
     );
 
-TARGET_COMP : EQ_COMPARATOR
-  generic map(
-    COMP_NBIT => EXE_NBIT
-  )
-  port map(
-    COMP_A   => s_alu_out,
-    COMP_B   => s_internal_npc,
-    COMP_RES => EXE_WRONG_TARGET
-  );
-  
+  TARGET_COMP : EQ_COMPARATOR
+    generic map(
+      COMP_NBIT => EXE_NBIT
+    )
+    port map(
+      COMP_A   => s_alu_out,
+      COMP_B   => s_internal_npc,
+      COMP_RES => EXE_WRONG_TARGET
+    );
+
   ZERO_COMP : EQ_COMPARATOR
     generic map(
       COMP_NBIT => EXE_NBIT
     )
     port map(
       COMP_A   => EXE_RF_IN1,
-      COMP_B   => (others  => '0'),
+      COMP_B   => (others => '0'),
       COMP_RES => s_zero_comp_out
     );
-  
+
   COND_MUX : bit_mux_2to1
     port map(
       BIT_MUX_2to1_in0 => s_zero_comp_out,
@@ -185,18 +185,38 @@ TARGET_COMP : EQ_COMPARATOR
       BIT_MUX_2to1_out => s_cond_mux_out
     );
 
-s_internal_ir  <= EXE_IR_IN;
-EXE_IR_OUT  <=  s_internal_ir;
+  s_internal_ir <= EXE_IR_IN;
+  EXE_IR_OUT    <= s_internal_ir;
 
-s_internal_npc  <=  EXE_NPC_IN;
-EXE_NPC_OUT  <= s_internal_npc;
+  s_internal_npc <= EXE_NPC_IN;
+  EXE_NPC_OUT    <= s_internal_npc;
 
-EXE_ALU_OUT <= s_alu_out;
+  EXE_ALU_OUT <= s_alu_out;
 
-s_zero_comp_out_inv  <=  not s_zero_comp_out;
+  s_zero_comp_out_inv <= not s_zero_comp_out;
 
-EXE_CALC_COND <= s_cond_mux_out;
-EXE_WRONG_COND <= s_cond_mux_out xor EXE_PRED_COND;
-
+  EXE_CALC_COND  <= s_cond_mux_out;
+  EXE_WRONG_COND <= s_cond_mux_out xor EXE_PRED_COND;
 
 end architecture STR;
+
+configuration CFG_EXECUTE_STR of EXECUTE is
+  for STR
+    for all : mux_2to1
+      use configuration work.CFG_BIT_MUX_2to1_BHV;
+    end for;
+
+    for all : mux_4to1
+      use configuration work.CFG_BIT_MUX_4to1_BHV;
+    end for;
+
+    for ALU_inst : ALU
+      use configuration work.ALU;
+    end for;
+
+    for all : EQ_COMPARATOR
+      use configuration work.CFG_EQ_COMPARATOR_DFLOW;
+    end for;
+  end for;
+end configuration CFG_EXECUTE_STR;
+

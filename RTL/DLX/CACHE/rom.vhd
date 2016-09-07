@@ -2,7 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use std.textio.all;
 use ieee.numeric_std.all;
-use ieee.std_logic_textio.all;
+--use ieee.std_logic_textio.all;
 use work.MEM_pkg.all;
 
 
@@ -64,3 +64,9 @@ begin
   ROM_DATA_OUT   <= data_out when valid = '1' else (others => 'Z');
 
 end BHV;
+
+configuration CFG_ROM_BHV of rom is
+  for BHV
+  end for;
+end configuration CFG_ROM_BHV;
+

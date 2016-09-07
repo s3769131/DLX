@@ -1,11 +1,11 @@
 LIBRARY_PATH=../work
-SYNTHESIS_ANALYSIS=../analyze.tcl
+
 VHDL_COMPILER=vcom
 VHDL_COMPILER_OPT=-work $(LIBRARY_PATH) -2002 -bindAtCompile -check_synthesis
 CREATE_LIBRARY=vlib
 
-SOURCES=ALU_comparator.vhd
-TESTBENCHES=TB_ALU_comparator.vhd
+SOURCES=COMP_bit_comparator.vhd ALU_comparator.vhd
+TESTBENCHES=TB_COMP_bit_comparator.vhd TB_ALU_comparator.vhd
 PACKAGES=../ALU_packages/ALU_pkg.vhd
 
 all : $(TESTBENCHES) $(SOURCES) $(PACKAGES)
@@ -16,7 +16,3 @@ all : $(TESTBENCHES) $(SOURCES) $(PACKAGES)
 sources : $(SOURCES) $(PACKAGES)
 	if [ ! -d $(LIBRARY_PATH) ]; then $(CREATE_LIBRARY) $(LIBRARY_PATH);fi
 	$(VHDL_COMPILER) $(VHDL_COMPILER_OPT) $(SOURCES)
-
-synthesis : $(SOURCES) $(DEPENDENCIES) $(PACKAGES)
-			if [ ! -d $(SYNTHESIS_ANALYSIS) ]; then touch $(SYNTHESIS_ANALYSIS); fi
-			echo analyze -format vhdl -library WORK { $(SOURCES) } >> $(SYNTHESIS_ANALYSIS)

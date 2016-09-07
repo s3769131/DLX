@@ -34,13 +34,13 @@ begin
       s_LU_BIT_LOGIC_UNIT_op1 <= '0';
       s_LU_BIT_LOGIC_UNIT_op2 <= '0';
 
-      s_LU_BIT_LOGIC_UNIT_sel <= "0001";  -- bitwise AND
+      s_LU_BIT_LOGIC_UNIT_sel <= "1000";  -- bitwise AND
       wait for 1 ns;
-      s_LU_BIT_LOGIC_UNIT_sel <= "1110";  -- bitwise NAND
+      s_LU_BIT_LOGIC_UNIT_sel <= "0111";  -- bitwise NAND
       wait for 1 ns;
-      s_LU_BIT_LOGIC_UNIT_sel <= "0111";  -- bitwise OR
+      s_LU_BIT_LOGIC_UNIT_sel <= "1110";  -- bitwise OR
       wait for 1 ns;
-      s_LU_BIT_LOGIC_UNIT_sel <= "1000";  -- bitwise NOR
+      s_LU_BIT_LOGIC_UNIT_sel <= "0001";  -- bitwise NOR
       wait for 1 ns;
       s_LU_BIT_LOGIC_UNIT_sel <= "0110";  -- bitwise XOR
       wait for 1 ns;

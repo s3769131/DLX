@@ -20,7 +20,7 @@ begin
   COMP_RES     <= and_reduce(s_partial_eq);
 end architecture STR;
 
-configuration CFG_EQ_COMPARATOR_STR of EQ_COMPARATOR is
+configuration CFG_EQ_COMPARATOR_DFLOW of EQ_COMPARATOR is
   for STR
   end for;
-end configuration CFG_EQ_COMPARATOR_STR;
+end configuration CFG_EQ_COMPARATOR_DFLOW;

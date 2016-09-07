@@ -63,7 +63,7 @@ begin
   a <= MEM_DATA_IN;                    
   MEM_DATA_OUT <= b;                  
    
-    PROCESS (MEM_CU_READNOTWRITE, MEM_INTERFACE)          -- Behavioral representation 
+    PROCESS (MEM_CU_READNOTWRITE, MEM_INTERFACE, a)          -- Behavioral representation 
         BEGIN                    -- of tri-states.
         IF( MEM_CU_READNOTWRITE = '1') THEN
             MEM_INTERFACE <= (others => 'Z');

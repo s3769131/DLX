@@ -1,7 +1,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
-use work.REGF_pkg.all;
+use work.DLX_pkg.all;
 
 entity TB_REGF_register_file is
 end TB_REGF_register_file;
@@ -65,13 +65,13 @@ begin
     INPUT_STIMULI_PROCESS : process
     begin
         s_REGF_rst  <= '0';
-        wait for 1 ns;
+        wait for 1.5 ns;
         s_REGF_rst  <= '1';
         wait for 2 ns;
         LOAD_VALUES : for i in 0 to c_REGF_NREG-1 loop
             s_REGF_write_en <=  '1';
             s_REGF_write_data   <=  std_logic_vector(to_unsigned(i+3,c_REGF_NBIT));
-            s_REGF_write_addr   <=  std_logic_vector(to_unsigned(i,c_REGF_NBIT));
+            s_REGF_write_addr   <=  std_logic_vector(to_unsigned(i,log2ceil(c_REGF_NREG)));
             wait for 2 ns;
         end loop;
 
@@ -79,8 +79,8 @@ begin
 
         wait for 2 ns;
         READ_VALUES : for i in 0 to c_REGF_NREG-1 loop
-            s_REGF_read_addr1   <=  std_logic_vector(to_unsigned(i,c_REGF_NBIT));
-            s_REGF_read_addr2   <=  std_logic_vector(to_unsigned(i+1,c_REGF_NBIT));
+            s_REGF_read_addr1   <=  std_logic_vector(to_unsigned(i,log2ceil(c_REGF_NREG)));
+            s_REGF_read_addr2   <=  std_logic_vector(to_unsigned(i+1,log2ceil(c_REGF_NREG)));
             wait for 2 ns;
         end loop;
 
@@ -89,7 +89,7 @@ begin
 
         wait for 4 ns;
         CHECK_RESET : for i in 0 to c_REGF_NREG-1 loop
-            s_REGF_read_addr1   <=  std_logic_vector(to_unsigned(i,c_REGF_NBIT));
+            s_REGF_read_addr1   <=  std_logic_vector(to_unsigned(i,log2ceil(c_REGF_NREG)));
             wait for 2 ns;
         end loop;
         wait;
