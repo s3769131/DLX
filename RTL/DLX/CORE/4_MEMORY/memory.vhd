@@ -71,8 +71,8 @@ begin
       MEM_INTERFACE            <= (others => 'Z');
     else
       if (MEM_CU_READNOTWRITE = '0') then
-        s_internal_data_from_mem  <= MEM_INTERFACE;
-        MEM_INTERFACE <= MEM_DATA_IN;
+        s_internal_data_from_mem <= MEM_INTERFACE;
+        MEM_INTERFACE            <= MEM_DATA_IN;
       end if;
     end if;
   end process;
@@ -124,3 +124,15 @@ begin
   MEM_ADDRESS_OUT    <= s_internal_address;
 
 end architecture STR;
+
+configuration CFG_MEMORY_STR of MEMORY is
+  for STR
+    for all : sign_extention
+      use configuration work.CFG_SIGN_EXTENTION_STR;
+    end for;
+    for all : mux_4to1
+      use configuration work.CFG_MUX_4to1_BHV;
+    end for;
+  end for;
+end configuration CFG_MEMORY_STR;
+
