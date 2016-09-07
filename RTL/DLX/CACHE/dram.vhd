@@ -1,0 +1,75 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+use std.textio.all;
+use work.MEM_pkg.all;
+
+entity DRAM is
+  generic(
+    DRAM_FILEPATH_DUMP : string;
+    DRAM_FILEPATH_INIT : string;
+    DRAM_WORDSIZE      : integer := 32;
+    DRAM_ENTRIES       : integer := 2 ** 32
+  );
+  port(
+    DRAM_CLK          : in    std_logic;
+    DRAM_RST          : in    std_logic;
+    DRAM_ADDRESS      : in    std_logic_vector(log2ceil(DRAM_ENTRIES) - 1 downto 0);
+    DRAM_ENABLE       : in    std_logic;
+    DRAM_READNOTWRITE : in    std_logic;
+    DRAM_DATA_READY   : out   std_logic;
+    DRAM_INOUT_DATA   : inout std_logic_vector(DRAM_WORDSIZE - 1 downto 0)
+  );
+end entity DRAM;
+
+architecture BHV of DRAM is
+  signal DRAM : MEMORY_TYPE(DRAM_ENTRIES - 1 downto 0, DRAM_WORDSIZE - 1 downto 0) := initilize_mem_from_file(DRAM_ENTRIES, DRAM_WORDSIZE, DRAM_FILEPATH_INIT);
+
+  signal tmp_data                  : std_logic_vector(DRAM_WORDSIZE - 1 downto 0);
+  signal int_data_ready, mem_ready : std_logic;
+
+
+begin
+  --write_process
+  WR_PROCESS : process(DRAM_CLK, DRAM_RST)
+  begin                                 -- process
+    if DRAM_RST = '1' then                   -- asynchronous reset (active low)
+      for index in 0 to DRAM_ENTRIES - 1 loop
+        for i in 0 to DRAM_WORDSIZE - 1 loop
+          DRAM(index, i) <= '0';
+        end loop;
+      end loop;
+
+      int_data_ready <= '0';
+      mem_ready      <= '0';
+
+    elsif DRAM_CLK'event and DRAM_CLK = '1' then  -- rising clock edge
+      if (DRAM_ENABLE = '1') then
+        if (DRAM_READNOTWRITE = '0') then
+          for i in 0 to DRAM_WORDSIZE - 1 loop
+            DRAM(to_integer(unsigned(DRAM_ADDRESS)), i) <= DRAM_INOUT_DATA(i);
+          end loop;
+          mem_ready <= '1';
+        else
+          for i in 0 to DRAM_WORDSIZE - 1 loop
+            tmp_data(i) <= DRAM(to_integer(unsigned(DRAM_ADDRESS)), i);
+          end loop;
+          int_data_ready <= '1';
+        end if;
+      else
+        mem_ready      <= '0';
+        int_data_ready <= '0';
+      end if;
+    end if;
+  end process;
+  rewrite_contenent(DRAM, DRAM_FILEPATH_DUMP); -- refresh the file
+  DRAM_INOUT_DATA <= tmp_data when int_data_ready = '1' else (others => 'Z'); -- to cache
+  DRAM_DATA_READY <= int_data_ready or mem_ready; --delay add
+end architecture BHV;
+
+configuration CFG_DRAM_BHV of DRAM is
+  for BHV
+  end for;
+end configuration CFG_DRAM_BHV;
+
+

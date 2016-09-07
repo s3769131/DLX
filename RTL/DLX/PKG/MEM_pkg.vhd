@@ -1,6 +1,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use std.textio.all;
+use ieee.std_logic_textio.all;
 
 
 package MEM_pkg is
@@ -14,6 +15,8 @@ package MEM_pkg is
   procedure HEX_TO_BITV(L : inout LINE; VALUE : out BIT_VECTOR);
   procedure HEX_TO_UV(L : inout LINE; VALUE : out STD_ULOGIC_VECTOR);
   procedure HEX_TO_LV(L : inout LINE; VALUE : out STD_LOGIC_VECTOR);
+  procedure rewrite_contenent(data : in MEMORY_TYPE; path_file : string);
+  
   impure function initilize_mem_from_file(ENTRIES : integer; WORD_SIZE : integer; FILE_PATH : string) return MEMORY_TYPE;
 end package MEM_pkg;
 
@@ -164,5 +167,25 @@ package body MEM_pkg is
 
     return tmp_mem;
   end function initilize_mem_from_file;
+
+
+  procedure rewrite_contenent(MEMORY : in MEMORY_TYPE; ENTRIES : integer; NBIT: integer; FILEPATH : string) is
+    variable index : natural range 0 to ENTRIES;
+    file wr_file : text;
+    variable line_in : line;
+    variable tmp_data : std_logic_vector ( NBIT -1 downto 0);
+  begin
+    index := 0;
+    file_open(wr_file, FILEPATH, WRITE_MODE);
+    while index < ENTRIES loop
+    for i in 0 to NBIT - 1 loop
+      tmp_data(i) := MEMORY(index,i);
+    end loop;
+      hwrite(line_in, tmp_data);
+      writeline(wr_file, line_in);
+      index := index + 1;
+    end loop;
+  end rewrite_contenent;
+
 
 end package body MEM_pkg;
