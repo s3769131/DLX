@@ -9,7 +9,7 @@ entity DRAM is
     DRAM_FILEPATH_DUMP : string;
     DRAM_FILEPATH_INIT : string;
     DRAM_WORDSIZE      : integer := 32;
-    DRAM_ENTRIES       : integer := 2 ** 32
+    DRAM_ENTRIES       : natural := 2 ** 32
   );
   port(
     DRAM_CLK          : in    std_logic;
@@ -62,7 +62,7 @@ begin
       end if;
     end if;
   end process;
-  rewrite_contenent(DRAM, DRAM_FILEPATH_DUMP); -- refresh the file
+  rewrite_contenent(DRAM, DRAM_ENTRIES, DRAM_WORDSIZE, DRAM_FILEPATH_DUMP); -- refresh the file
   DRAM_INOUT_DATA <= tmp_data when int_data_ready = '1' else (others => 'Z'); -- to cache
   DRAM_DATA_READY <= int_data_ready or mem_ready; --delay add
 end architecture BHV;

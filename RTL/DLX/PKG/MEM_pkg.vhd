@@ -15,7 +15,8 @@ package MEM_pkg is
   procedure HEX_TO_BITV(L : inout LINE; VALUE : out BIT_VECTOR);
   procedure HEX_TO_UV(L : inout LINE; VALUE : out STD_ULOGIC_VECTOR);
   procedure HEX_TO_LV(L : inout LINE; VALUE : out STD_LOGIC_VECTOR);
-  procedure rewrite_contenent(MEMORY : in MEMORY_TYPE; ENTRIES : integer; NBIT: integer; FILEPATH : string);
+    
+  procedure rewrite_contenent(MEMORY : in MEMORY_TYPE; ENTRIES : natural; NBIT: integer; FILEPATH : string);
   
   impure function initilize_mem_from_file(ENTRIES : integer; WORD_SIZE : integer; FILE_PATH : string) return MEMORY_TYPE;
 end package MEM_pkg;
@@ -169,7 +170,7 @@ package body MEM_pkg is
   end function initilize_mem_from_file;
 
 
-  procedure rewrite_contenent(MEMORY : in MEMORY_TYPE; ENTRIES : integer; NBIT: integer; FILEPATH : string) is
+  procedure rewrite_contenent(MEMORY : in MEMORY_TYPE; ENTRIES : natural; NBIT: integer; FILEPATH : string) is
     variable index : natural range 0 to ENTRIES;
     file wr_file : text;
     variable line_in : line;
