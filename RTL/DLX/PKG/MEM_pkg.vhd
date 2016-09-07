@@ -15,7 +15,7 @@ package MEM_pkg is
   procedure HEX_TO_BITV(L : inout LINE; VALUE : out BIT_VECTOR);
   procedure HEX_TO_UV(L : inout LINE; VALUE : out STD_ULOGIC_VECTOR);
   procedure HEX_TO_LV(L : inout LINE; VALUE : out STD_LOGIC_VECTOR);
-  procedure rewrite_contenent(data : in MEMORY_TYPE; path_file : string);
+  procedure rewrite_contenent(MEMORY : in MEMORY_TYPE; ENTRIES : integer; NBIT: integer; FILEPATH : string);
   
   impure function initilize_mem_from_file(ENTRIES : integer; WORD_SIZE : integer; FILE_PATH : string) return MEMORY_TYPE;
 end package MEM_pkg;
