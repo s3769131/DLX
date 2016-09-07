@@ -71,7 +71,7 @@ begin
       MEM_INTERFACE            <= (others => 'Z');
     else
       if (MEM_CU_READNOTWRITE = '0') then
-        MEM_DATA_OUT  <= MEM_INTERFACE;
+        s_internal_data_from_mem  <= MEM_INTERFACE;
         MEM_INTERFACE <= MEM_DATA_IN;
       end if;
     end if;
