@@ -51,12 +51,16 @@ UUT : memory
   );
 
 process
-begin 
+begin
 wait for 1 ns;
-s_INTERFACE <= (others => '1');
+-- Read from memory
+s_CU_READNOTWRITE <= '1';
+s_INTERFACE <= x"AAAAAAAA";
 wait for 1 ns;
-s_DATA_IN <= (others => '0');
-s_CU_READNOTWRITE <= '0';
+-- Write in memory
+s_INTERFACE <= (others => 'Z');
+s_DATA_IN <= x"EEEEEEEE";
+s_CU_READNOTWRITE <= '0';x
 wait;
 end process;
 
