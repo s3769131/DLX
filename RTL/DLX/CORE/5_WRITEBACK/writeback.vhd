@@ -16,8 +16,9 @@ entity writeback is
 
     WB_DATA_FROM_MEM  : in  std_logic_vector(WB_DATA_NBIT - 1 downto 0);
     WB_DATA_FROM_ALU  : in  std_logic_vector(WB_DATA_NBIT - 1 downto 0);
-    WB_CU_MUX_CONTROL : in  std_logic;
-    WB_DATA_TO_RF     : out std_logic_vector(WB_DATA_NBIT - 1 downto 0)
+    WB_DATA_TO_RF     : out std_logic_vector(WB_DATA_NBIT - 1 downto 0);
+    
+    WB_CU_MUX_CONTROL : in  std_logic
   );
 end entity writeback;
 

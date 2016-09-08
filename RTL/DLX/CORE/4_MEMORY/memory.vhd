@@ -20,10 +20,10 @@ entity memory is
     MEM_ADDRESS_OUT     : out   std_logic_vector(MEM_ADDR_NBIT - 1 downto 0); --
 
     MEM_DATA_IN         : in    std_logic_vector(MEM_DATA_NBIT - 1 downto 0); --
-    MEM_CU_READNOTWRITE : in    std_logic; --
     MEM_DATA_OUT        : out   std_logic_vector(MEM_DATA_NBIT - 1 downto 0); --
     MEM_INTERFACE       : inout std_logic_vector(MEM_DATA_NBIT - 1 downto 0); --
 
+    MEM_CU_READNOTWRITE : in    std_logic; --
     MEM_CU_SIGNED_LOAD  : in    std_logic;
     MEM_CU_LOAD_TYPE    : in    std_logic_vector(1 downto 0)
   );

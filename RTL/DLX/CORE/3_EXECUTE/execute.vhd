@@ -23,13 +23,13 @@ entity execute is
     EXE_FW_ALU_FROM_WB  : in  std_logic_vector(EXE_ALU_NBIT - 1 downto 0); -- ALU data coming from WB stage
     EXE_FW_MEM_FROM_WB  : in  std_logic_vector(EXE_ALU_NBIT - 1 downto 0); -- MEM data coming from WB stage
 
-    EXE_BRANCH_TYPE     : in  std_logic; -- Identify the type of branch under execution (0 for bz, 1 for bnz)
     EXE_PRED_COND       : in  std_logic; -- Predicted condition of a branch (comes from BPU)
     EXE_CALC_COND       : out std_logic; -- Calculated condition of a branch
     EXE_WRONG_COND      : out std_logic; -- Signal to identify the condition in which the predicted branch condition is wrong (may be useless)
     EXE_WRONG_TARGET    : out std_logic; -- Signal to identify the condition in which the predicted branch target is wrong (may be useless)
     EXE_ALU_OUT         : out std_logic_vector(EXE_ALU_NBIT - 1 downto 0); -- Output of ALU logic
 
+    EXE_CU_BRANCH_TYPE     : in  std_logic; -- Identify the type of branch under execution (0 for bz, 1 for bnz)
     EXE_CU_ALU_CONTROL  : in  std_logic_vector(5 downto 0); -- Control signal for ALU operation selection
     EXE_CU_TOP_MUX      : in  std_logic; -- Signal from general CU for top multiplexer
     EXE_CU_BOT_MUX      : in  std_logic; -- Signal from general CU for bottom multiplexer
@@ -184,7 +184,7 @@ begin
     port map(
       BIT_MUX_2to1_in0 => s_zero_comp_out,
       BIT_MUX_2to1_in1 => s_zero_comp_out_inv,
-      BIT_MUX_2to1_sel => EXE_BRANCH_TYPE,
+      BIT_MUX_2to1_sel => EXE_CU_BRANCH_TYPE,
       BIT_MUX_2to1_out => s_cond_mux_out
     );
 

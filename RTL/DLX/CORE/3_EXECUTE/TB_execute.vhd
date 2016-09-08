@@ -19,7 +19,7 @@ architecture TEST of TB_execute is
       EXE_FW_ALU_FROM_MEM : in  std_logic_vector(EXE_NBIT - 1 downto 0);
       EXE_FW_ALU_FROM_WB  : in  std_logic_vector(EXE_NBIT - 1 downto 0);
       EXE_FW_MEM_FROM_WB  : in  std_logic_vector(EXE_NBIT - 1 downto 0);
-      EXE_BRANCH_TYPE     : in  std_logic;
+      EXE_CU_BRANCH_TYPE     : in  std_logic;
       EXE_PRED_COND       : in  std_logic;
       EXE_CALC_COND       : out std_logic;
       EXE_WRONG_COND      : out std_logic;
@@ -74,7 +74,7 @@ begin
       EXE_FW_ALU_FROM_MEM => s_FW_ALU_FROM_MEM,
       EXE_FW_ALU_FROM_WB  => s_FW_ALU_FROM_WB,
       EXE_FW_MEM_FROM_WB  => s_FW_MEM_FROM_WB,
-      EXE_BRANCH_TYPE     => s_BRANCH_TYPE,
+      EXE_CU_BRANCH_TYPE     => s_BRANCH_TYPE,
       EXE_PRED_COND       => s_PRED_COND,
       EXE_CALC_COND       => s_CALC_COND,
       EXE_WRONG_COND      => s_WRONG_COND,
