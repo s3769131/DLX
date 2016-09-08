@@ -19,7 +19,7 @@ architecture TEST of TB_d_register is
             REG_data_out    :   out std_logic_vector(REG_NBIT-1 downto 0));
     end component;
 
-    constant c_REG_NBIT :   integer :=  4;
+    constant c_REG_NBIT :   integer :=  1;
 
     signal  s_REG_clk       :   std_logic                               :=  '0';
     signal  s_REG_rst       :   std_logic                               :=  '0';
@@ -49,21 +49,21 @@ begin
         wait for 1 ns;
     end process;
 
-    INPUT_STIMULI_PROCESS : process
-    begin
-        s_REG_rst       <= '0';
-        s_REG_clr       <= '0';
-        s_REG_enable    <= '0';
-        s_REG_data_in   <= (others => '0');
-        wait for 2.5 ns;
-
-        s_REG_rst       <= '1';
-        s_REG_data_in   <=  x"f";
-        wait for 1 ns;
-        s_REG_enable    <= '1';
-        wait for 1 ns;
-        s_REG_data_in   <=  x"a";
-        wait;
-    end process;
+   -- INPUT_STIMULI_PROCESS : process
+   -- begin
+   --     s_REG_rst       <= '0';
+   --     s_REG_clr       <= '0';
+   --     s_REG_enable    <= '0';
+   --     s_REG_data_in   <= (others => '0');
+   --     wait for 2.5 ns;
+   --
+   --     s_REG_rst       <= '1';
+   --     s_REG_data_in   <=  x"f";
+   --     wait for 1 ns;
+   --     s_REG_enable    <= '1';
+   --     wait for 1 ns;
+   --     s_REG_data_in   <=  x"a";
+   --     wait;
+   -- end process;
 
 end TEST;
