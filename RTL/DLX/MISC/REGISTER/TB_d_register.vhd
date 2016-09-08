@@ -75,11 +75,11 @@ begin
     wait for 2.5 ns;                   
                                        
     s_REG_rst       <= '1';            
-    s_REG_data_in   <=  x"1";          
+    s_REG_data_in   <=  "1";          
     wait for 1 ns;                     
     s_REG_enable    <= '1';            
     wait for 1 ns;                     
-    s_REG_data_in   <=  x"0";          
+    s_REG_data_in   <=  "0";          
     wait;                              
 end process;                           
    
