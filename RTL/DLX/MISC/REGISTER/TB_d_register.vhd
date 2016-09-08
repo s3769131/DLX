@@ -65,5 +65,38 @@ begin
    --     s_REG_data_in   <=  x"a";
    --     wait;
    -- end process;
+   
+   INPUT_STIMULI_PROCESS : process        
+begin                                  
+    s_REG_rst       <= '0';            
+    s_REG_clr       <= '0';            
+    s_REG_enable    <= '0';            
+    s_REG_data_in   <= (others => '0');
+    wait for 2.5 ns;                   
+                                       
+    s_REG_rst       <= '1';            
+    s_REG_data_in   <=  x"1";          
+    wait for 1 ns;                     
+    s_REG_enable    <= '1';            
+    wait for 1 ns;                     
+    s_REG_data_in   <=  x"0";          
+    wait;                              
+end process;                           
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
 
 end TEST;
