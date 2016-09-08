@@ -22,8 +22,19 @@ entity core is
     CORE_MEMWB_EN       : in    std_logic; ---Enable signal for pipeling register MEM/WB         
     CORE_MEMWB_CLR      : in    std_logic; ---Clear signal (Sync) for pipeling register MEM/WB  
 
-    CORE_DRAM_INTERFACE : inout std_logic_vector(CORE_DATA_NBIT - 1 downto 0);
-    CORE_DRAM_ADDRESS   : out   std_logic_vector(CORE_ADDR_NBIT - 1 downto 0)
+    CORE_DRAM_INTERFACE : inout std_logic_vector(CORE_DATA_NBIT - 1 downto 0); --
+    CORE_DRAM_ADDRESS   : out   std_logic_vector(CORE_ADDR_NBIT - 1 downto 0); --
+
+    CU_EX_BRANCH_TYPE   : in    std_logic;
+    CU_EX_ALU_CONTROL   : in    std_logic_vector(5 downto 0);
+    CU_EX_TOP_MUX       : in    std_logic;
+    CU_EX_BOT_MUX       : in    std_logic;
+    CU_EX_FW_TOP_MUX    : in    std_logic_vector(1 downto 0);
+    CU_EX_FW_BOT_MUX    : in    std_logic_vector(1 downto 0);
+    CU_MEM_READNOTWRITE : in    std_logic;
+    CU_MEM_SIGNED_LOAD  : in    std_logic;
+    CU_MEM_LOAD_TYPE    : in    std_logic_vector(1 downto 0);
+    CU_WB_MUX_CONTROL   : in    std_logic
   );
 end entity core;
 
@@ -481,10 +492,21 @@ begin
       WB_DATA_TO_RF     => s_WB_DATA_TO_RF,
       WB_CU_MUX_CONTROL => s_CU_WB_MUX_CONTROL
     );
-    
---- Forwarding data
-s_FW_ALU_FROM_MEM <= s_EXMEM_ALU_OUT ;
-s_FW_ALU_FROM_WB  <= s_MEMWB_DATA_FROM_ALU;
-s_FW_MEM_FROM_WB  <= s_MEMWB_DATA_FROM_MEM;
 
+  --- Forwarding data
+  s_FW_ALU_FROM_MEM <= s_EXMEM_ALU_OUT;
+  s_FW_ALU_FROM_WB  <= s_MEMWB_DATA_FROM_ALU;
+  s_FW_MEM_FROM_WB  <= s_MEMWB_DATA_FROM_MEM;
+
+  --- Control signals
+  s_CU_EX_BRANCH_TYPE   <= CU_EX_BRANCH_TYPE;
+  s_CU_EX_ALU_CONTROL   <= CU_EX_ALU_CONTROL;
+  s_CU_EX_TOP_MUX       <= CU_EX_TOP_MUX;
+  s_CU_EX_BOT_MUX       <= CU_EX_BOT_MUX;
+  s_CU_EX_FW_TOP_MUX    <= CU_EX_FW_TOP_MUX;
+  s_CU_EX_FW_BOT_MUX    <= CU_EX_FW_BOT_MUX;
+  s_CU_MEM_READNOTWRITE <= CU_MEM_READNOTWRITE;
+  s_CU_MEM_SIGNED_LOAD  <= CU_MEM_SIGNED_LOAD;
+  s_CU_MEM_LOAD_TYPE    <= CU_MEM_LOAD_TYPE;
+  s_CU_WB_MUX_CONTROL   <= CU_WB_MUX_CONTROL;
 end architecture STR;
