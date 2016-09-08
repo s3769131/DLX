@@ -78,7 +78,7 @@ begin
     s_REG_data_in   <=  "1";          
     wait for 1 ns;                     
     s_REG_enable    <= '1';            
-    wait for 1 ns;                     
+    wait for 2 ns;                     
     s_REG_data_in   <=  "0";          
     wait;                              
 end process;                           
