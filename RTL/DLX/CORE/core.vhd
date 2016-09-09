@@ -250,12 +250,13 @@ architecture STR of core is
   signal s_DX_OUT_rf_addr_dest  : std_logic_vector(log2ceil(CORE_RF_NREG) - 1 downto 0);
 
   --- Pipelined signals coming from DX/EX pipelining registers to EXECUTE
-  signal ps_DXEX_IR_IN     : std_logic_vector(CORE_IR_NBIT - 1 downto 0);
-  signal ps_DXEX_NPC_IN    : std_logic_vector(CORE_PC_NBIT - 1 downto 0);
-  signal ps_DXEX_RF_IN1    : std_logic_vector(CORE_ALU_NBIT - 1 downto 0);
-  signal ps_DXEX_RF_IN2    : std_logic_vector(CORE_ALU_NBIT - 1 downto 0);
-  signal ps_DXEX_IMM_IN    : std_logic_vector(CORE_ALU_NBIT - 1 downto 0);
-  signal ps_DXEX_PRED_COND : std_logic;
+  signal ps_DXEX_rf_addr_dest : std_logic_vector(log2ceil(CORE_RF_NREG) - 1 downto 0);
+  signal ps_DXEX_IR_IN        : std_logic_vector(CORE_IR_NBIT - 1 downto 0);
+  signal ps_DXEX_NPC_IN       : std_logic_vector(CORE_PC_NBIT - 1 downto 0);
+  signal ps_DXEX_RF_IN1       : std_logic_vector(CORE_ALU_NBIT - 1 downto 0);
+  signal ps_DXEX_RF_IN2       : std_logic_vector(CORE_ALU_NBIT - 1 downto 0);
+  signal ps_DXEX_IMM_IN       : std_logic_vector(CORE_ALU_NBIT - 1 downto 0);
+  signal ps_DXEX_PRED_COND    : std_logic;
 
   --- Signals from EXECUTE to EX/MEM pipelining registers  
   signal s_EX_OUT_IR_OUT       : std_logic_vector(CORE_IR_NBIT - 1 downto 0);
@@ -279,10 +280,11 @@ architecture STR of core is
   signal s_FW_MEM_FROM_WB  : std_logic_vector(CORE_ALU_NBIT - 1 downto 0);
 
   --- Pipelined signals coming from EX/MEM pipelining registers to MEMORY
-  signal ps_EXMEM_IR_IN   : std_logic_vector(CORE_IR_NBIT - 1 downto 0);
-  signal ps_EXMEM_NPC_IN  : std_logic_vector(CORE_PC_NBIT - 1 downto 0);
-  signal ps_EXMEM_ALU_OUT : std_logic_vector(CORE_ADDR_NBIT - 1 downto 0);
-  signal ps_EXMEM_DATA_IN : std_logic_vector(CORE_DATA_NBIT - 1 downto 0);
+  signal ps_EXMEM_rf_addr_dest : std_logic_vector(log2ceil(CORE_RF_NREG) - 1 downto 0);
+  signal ps_EXMEM_IR_IN        : std_logic_vector(CORE_IR_NBIT - 1 downto 0);
+  signal ps_EXMEM_NPC_IN       : std_logic_vector(CORE_PC_NBIT - 1 downto 0);
+  signal ps_EXMEM_ALU_OUT      : std_logic_vector(CORE_ADDR_NBIT - 1 downto 0);
+  signal ps_EXMEM_DATA_IN      : std_logic_vector(CORE_DATA_NBIT - 1 downto 0);
 
   --- Signals coming from MEMORY to MEM/WB pipelining registers
   signal s_MEM_OUT_IR_OUT      : std_logic_vector(CORE_IR_NBIT - 1 downto 0);
@@ -299,15 +301,17 @@ architecture STR of core is
   signal s_CU_MEM_LOAD_TYPE    : std_logic_vector(1 downto 0);
 
   --- Pipelined signals coming from MEM/WB pipelining registers to WB
+  signal ps_MEMWB_rf_addr_dest  : std_logic_vector(log2ceil(CORE_RF_NREG) - 1 downto 0);
   signal ps_MEMWB_IR_IN         : std_logic_vector(CORE_IR_NBIT - 1 downto 0);
   signal ps_MEMWB_NPC_IN        : std_logic_vector(CORE_PC_NBIT - 1 downto 0);
   signal ps_MEMWB_DATA_FROM_MEM : std_logic_vector(CORE_ALU_NBIT - 1 downto 0);
   signal ps_MEMWB_DATA_FROM_ALU : std_logic_vector(CORE_ALU_NBIT - 1 downto 0);
 
   --- Signal from WB to previous stage
-  signal s_WB_OUT_IR_OUT     : std_logic_vector(CORE_IR_NBIT - 1 downto 0);
-  signal s_WB_OUT_NPC_OUT    : std_logic_vector(CORE_PC_NBIT - 1 downto 0);
-  signal s_WB_OUT_DATA_TO_RF : std_logic_vector(CORE_ALU_NBIT - 1 downto 0);
+  signal s_WB_OUT_IR_OUT       : std_logic_vector(CORE_IR_NBIT - 1 downto 0);
+  signal s_WB_OUT_NPC_OUT      : std_logic_vector(CORE_PC_NBIT - 1 downto 0);
+  signal s_WB_OUT_DATA_TO_RF   : std_logic_vector(CORE_ALU_NBIT - 1 downto 0);
+  signal s_WB_OUT_RF_ADDR_DEST : std_logic_vector(log2ceil(CORE_RF_NREG) - 1 downto 0);
 
   --- Control signals for MEMORY
   signal s_CU_WB_MUX_CONTROL : std_logic;
@@ -401,7 +405,8 @@ begin
   -----------------------------------------------------------------------------
 
 
-  s_DX_IN_rf_addr_write <= fg;          -- from write back
+  s_DX_IN_rf_addr_write <= s_WB_OUT_RF_ADDR_DEST; -- from write back
+  s_DX_IN_rf_data_write <= s_WB_OUT_DATA_TO_RF;
   s_DX_IN_rf_addr_rs    <= ps_FXDX_IR_IN(25 downto 21);
   s_DX_IN_rf_addr_rt    <= ps_FXDX_IR_IN(20 downto 16);
   s_DX_IN_rf_addr_rd    <= ps_FXDX_IR_IN(15 downto 11);
@@ -513,10 +518,23 @@ begin
     port map(
       DFF_clk => CORE_CLK,
       DFF_rst => CORE_RST,
-      DFF_clr => CORE_FXDX_CLR,
+      DFF_clr => CORE_DXEX_CLR,
       DFF_d   => ps_FXDX_BTB_PREDICTION_OUT,
       DFF_q   => ps_DXEX_PRED_COND,
       DFF_nq  => open);
+
+  RF_ADDR_DEST_DXEX : d_register
+    generic map(
+      REG_NBIT => log2ceil(CORE_RF_NREG)
+    )
+    port map(
+      REG_clk      => CORE_CLK,
+      REG_rst      => CORE_RST,
+      REG_clr      => CORE_DXEX_CLR,
+      REG_enable   => CORE_DXEX_EN,
+      REG_data_in  => s_DX_OUT_rf_addr_dest,
+      REG_data_out => ps_DXEX_rf_addr_dest
+    );
 
   -----------------------------------------------------------------------------
   --                              EXECUTE
@@ -608,6 +626,19 @@ begin
       REG_data_out => ps_EXMEM_DATA_IN
     );
 
+  RF_ADDR_DEST_EXMEM : d_register
+    generic map(
+      REG_NBIT => log2ceil(CORE_RF_NREG)
+    )
+    port map(
+      REG_clk      => CORE_CLK,
+      REG_rst      => CORE_RST,
+      REG_clr      => CORE_EXMEM_CLR,
+      REG_enable   => CORE_EXMEM_EN,
+      REG_data_in  => ps_DXEX_rf_addr_dest,
+      REG_data_out => ps_EXMEM_rf_addr_dest
+    );
+
   -----------------------------------------------------------------------------
   --                              MEMORY
   -----------------------------------------------------------------------------
@@ -692,7 +723,18 @@ begin
       REG_data_in  => ps_EXMEM_DATA_IN,
       REG_data_out => ps_MEMWB_DATA_FROM_ALU
     );
-
+  RF_ADDR_DEST_MEMWB : d_register
+    generic map(
+      REG_NBIT => log2ceil(CORE_RF_NREG)
+    )
+    port map(
+      REG_clk      => CORE_CLK,
+      REG_rst      => CORE_RST,
+      REG_clr      => CORE_MEMWB_CLR,
+      REG_enable   => CORE_MEMWB_EN,
+      REG_data_in  => ps_EXMEM_rf_addr_dest,
+      REG_data_out => ps_MEMWB_rf_addr_dest
+    );
   -----------------------------------------------------------------------------
   --                              WRITEBACK
   -----------------------------------------------------------------------------
@@ -714,8 +756,10 @@ begin
       WB_CU_MUX_CONTROL => s_CU_WB_MUX_CONTROL
     );
 
+  s_WB_OUT_RF_ADDR_DEST <= ps_MEMWB_rf_addr_dest;
+
   --- Forwarding data
-  s_FW_ALU_FROM_MEM <= s_EX_OUT_ALU_OUT;
+  s_FW_ALU_FROM_MEM <= ps_EXMEM_ALU_OUT;
   s_FW_ALU_FROM_WB  <= ps_MEMWB_DATA_FROM_ALU;
   s_FW_MEM_FROM_WB  <= ps_MEMWB_DATA_FROM_MEM;
 
