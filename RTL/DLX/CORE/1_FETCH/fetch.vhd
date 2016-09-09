@@ -65,7 +65,7 @@ architecture str of fetch is
       CLA_ovflow : out std_logic);
   end component;
 
-  constant c_slv4 : std_logic_vector(FETCH_PC_NBIT - 1 downto 0) := x"00000004";
+  constant c_slv4 : std_logic_vector(FETCH_PC_NBIT - 1 downto 0) := x"00000004"; ---- CHANGED
 
   signal s_pc_in        : std_logic_vector(FETCH_PC_NBIT - 1 downto 0);
   signal s_pc_out       : std_logic_vector(FETCH_PC_NBIT - 1 downto 0);

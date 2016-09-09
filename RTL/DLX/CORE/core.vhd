@@ -424,7 +424,7 @@ begin
       DECODE_sigext_in       => s_DX_IN_sigext_in,
       DECODE_destination_sel => s_CU_DX_destination_sel,
       DECODE_rf_write_en     => s_CU_DX_rf_write_en,
-      DECODE_rf_data_write   => s_DX_IN_rf_addr_write, -- from wb
+      DECODE_rf_data_write   => s_DX_IN_rf_data_write, -- from wb
       DECODE_rf_addr_write   => s_DX_IN_rf_addr_write, -- from wb
       DECODE_rf_addr_rs      => s_DX_IN_rf_addr_rs,
       DECODE_rf_addr_rt      => s_DX_IN_rf_addr_rt,
