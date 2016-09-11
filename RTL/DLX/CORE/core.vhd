@@ -37,6 +37,7 @@ entity core is
     CU_DX_destination_sel : in    std_logic;
     CU_DX_rf_write_en     : in    std_logic;
     CU_DX_sigext_signed   : in    std_logic;
+    CU_EX_IS_BRANCH       : in    std_logic; -- Signal from CU to identify if the current instruction is a branch (0 is not a branch)
     CU_EX_BRANCH_TYPE     : in    std_logic;
     CU_EX_ALU_CONTROL     : in    std_logic_vector(5 downto 0);
     CU_EX_TOP_MUX         : in    std_logic;
@@ -122,13 +123,14 @@ architecture STR of core is
       EXE_FW_ALU_FROM_MEM : in  std_logic_vector(EXE_ALU_NBIT - 1 downto 0);
       EXE_FW_ALU_FROM_WB  : in  std_logic_vector(EXE_ALU_NBIT - 1 downto 0);
       EXE_FW_MEM_FROM_WB  : in  std_logic_vector(EXE_ALU_NBIT - 1 downto 0);
-      EXE_CU_BRANCH_TYPE  : in  std_logic;
       EXE_PRED_COND       : in  std_logic;
       EXE_CALC_COND       : out std_logic;
       EXE_WRONG_COND      : out std_logic;
       EXE_WRONG_TARGET    : out std_logic;
       EXE_ALU_OUT         : out std_logic_vector(EXE_ALU_NBIT - 1 downto 0);
+      EXE_CU_BRANCH_TYPE  : in  std_logic;
       EXE_CU_ALU_CONTROL  : in  std_logic_vector(5 downto 0);
+      EXE_CU_IS_BRANCH    : in  std_logic; -- Signal from CU to identify if the current instruction is a branch (0 is not a branch)
       EXE_CU_TOP_MUX      : in  std_logic;
       EXE_CU_BOT_MUX      : in  std_logic;
       EXE_CU_FW_TOP_MUX   : in  std_logic_vector(1 downto 0);
@@ -267,6 +269,7 @@ architecture STR of core is
   signal s_EX_OUT_ALU_OUT      : std_logic_vector(CORE_ALU_NBIT - 1 downto 0);
 
   --- Control signals for EXECUTE
+  signal s_CU_EX_IS_BRANCH   : std_logic;
   signal s_CU_EX_BRANCH_TYPE : std_logic;
   signal s_CU_EX_ALU_CONTROL : std_logic_vector(5 downto 0);
   signal s_CU_EX_TOP_MUX     : std_logic;
@@ -353,7 +356,6 @@ begin
   --     REG_enable   => TODO,
   --     REG_data_in  => s_FX_OUT_PC,
   --     REG_data_out => ps_FXDX_pc_in);
-
   -----------------------------------------------------------------------------
   --                              FX/DX REGISTERS
   -----------------------------------------------------------------------------
@@ -562,6 +564,7 @@ begin
       EXE_FW_ALU_FROM_MEM => s_FW_ALU_FROM_MEM,
       EXE_FW_ALU_FROM_WB  => s_FW_ALU_FROM_WB,
       EXE_FW_MEM_FROM_WB  => s_FW_MEM_FROM_WB,
+      EXE_CU_IS_BRANCH    => s_CU_EX_IS_BRANCH,
       EXE_CU_BRANCH_TYPE  => s_CU_EX_BRANCH_TYPE,
       EXE_CU_ALU_CONTROL  => s_CU_EX_ALU_CONTROL,
       EXE_CU_TOP_MUX      => s_CU_EX_TOP_MUX,
@@ -770,13 +773,13 @@ begin
   s_CU_DX_destination_sel <= CU_DX_destination_sel;
   s_CU_DX_rf_write_en     <= CU_DX_rf_write_en;
   s_CU_DX_sigext_signed   <= CU_DX_sigext_signed;
-
-  s_CU_EX_BRANCH_TYPE <= CU_EX_BRANCH_TYPE;
-  s_CU_EX_ALU_CONTROL <= CU_EX_ALU_CONTROL;
-  s_CU_EX_TOP_MUX     <= CU_EX_TOP_MUX;
-  s_CU_EX_BOT_MUX     <= CU_EX_BOT_MUX;
-  s_CU_EX_FW_TOP_MUX  <= CU_EX_FW_TOP_MUX;
-  s_CU_EX_FW_BOT_MUX  <= CU_EX_FW_BOT_MUX;
+  s_CU_EX_IS_BRANCH       <= CU_EX_IS_BRANCH;
+  s_CU_EX_BRANCH_TYPE     <= CU_EX_BRANCH_TYPE;
+  s_CU_EX_ALU_CONTROL     <= CU_EX_ALU_CONTROL;
+  s_CU_EX_TOP_MUX         <= CU_EX_TOP_MUX;
+  s_CU_EX_BOT_MUX         <= CU_EX_BOT_MUX;
+  s_CU_EX_FW_TOP_MUX      <= CU_EX_FW_TOP_MUX;
+  s_CU_EX_FW_BOT_MUX      <= CU_EX_FW_BOT_MUX;
 
   s_CU_MEM_READNOTWRITE <= CU_MEM_READNOTWRITE;
   s_CU_MEM_SIGNED_LOAD  <= CU_MEM_SIGNED_LOAD;

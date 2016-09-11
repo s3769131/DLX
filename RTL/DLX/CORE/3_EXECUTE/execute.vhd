@@ -4,10 +4,10 @@ use ieee.numeric_std.all;
 
 entity execute is
   generic(
-    EXE_PC_NBIT : integer := 32;
-    EXE_IR_NBIT : integer := 32;
-    EXE_ALU_NBIT: integer := 32
-   );
+    EXE_PC_NBIT  : integer := 32;
+    EXE_IR_NBIT  : integer := 32;
+    EXE_ALU_NBIT : integer := 32
+  );
   port(
     EXE_IR_IN           : in  std_logic_vector(EXE_IR_NBIT - 1 downto 0); -- Instruction register in 
     EXE_NPC_IN          : in  std_logic_vector(EXE_PC_NBIT - 1 downto 0); -- Next program counter (it can be the speculated) 
@@ -29,8 +29,8 @@ entity execute is
     EXE_WRONG_TARGET    : out std_logic; -- Signal to identify the condition in which the predicted branch target is wrong (may be useless)
     EXE_ALU_OUT         : out std_logic_vector(EXE_ALU_NBIT - 1 downto 0); -- Output of ALU logic
 
-    EXE_CU_IS_BRANCH : in std_logic; -- Signal from CU to identify if the current instruction is a branch (0 is not a branch)
-    EXE_CU_BRANCH_TYPE     : in  std_logic; -- Identify the type of branch under execution (0 for bz, 1 for bnz)
+    EXE_CU_IS_BRANCH    : in  std_logic; -- Signal from CU to identify if the current instruction is a branch (0 is not a branch)
+    EXE_CU_BRANCH_TYPE  : in  std_logic; -- Identify the type of branch under execution (0 for bz, 1 for bnz)
     EXE_CU_ALU_CONTROL  : in  std_logic_vector(5 downto 0); -- Control signal for ALU operation selection
     EXE_CU_TOP_MUX      : in  std_logic; -- Signal from general CU for top multiplexer
     EXE_CU_BOT_MUX      : in  std_logic; -- Signal from general CU for bottom multiplexer
@@ -100,8 +100,8 @@ architecture STR of execute is
   signal s_zero_comp_out     : std_logic;
   signal s_zero_comp_out_inv : std_logic;
   signal s_cond_mux_out      : std_logic;
-  signal s_wrong_target : std_logic;
-  
+  signal s_wrong_target      : std_logic;
+
 begin
   TOP_MUX : mux_2to1
     generic map(
@@ -200,9 +200,9 @@ begin
 
   s_zero_comp_out_inv <= not s_zero_comp_out;
 
-  EXE_CALC_COND  <= s_cond_mux_out;
-  
-  EXE_WRONG_COND <= (s_cond_mux_out xor EXE_PRED_COND) and EXE_CU_IS_BRANCH;
+  EXE_CALC_COND <= s_cond_mux_out;
+
+  EXE_WRONG_COND   <= (s_cond_mux_out xor EXE_PRED_COND) and EXE_CU_IS_BRANCH;
   EXE_WRONG_TARGET <= s_wrong_target and EXE_CU_IS_BRANCH;
 
 end architecture STR;
