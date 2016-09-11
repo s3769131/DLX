@@ -337,7 +337,7 @@ begin
       FETCH_pc                 => s_FX_OUT_PC,
       FETCH_npc                => s_FX_OUT_NPC,
       FETCH_btb_prediction_out => s_FX_OUT_BTB_PREDICTION_OUT,
-      FETCH_btb_target_out     => s_FX_OUT_btb_target_out); ------??????????????? TODO is necesarry?
+      FETCH_btb_target_out     => open); ------??????????????? TODO is necesarry?
 
   --- Interface with IROM
   s_FX_IN_IR_IN    <= CORE_ROM_INTERFACE;
@@ -380,16 +380,16 @@ begin
       REG_data_in  => s_FX_OUT_IR_OUT,
       REG_data_out => ps_FXDX_IR_IN);
 
-  FETCH_DECODE_REG_BTB_TARGET : d_register ------??????????????? TODO is necesarry?
-    generic map(
-      REG_NBIT => CORE_PC_NBIT)
-    port map(
-      REG_clk      => CORE_CLK,
-      REG_rst      => CORE_RST,
-      REG_clr      => CORE_FXDX_CLR,
-      REG_enable   => CORE_FXDX_EN,
-      REG_data_in  => s_FX_OUT_btb_target_out,
-      REG_data_out => ps_FXDX_BTB_TARGET_OUT);
+  --FETCH_DECODE_REG_BTB_TARGET : d_register ------??????????????? TODO is necesarry?
+  --  generic map(
+  --    REG_NBIT => CORE_PC_NBIT)
+  --  port map(
+  --    REG_clk      => CORE_CLK,
+  --    REG_rst      => CORE_RST,
+  --    REG_clr      => CORE_FXDX_CLR,
+  --    REG_enable   => CORE_FXDX_EN,
+  --    REG_data_in  => s_FX_OUT_btb_target_out,
+  --    REG_data_out => ps_FXDX_BTB_TARGET_OUT);
 
   FXDX_BTB_PREDICTION : d_ff
     port map(
