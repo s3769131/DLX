@@ -259,6 +259,7 @@ architecture STR of core is
   signal ps_DXEX_RF_IN2       : std_logic_vector(CORE_ALU_NBIT - 1 downto 0);
   signal ps_DXEX_IMM_IN       : std_logic_vector(CORE_ALU_NBIT - 1 downto 0);
   signal ps_DXEX_PRED_COND    : std_logic;
+  signal ps_DXEX_pc : std_logic_vector(CORE_PC_NBIT - 1 downto 0);
 
   --- Signals from EXECUTE to EX/MEM pipelining registers  
   signal s_EX_OUT_IR_OUT       : std_logic_vector(CORE_IR_NBIT - 1 downto 0);
@@ -318,6 +319,7 @@ architecture STR of core is
 
   --- Control signals for MEMORY
   signal s_CU_WB_MUX_CONTROL : std_logic;
+  
 
 begin
   -----------------------------------------------------------------------------
@@ -346,19 +348,19 @@ begin
   s_FX_IN_IR_IN    <= CORE_ROM_INTERFACE;
   CORE_ROM_ADDRESS <= s_FX_OUT_PC;
 
-  -- FETCH_DECODE_REG_PC : d_register       ------??????????????? TODO is necesarry?
-  --   generic map(
-  --     REG_NBIT => c_program_counter_nbit)
-  --   port map(
-  --     REG_clk      => TODO,
-  --     REG_rst      => TODO,
-  --     REG_clr      => TODO,
-  --     REG_enable   => TODO,
-  --     REG_data_in  => s_FX_OUT_PC,
-  --     REG_data_out => ps_FXDX_pc_in);
   -----------------------------------------------------------------------------
   --                              FX/DX REGISTERS
   -----------------------------------------------------------------------------
+   FETCH_DECODE_REG_PC : d_register       ------??????????????? TODO is necesarry?
+     generic map(
+       REG_NBIT => CORE_PC_NBIT)
+     port map(
+       REG_clk      => CORE_CLK,
+       REG_rst      => CORE_RST,
+       REG_clr      => CORE_FXDX_CLR,
+       REG_enable   => CORE_FXDX_EN,
+       REG_data_in  => s_FX_OUT_PC,
+       REG_data_out => ps_FXDX_pc_in);
 
   FXDX_NPC : d_register
     generic map(
@@ -443,6 +445,21 @@ begin
   -----------------------------------------------------------------------------
   --                              DX/EX REGISTERS
   -----------------------------------------------------------------------------
+
+  --- Pipeline register DX/EX for IR
+  PC_DXEX : d_register
+    generic map(
+      REG_NBIT => CORE_PC_NBIT
+    )
+    port map(
+      REG_clk      => CORE_CLK,
+      REG_rst      => CORE_RST,
+      REG_clr      => CORE_DXEX_CLR,
+      REG_enable   => CORE_DXEX_EN,
+      REG_data_in  => ps_FXDX_pc_in,
+      REG_data_out => ps_DXEX_pc
+    );
+
 
   --- Pipeline register DX/EX for IR
   IR_DXEX : d_register
@@ -773,6 +790,8 @@ begin
   s_CU_DX_destination_sel <= CU_DX_destination_sel;
   s_CU_DX_rf_write_en     <= CU_DX_rf_write_en;
   s_CU_DX_sigext_signed   <= CU_DX_sigext_signed;
+  
+  
   s_CU_EX_IS_BRANCH       <= CU_EX_IS_BRANCH;
   s_CU_EX_BRANCH_TYPE     <= CU_EX_BRANCH_TYPE;
   s_CU_EX_ALU_CONTROL     <= CU_EX_ALU_CONTROL;
