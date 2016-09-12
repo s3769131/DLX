@@ -12,7 +12,9 @@ entity REGF_register_file is
         REGF_write_en   :   in  std_logic;
         REGF_write_addr :   in  std_logic_vector(log2ceil(REGF_NREG)-1 downto 0);
         REGF_write_data :   in  std_logic_vector(REGF_NBIT-1 downto 0);
+        REGF_read_en1   :   in  std_logic;
         REGF_read_addr1 :   in  std_logic_vector(log2ceil(REGF_NREG)-1 downto 0);
+        REGF_read_en2   :   in  std_logic;
         REGF_read_addr2 :   in  std_logic_vector(log2ceil(REGF_NREG)-1 downto 0);
         REGF_read_out1  :   out std_logic_vector(REGF_NBIT-1 downto 0);
         REGF_read_out2  :   out std_logic_vector(REGF_NBIT-1 downto 0));
@@ -73,7 +75,9 @@ architecture str of REGF_register_file is
     signal s_register_enable    :   std_logic_vector(REGF_NREG-1 downto 0);
     signal s_multiplexer_inputs :   std_logic_vector(REGF_NBIT*REGF_NREG-1 downto 0);
     signal s_gate_mux_out1      :   std_logic_vector(REGF_NBIT-1 downto 0);
+    signal s_read_out1          :   std_logic_vector(REGF_NBIT-1 downto 0);
     signal s_gate_mux_out2      :   std_logic_vector(REGF_NBIT-1 downto 0);
+    signal s_read_out2          :   std_logic_vector(REGF_NBIT-1 downto 0);
     signal s_comparator_res1    :   std_logic;
     signal s_comparator_res2    :   std_logic;
 
@@ -111,7 +115,11 @@ begin
             MUX_2to1_in0    =>  s_gate_mux_out1,
             MUX_2to1_in1    =>  REGF_write_data,
             MUX_2to1_sel    =>  s_comparator_res1,
-            MUX_2to1_out    =>  REGF_read_out1);
+            MUX_2to1_out    =>  s_read_out1);
+
+    GATE1_OUT : for i in 0 to REGF_NBIT-1 generate
+        REGF_read_out1  <=  s_read_out1 and REGF_read_en1;
+    end generate;
 
     GATE2_MULTIPLEXER : multiplexer
         generic map(
@@ -137,7 +145,11 @@ begin
             MUX_2to1_in0    =>  s_gate_mux_out2,
             MUX_2to1_in1    =>  REGF_write_data,
             MUX_2to1_sel    =>  s_comparator_res2,
-            MUX_2to1_out    =>  REGF_read_out2);
+            MUX_2to1_out    =>  s_read_out2);
+
+    GATE2_OUT : for i in 0 to REGF_NBIT-1 generate
+        REGF_read_out2  <=  s_read_out2 and REGF_read_en2;
+    end generate;
 
     REGISTER_GEN : for i in 0 to REGF_NREG-1 generate
         R0_REGISTER : if i = 0 generate
@@ -182,6 +194,8 @@ configuration CFG_REGF_REGISTER_FILE_STR of REGF_register_file is
         for FORWARD1_MULTIPLEXER : mux_2to1
             use configuration work.CFG_MUX_2to1_BHV;
         end for;
+        for GATE1_OUT
+        end for;
         for GATE2_MULTIPLEXER : multiplexer
             use configuration work.CFG_MULTIPLEXER_DFLOW;
         end for;
@@ -190,6 +204,8 @@ configuration CFG_REGF_REGISTER_FILE_STR of REGF_register_file is
         end for;
         for FORWARD2_MULTIPLEXER : mux_2to1
             use configuration work.CFG_MUX_2to1_BHV;
+        end for;
+        for GATE2_OUT
         end for;
         for REGISTER_GEN
             for R0_REGISTER
