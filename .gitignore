@@ -6,3 +6,9 @@ RTL/.project
 .DS_Store
 
 RTL/.settings/org.eclipse.core.resources.prefs
+
+tech/STcmos65/.CORE65LPLVT_nom_1.00V_25C.lib.swp
+
+*.db
+
+*.lib
