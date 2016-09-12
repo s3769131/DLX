@@ -3,10 +3,10 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use work.DLX_pkg.all;
 
-entity TB_sign_extention is
-end TB_sign_extention;
+entity TB_sign_extention_decode is
+end TB_sign_extention_decode;
 
-architecture TEST of TB_sign_extention is
+architecture TEST of TB_sign_extention_decode is
 
     component sign_extention_decode
       generic(

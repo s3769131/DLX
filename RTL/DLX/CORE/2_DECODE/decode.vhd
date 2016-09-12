@@ -60,13 +60,13 @@ architecture str of decode is
             REGF_read_out2  :   out std_logic_vector(REGF_NBIT-1 downto 0));
     end component;
 
-    component sign_extention is
+    component sign_extention_decode is
         generic(
             SIGN_EXT_NBIT   :   positive :=  32);
         port (
             SIGN_EXT_op     :   in  std_logic_vector(1 downto 0);
-            SIGN_EXT_input  :   in  std_logic_vector(SIGN_EXT_IN_NBIT-1 downto 0);
-            SIGN_EXT_output :   out std_logic_vector(SIGN_EXT_OUT_NBIT-1 downto 0));
+            SIGN_EXT_input  :   in  std_logic_vector(SIGN_EXT_NBIT-1 downto 0);
+            SIGN_EXT_output :   out std_logic_vector(SIGN_EXT_NBIT-1 downto 0));
     end component;
 
     signal s_rf_addr_rs     :   std_logic_vector(log2ceil(DECODE_NREG)-1 downto 0);
@@ -95,7 +95,7 @@ begin
             REGF_read_out1  =>  DECODE_rf_data_read1,
             REGF_read_out2  =>  DECODE_rf_data_read2);
 
-    SIGN_EXT : sign_extention
+    SIGN_EXT : sign_extention_decode
         generic map(
             SIGN_EXT_NBIT   =>  DECODE_IR_NBIT)
         port map(
@@ -124,8 +124,8 @@ configuration CFG_DECODE_STR of decode is
         for REGISTER_FILE : REGF_register_file
             use configuration work.CFG_REGF_REGISTER_FILE_STR;
         end for;
-        for SIGN_EXT : sign_extention
-            use configuration work.CFG_SIGN_EXTENTION_STR;
+        for SIGN_EXT : sign_extention_decode
+            use configuration work.CFG_SIGN_EXTENTION_DEC_STR;
         end for;
         for DESTINATION_MUX : mux_4to1
             use configuration work.CFG_MUX_4to1_BHV;

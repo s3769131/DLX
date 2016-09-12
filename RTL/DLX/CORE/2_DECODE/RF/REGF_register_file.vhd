@@ -118,7 +118,7 @@ begin
             MUX_2to1_out    =>  s_read_out1);
 
     GATE1_OUT : for i in 0 to REGF_NBIT-1 generate
-        REGF_read_out1  <=  s_read_out1 and REGF_read_en1;
+        REGF_read_out1(i)  <=  s_read_out1(i) and REGF_read_en1;
     end generate;
 
     GATE2_MULTIPLEXER : multiplexer
@@ -148,7 +148,7 @@ begin
             MUX_2to1_out    =>  s_read_out2);
 
     GATE2_OUT : for i in 0 to REGF_NBIT-1 generate
-        REGF_read_out2  <=  s_read_out2 and REGF_read_en2;
+        REGF_read_out2(i)  <=  s_read_out2(i) and REGF_read_en2;
     end generate;
 
     REGISTER_GEN : for i in 0 to REGF_NREG-1 generate
