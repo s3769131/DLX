@@ -23,6 +23,7 @@ entity execute is
     EXE_FW_ALU_FROM_WB  : in  std_logic_vector(EXE_ALU_NBIT - 1 downto 0); -- ALU data coming from WB stage
     EXE_FW_MEM_FROM_WB  : in  std_logic_vector(EXE_ALU_NBIT - 1 downto 0); -- MEM data coming from WB stage
 
+    EXE_BTB_TARGET      : in  std_logic_vector(EXE_PC_NBIT - 1 downto 0); -- Target from BTB
     EXE_PRED_COND       : in  std_logic; -- Predicted condition of a branch (comes from BPU)
     EXE_CALC_COND       : out std_logic; -- Calculated condition of a branch
     EXE_WRONG_COND      : out std_logic; -- Signal to identify the condition in which the predicted branch condition is wrong (may be useless)
@@ -168,7 +169,7 @@ begin
     )
     port map(
       COMP_A   => s_alu_out,
-      COMP_B   => s_internal_npc,
+      COMP_B   => EXE_BTB_TARGET,
       COMP_RES => s_wrong_target
     );
 

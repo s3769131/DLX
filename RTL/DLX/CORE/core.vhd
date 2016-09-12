@@ -7,7 +7,7 @@ entity core is
   generic(
     CORE_PC_NBIT   : positive := 32;    --- Number of bit of Program Counter
     CORE_IR_NBIT   : positive := 32;    --- Number of bit of Instruction Register
-    CORE_IMM_SIZE  : positive := 16;    --- Number of bit of Immediate
+   -- CORE_IMM_SIZE  : positive := 16;    --- Number of bit of Immediate
     CORE_ALU_NBIT  : positive := 32;    --- Number of bit of ALU
     CORE_DATA_NBIT : positive := 32;    --- Number of bit of data interface from and to memories
     CORE_ADDR_NBIT : positive := 32;    --- Number of bit of memory addresses
@@ -34,9 +34,12 @@ entity core is
 
     CU_FX_PC_EN           : in    std_logic;
     CU_FX_PC_CLR          : in    std_logic;
-    CU_DX_destination_sel : in    std_logic;
+    CU_DX_destination_sel : in    std_logic_vector(1 downto 0);
     CU_DX_rf_write_en     : in    std_logic;
     CU_DX_sigext_signed   : in    std_logic;
+    CU_DX_sigext_op       : in    std_logic_vector(1 downto 0);
+    CU_DX_read1_en        : in    std_logic;
+    CU_DX_read2_en        : in    std_logic;
     CU_EX_IS_BRANCH       : in    std_logic; -- Signal from CU to identify if the current instruction is a branch (0 is not a branch)
     CU_EX_BRANCH_TYPE     : in    std_logic;
     CU_EX_ALU_CONTROL     : in    std_logic_vector(5 downto 0);
@@ -47,7 +50,7 @@ entity core is
     CU_MEM_READNOTWRITE   : in    std_logic;
     CU_MEM_SIGNED_LOAD    : in    std_logic;
     CU_MEM_LOAD_TYPE      : in    std_logic_vector(1 downto 0);
-    CU_WB_MUX_CONTROL     : in    std_logic; --
+    CU_WB_MUX_CONTROL     : in    std_logic_vector(1 downto 0); --
 
     BTB_PREDICTION_IN     : in    std_logic;
     BTB_TARGET_IN         : in    std_logic_vector(CORE_PC_NBIT - 1 downto 0)
@@ -55,6 +58,130 @@ entity core is
 end entity core;
 
 architecture STR of core is
+  --component fetch
+  --  generic(
+  --    FETCH_PC_NBIT : integer := 32;
+  --    FETCH_IR_NBIT : integer := 32
+  --  );
+  --  port(
+  --    FETCH_clk                : in  std_logic;
+  --    FETCH_rst                : in  std_logic;
+  --    FETCH_pc_enable          : in  std_logic;
+  --    FETCH_pc_clear           : in  std_logic;
+  --    FETCH_btb_prediction_in  : in  std_logic;
+  --    FETCH_btb_target_in      : in  std_logic_vector(FETCH_PC_NBIT - 1 downto 0);
+  --    FETCH_alu_out            : in  std_logic_vector(FETCH_PC_NBIT - 1 downto 0);
+  --    FETCH_ir_in              : in  std_logic_vector(FETCH_IR_NBIT - 1 downto 0);
+  --    FETCH_ir_out             : out std_logic_vector(FETCH_IR_NBIT - 1 downto 0);
+  --    FETCH_pc                 : out std_logic_vector(FETCH_PC_NBIT - 1 downto 0);
+  --    FETCH_npc                : out std_logic_vector(FETCH_PC_NBIT - 1 downto 0);
+  --    FETCH_btb_prediction_out : out std_logic;
+  --    FETCH_btb_target_out     : out std_logic_vector(FETCH_PC_NBIT - 1 downto 0)
+  --  );
+  --end component fetch;
+  --
+  --component decode
+  --  generic(
+  --    DECODE_NREG     : integer := 32;
+  --    DECODE_NBIT     : integer := 32;
+  --    DECODE_IMM_SIZE : integer := 16
+  --  );
+  --  port(
+  --    DECODE_clk             : in  std_logic;
+  --    DECODE_rst             : in  std_logic;
+  --    DECODE_sigext_signed   : in  std_logic;
+  --    DECODE_sigext_in       : in  std_logic_vector(DECODE_IMM_SIZE - 1 downto 0);
+  --    DECODE_destination_sel : in  std_logic;
+  --    DECODE_rf_write_en     : in  std_logic;
+  --    DECODE_rf_data_write   : in  std_logic_vector(DECODE_NBIT - 1 downto 0);
+  --    DECODE_rf_addr_write   : in  std_logic_vector(log2ceil(DECODE_NREG) - 1 downto 0);
+  --    DECODE_rf_addr_rs      : in  std_logic_vector(log2ceil(DECODE_NREG) - 1 downto 0);
+  --    DECODE_rf_addr_rt      : in  std_logic_vector(log2ceil(DECODE_NREG) - 1 downto 0);
+  --    DECODE_rf_addr_rd      : in  std_logic_vector(log2ceil(DECODE_NREG) - 1 downto 0);
+  --    DECODE_pc_in           : in  std_logic_vector(DECODE_NBIT - 1 downto 0);
+  --    DECODE_npc_in          : in  std_logic_vector(DECODE_NBIT - 1 downto 0);
+  --    DECODE_sigext_out      : out std_logic_vector(DECODE_NBIT - 1 downto 0);
+  --    DECODE_rf_addr_dest    : out std_logic_vector(log2ceil(DECODE_NREG) - 1 downto 0);
+  --    DECODE_rf_data_read1   : out std_logic_vector(DECODE_NBIT - 1 downto 0);
+  --    DECODE_rf_data_read2   : out std_logic_vector(DECODE_NBIT - 1 downto 0);
+  --    DECODE_pc_out          : out std_logic_vector(DECODE_NBIT - 1 downto 0);
+  --    DECODE_npc_out         : out std_logic_vector(DECODE_NBIT - 1 downto 0)
+  --  );
+  --end component decode;
+  --
+  --component execute
+  --  generic(
+  --    EXE_PC_NBIT  : integer := 32;
+  --    EXE_IR_NBIT  : integer := 32;
+  --    EXE_ALU_NBIT : integer := 32
+  --  );
+  --  port(
+  --    EXE_IR_IN           : in  std_logic_vector(EXE_IR_NBIT - 1 downto 0);
+  --    EXE_NPC_IN          : in  std_logic_vector(EXE_PC_NBIT - 1 downto 0);
+  --    EXE_IR_OUT          : out std_logic_vector(EXE_IR_NBIT - 1 downto 0);
+  --    EXE_NPC_OUT         : out std_logic_vector(EXE_PC_NBIT - 1 downto 0);
+  --    EXE_RF_IN1          : in  std_logic_vector(EXE_ALU_NBIT - 1 downto 0);
+  --    EXE_IMM_IN          : in  std_logic_vector(EXE_ALU_NBIT - 1 downto 0);
+  --    EXE_RF_IN2          : in  std_logic_vector(EXE_ALU_NBIT - 1 downto 0);
+  --    EXE_FW_ALU_FROM_MEM : in  std_logic_vector(EXE_ALU_NBIT - 1 downto 0);
+  --    EXE_FW_ALU_FROM_WB  : in  std_logic_vector(EXE_ALU_NBIT - 1 downto 0);
+  --    EXE_FW_MEM_FROM_WB  : in  std_logic_vector(EXE_ALU_NBIT - 1 downto 0);
+  --    EXE_PRED_COND       : in  std_logic;
+  --    EXE_CALC_COND       : out std_logic;
+  --    EXE_WRONG_COND      : out std_logic;
+  --    EXE_WRONG_TARGET    : out std_logic;
+  --    EXE_ALU_OUT         : out std_logic_vector(EXE_ALU_NBIT - 1 downto 0);
+  --    EXE_CU_BRANCH_TYPE  : in  std_logic;
+  --    EXE_CU_ALU_CONTROL  : in  std_logic_vector(5 downto 0);
+  --    EXE_CU_IS_BRANCH    : in  std_logic; -- Signal from CU to identify if the current instruction is a branch (0 is not a branch)
+  --    EXE_CU_TOP_MUX      : in  std_logic;
+  --    EXE_CU_BOT_MUX      : in  std_logic;
+  --    EXE_CU_FW_TOP_MUX   : in  std_logic_vector(1 downto 0);
+  --    EXE_CU_FW_BOT_MUX   : in  std_logic_vector(1 downto 0)
+  --  );
+  --end component execute;
+  --
+  --component memory
+  --  generic(
+  --    MEM_IR_NBIT   : integer := 32;
+  --    MEM_PC_NBIT   : integer := 32;
+  --    MEM_DATA_NBIT : integer := 32;
+  --    MEM_ADDR_NBIT : integer := 32
+  --  );
+  --  port(
+  --    MEM_IR_IN           : in    std_logic_vector(MEM_IR_NBIT - 1 downto 0);
+  --    MEM_NPC_IN          : in    std_logic_vector(MEM_PC_NBIT - 1 downto 0);
+  --    MEM_IR_OUT          : out   std_logic_vector(MEM_IR_NBIT - 1 downto 0);
+  --    MEM_NPC_OUT         : out   std_logic_vector(MEM_PC_NBIT - 1 downto 0);
+  --    MEM_ADDRESS_IN      : in    std_logic_vector(MEM_ADDR_NBIT - 1 downto 0);
+  --    MEM_ADDRESS_OUT     : out   std_logic_vector(MEM_ADDR_NBIT - 1 downto 0);
+  --    MEM_DATA_IN         : in    std_logic_vector(MEM_DATA_NBIT - 1 downto 0);
+  --    MEM_CU_READNOTWRITE : in    std_logic;
+  --    MEM_DATA_OUT        : out   std_logic_vector(MEM_DATA_NBIT - 1 downto 0);
+  --    MEM_INTERFACE       : inout std_logic_vector(MEM_DATA_NBIT - 1 downto 0);
+  --    MEM_CU_SIGNED_LOAD  : in    std_logic;
+  --    MEM_CU_LOAD_TYPE    : in    std_logic_vector(1 downto 0)
+  --  );
+  --end component memory;
+  --
+  --component writeback
+  --  generic(
+  --    WB_PC_NBIT   : integer := 32;
+  --    WB_IR_NBIT   : integer := 32;
+  --    WB_DATA_NBIT : integer := 32
+  --  );
+  --  port(
+  --    WB_IR_IN          : in  std_logic_vector(WB_IR_NBIT - 1 downto 0);
+  --    WB_NPC_IN         : in  std_logic_vector(WB_PC_NBIT - 1 downto 0);
+  --    WB_IR_OUT         : out std_logic_vector(WB_IR_NBIT - 1 downto 0);
+  --    WB_NPC_OUT        : out std_logic_vector(WB_PC_NBIT - 1 downto 0);
+  --    WB_DATA_FROM_MEM  : in  std_logic_vector(WB_DATA_NBIT - 1 downto 0);
+  --    WB_DATA_FROM_ALU  : in  std_logic_vector(WB_DATA_NBIT - 1 downto 0);
+  --    WB_CU_MUX_CONTROL : in  std_logic;
+  --    WB_DATA_TO_RF     : out std_logic_vector(WB_DATA_NBIT - 1 downto 0)
+  --  );
+  --end component writeback;
+
   component fetch
     generic(
       FETCH_PC_NBIT : integer := 32;
@@ -79,22 +206,21 @@ architecture STR of core is
 
   component decode
     generic(
-      DECODE_NREG     : integer := 32;
-      DECODE_NBIT     : integer := 32;
-      DECODE_IMM_SIZE : integer := 16
+      DECODE_NREG    : positive := 32;
+      DECODE_NBIT    : positive := 32;
+      DECODE_IR_NBIT : positive := 32
     );
     port(
       DECODE_clk             : in  std_logic;
       DECODE_rst             : in  std_logic;
-      DECODE_sigext_signed   : in  std_logic;
-      DECODE_sigext_in       : in  std_logic_vector(DECODE_IMM_SIZE - 1 downto 0);
-      DECODE_destination_sel : in  std_logic;
+      DECODE_sigext_op       : in  std_logic_vector(1 downto 0);
+      DECODE_ir              : in  std_logic_vector(DECODE_IR_NBIT - 1 downto 0);
+      DECODE_destination_sel : in  std_logic_vector;
       DECODE_rf_write_en     : in  std_logic;
       DECODE_rf_data_write   : in  std_logic_vector(DECODE_NBIT - 1 downto 0);
       DECODE_rf_addr_write   : in  std_logic_vector(log2ceil(DECODE_NREG) - 1 downto 0);
-      DECODE_rf_addr_rs      : in  std_logic_vector(log2ceil(DECODE_NREG) - 1 downto 0);
-      DECODE_rf_addr_rt      : in  std_logic_vector(log2ceil(DECODE_NREG) - 1 downto 0);
-      DECODE_rf_addr_rd      : in  std_logic_vector(log2ceil(DECODE_NREG) - 1 downto 0);
+      DECODE_rf_read_en_rs   : in  std_logic;
+      DECODE_rf_read_en_rt   : in  std_logic;
       DECODE_pc_in           : in  std_logic_vector(DECODE_NBIT - 1 downto 0);
       DECODE_npc_in          : in  std_logic_vector(DECODE_NBIT - 1 downto 0);
       DECODE_sigext_out      : out std_logic_vector(DECODE_NBIT - 1 downto 0);
@@ -105,7 +231,6 @@ architecture STR of core is
       DECODE_npc_out         : out std_logic_vector(DECODE_NBIT - 1 downto 0)
     );
   end component decode;
-
   component execute
     generic(
       EXE_PC_NBIT  : integer := 32;
@@ -123,14 +248,15 @@ architecture STR of core is
       EXE_FW_ALU_FROM_MEM : in  std_logic_vector(EXE_ALU_NBIT - 1 downto 0);
       EXE_FW_ALU_FROM_WB  : in  std_logic_vector(EXE_ALU_NBIT - 1 downto 0);
       EXE_FW_MEM_FROM_WB  : in  std_logic_vector(EXE_ALU_NBIT - 1 downto 0);
+      EXE_BTB_TARGET      : in  std_logic_vector(EXE_PC_NBIT - 1 downto 0);
       EXE_PRED_COND       : in  std_logic;
       EXE_CALC_COND       : out std_logic;
       EXE_WRONG_COND      : out std_logic;
       EXE_WRONG_TARGET    : out std_logic;
       EXE_ALU_OUT         : out std_logic_vector(EXE_ALU_NBIT - 1 downto 0);
+      EXE_CU_IS_BRANCH    : in  std_logic;
       EXE_CU_BRANCH_TYPE  : in  std_logic;
       EXE_CU_ALU_CONTROL  : in  std_logic_vector(5 downto 0);
-      EXE_CU_IS_BRANCH    : in  std_logic; -- Signal from CU to identify if the current instruction is a branch (0 is not a branch)
       EXE_CU_TOP_MUX      : in  std_logic;
       EXE_CU_BOT_MUX      : in  std_logic;
       EXE_CU_FW_TOP_MUX   : in  std_logic_vector(1 downto 0);
@@ -153,9 +279,9 @@ architecture STR of core is
       MEM_ADDRESS_IN      : in    std_logic_vector(MEM_ADDR_NBIT - 1 downto 0);
       MEM_ADDRESS_OUT     : out   std_logic_vector(MEM_ADDR_NBIT - 1 downto 0);
       MEM_DATA_IN         : in    std_logic_vector(MEM_DATA_NBIT - 1 downto 0);
-      MEM_CU_READNOTWRITE : in    std_logic;
       MEM_DATA_OUT        : out   std_logic_vector(MEM_DATA_NBIT - 1 downto 0);
       MEM_INTERFACE       : inout std_logic_vector(MEM_DATA_NBIT - 1 downto 0);
+      MEM_CU_READNOTWRITE : in    std_logic;
       MEM_CU_SIGNED_LOAD  : in    std_logic;
       MEM_CU_LOAD_TYPE    : in    std_logic_vector(1 downto 0)
     );
@@ -163,9 +289,9 @@ architecture STR of core is
 
   component writeback
     generic(
-      WB_PC_NBIT   : integer := 32;
-      WB_IR_NBIT   : integer := 32;
-      WB_DATA_NBIT : integer := 32
+      WB_PC_NBIT   : positive := 32;
+      WB_IR_NBIT   : positive := 32;
+      WB_DATA_NBIT : positive := 32
     );
     port(
       WB_IR_IN          : in  std_logic_vector(WB_IR_NBIT - 1 downto 0);
@@ -174,8 +300,8 @@ architecture STR of core is
       WB_NPC_OUT        : out std_logic_vector(WB_PC_NBIT - 1 downto 0);
       WB_DATA_FROM_MEM  : in  std_logic_vector(WB_DATA_NBIT - 1 downto 0);
       WB_DATA_FROM_ALU  : in  std_logic_vector(WB_DATA_NBIT - 1 downto 0);
-      WB_CU_MUX_CONTROL : in  std_logic;
-      WB_DATA_TO_RF     : out std_logic_vector(WB_DATA_NBIT - 1 downto 0)
+      WB_DATA_TO_RF     : out std_logic_vector(WB_DATA_NBIT - 1 downto 0);
+      WB_CU_MUX_CONTROL : in  std_logic_vector(1 downto 0)
     );
   end component writeback;
 
@@ -231,17 +357,20 @@ architecture STR of core is
   signal ps_FXDX_NPC_IN             : std_logic_vector(CORE_PC_NBIT - 1 downto 0);
 
   --- Signals input to DECODE stage.
-  signal s_DX_IN_sigext_in     : std_logic_vector(CORE_IMM_SIZE - 1 downto 0);
+  --signal s_DX_IN_sigext_in     : std_logic_vector(CORE_IMM_SIZE - 1 downto 0);
   signal s_DX_IN_rf_data_write : std_logic_vector(CORE_RF_NBIT - 1 downto 0);
   signal s_DX_IN_rf_addr_write : std_logic_vector(log2ceil(CORE_RF_NREG) - 1 downto 0);
-  signal s_DX_IN_rf_addr_rs    : std_logic_vector(log2ceil(CORE_RF_NREG) - 1 downto 0);
-  signal s_DX_IN_rf_addr_rt    : std_logic_vector(log2ceil(CORE_RF_NREG) - 1 downto 0);
-  signal s_DX_IN_rf_addr_rd    : std_logic_vector(log2ceil(CORE_RF_NREG) - 1 downto 0);
+  --signal s_DX_IN_rf_addr_rs    : std_logic_vector(log2ceil(CORE_RF_NREG) - 1 downto 0);
+  --signal s_DX_IN_rf_addr_rt    : std_logic_vector(log2ceil(CORE_RF_NREG) - 1 downto 0);
+  --signal s_DX_IN_rf_addr_rd    : std_logic_vector(log2ceil(CORE_RF_NREG) - 1 downto 0);
 
   ---Control signal for DECODE
-  signal s_CU_DX_destination_sel : std_logic; ----- CHANGED
+  signal s_CU_DX_destination_sel : std_logic_vector(1 downto 0); ----- CHANGED
   signal s_CU_DX_rf_write_en     : std_logic;
   signal s_CU_DX_sigext_signed   : std_logic;
+  signal s_CU_sigext_op          : std_logic_vector(1 downto 0);
+  signal s_CU_decode_read1_en    : std_logic;
+  signal s_CU_decode_read2_en    : std_logic;
 
   --- Signal from DECODE to DX/EX pipelining registers
   signal s_DX_OUT_pc_out        : std_logic_vector(CORE_PC_NBIT - 1 downto 0);
@@ -252,14 +381,15 @@ architecture STR of core is
   signal s_DX_OUT_rf_addr_dest  : std_logic_vector(log2ceil(CORE_RF_NREG) - 1 downto 0);
 
   --- Pipelined signals coming from DX/EX pipelining registers to EXECUTE
-  signal ps_DXEX_rf_addr_dest : std_logic_vector(log2ceil(CORE_RF_NREG) - 1 downto 0);
-  signal ps_DXEX_IR_IN        : std_logic_vector(CORE_IR_NBIT - 1 downto 0);
-  signal ps_DXEX_NPC_IN       : std_logic_vector(CORE_PC_NBIT - 1 downto 0);
-  signal ps_DXEX_RF_IN1       : std_logic_vector(CORE_ALU_NBIT - 1 downto 0);
-  signal ps_DXEX_RF_IN2       : std_logic_vector(CORE_ALU_NBIT - 1 downto 0);
-  signal ps_DXEX_IMM_IN       : std_logic_vector(CORE_ALU_NBIT - 1 downto 0);
-  signal ps_DXEX_PRED_COND    : std_logic;
-  signal ps_DXEX_pc : std_logic_vector(CORE_PC_NBIT - 1 downto 0);
+  signal ps_DXEX_rf_addr_dest   : std_logic_vector(log2ceil(CORE_RF_NREG) - 1 downto 0);
+  signal ps_DXEX_IR_IN          : std_logic_vector(CORE_IR_NBIT - 1 downto 0);
+  signal ps_DXEX_NPC_IN         : std_logic_vector(CORE_PC_NBIT - 1 downto 0);
+  signal ps_DXEX_RF_IN1         : std_logic_vector(CORE_ALU_NBIT - 1 downto 0);
+  signal ps_DXEX_RF_IN2         : std_logic_vector(CORE_ALU_NBIT - 1 downto 0);
+  signal ps_DXEX_IMM_IN         : std_logic_vector(CORE_ALU_NBIT - 1 downto 0);
+  signal ps_DXEX_PRED_COND      : std_logic;
+  signal ps_DXEX_pc             : std_logic_vector(CORE_PC_NBIT - 1 downto 0);
+  signal ps_DXEX_BTB_TARGET_OUT : std_logic_vector(CORE_PC_NBIT - 1 downto 0);
 
   --- Signals from EXECUTE to EX/MEM pipelining registers  
   signal s_EX_OUT_IR_OUT       : std_logic_vector(CORE_IR_NBIT - 1 downto 0);
@@ -318,8 +448,7 @@ architecture STR of core is
   signal s_WB_OUT_RF_ADDR_DEST : std_logic_vector(log2ceil(CORE_RF_NREG) - 1 downto 0);
 
   --- Control signals for MEMORY
-  signal s_CU_WB_MUX_CONTROL : std_logic;
-  
+  signal s_CU_WB_MUX_CONTROL : std_logic_vector(1 downto 0);
 
 begin
   -----------------------------------------------------------------------------
@@ -342,7 +471,7 @@ begin
       FETCH_pc                 => s_FX_OUT_PC,
       FETCH_npc                => s_FX_OUT_NPC,
       FETCH_btb_prediction_out => s_FX_OUT_BTB_PREDICTION_OUT,
-      FETCH_btb_target_out     => open); ------??????????????? TODO is necesarry?
+      FETCH_btb_target_out     => s_FX_OUT_btb_target_out); ------??????????????? TODO is necesarry?
 
   --- Interface with IROM
   s_FX_IN_IR_IN    <= CORE_ROM_INTERFACE;
@@ -351,16 +480,16 @@ begin
   -----------------------------------------------------------------------------
   --                              FX/DX REGISTERS
   -----------------------------------------------------------------------------
-   FETCH_DECODE_REG_PC : d_register       ------??????????????? TODO is necesarry?
-     generic map(
-       REG_NBIT => CORE_PC_NBIT)
-     port map(
-       REG_clk      => CORE_CLK,
-       REG_rst      => CORE_RST,
-       REG_clr      => CORE_FXDX_CLR,
-       REG_enable   => CORE_FXDX_EN,
-       REG_data_in  => s_FX_OUT_PC,
-       REG_data_out => ps_FXDX_pc_in);
+  FETCH_DECODE_REG_PC : d_register
+    generic map(
+      REG_NBIT => CORE_PC_NBIT)
+    port map(
+      REG_clk      => CORE_CLK,
+      REG_rst      => CORE_RST,
+      REG_clr      => CORE_FXDX_CLR,
+      REG_enable   => CORE_FXDX_EN,
+      REG_data_in  => s_FX_OUT_PC,
+      REG_data_out => ps_FXDX_pc_in);
 
   FXDX_NPC : d_register
     generic map(
@@ -384,16 +513,16 @@ begin
       REG_data_in  => s_FX_OUT_IR_OUT,
       REG_data_out => ps_FXDX_IR_IN);
 
-  --FETCH_DECODE_REG_BTB_TARGET : d_register ------??????????????? TODO is necesarry?
-  --  generic map(
-  --    REG_NBIT => CORE_PC_NBIT)
-  --  port map(
-  --    REG_clk      => CORE_CLK,
-  --    REG_rst      => CORE_RST,
-  --    REG_clr      => CORE_FXDX_CLR,
-  --    REG_enable   => CORE_FXDX_EN,
-  --    REG_data_in  => s_FX_OUT_btb_target_out,
-  --    REG_data_out => ps_FXDX_BTB_TARGET_OUT);
+  FETCH_DECODE_REG_BTB_TARGET : d_register
+    generic map(
+      REG_NBIT => CORE_PC_NBIT)
+    port map(
+      REG_clk      => CORE_CLK,
+      REG_rst      => CORE_RST,
+      REG_clr      => CORE_FXDX_CLR,
+      REG_enable   => CORE_FXDX_EN,
+      REG_data_in  => s_FX_OUT_btb_target_out,
+      REG_data_out => ps_FXDX_BTB_TARGET_OUT);
 
   FXDX_BTB_PREDICTION : d_ff
     port map(
@@ -411,28 +540,54 @@ begin
 
   s_DX_IN_rf_addr_write <= s_WB_OUT_RF_ADDR_DEST; -- from write back
   s_DX_IN_rf_data_write <= s_WB_OUT_DATA_TO_RF;
-  s_DX_IN_rf_addr_rs    <= ps_FXDX_IR_IN(25 downto 21);
-  s_DX_IN_rf_addr_rt    <= ps_FXDX_IR_IN(20 downto 16);
-  s_DX_IN_rf_addr_rd    <= ps_FXDX_IR_IN(15 downto 11);
-  s_DX_IN_sigext_in     <= ps_FXDX_IR_IN(CORE_IMM_SIZE - 1 downto 0); --  last 16 bits
+  --s_DX_IN_rf_addr_rs    <= ps_FXDX_IR_IN(25 downto 21);
+  --s_DX_IN_rf_addr_rt    <= ps_FXDX_IR_IN(20 downto 16);
+  --s_DX_IN_rf_addr_rd    <= ps_FXDX_IR_IN(15 downto 11);
+  --s_DX_IN_sigext_in     <= ps_FXDX_IR_IN(CORE_IMM_SIZE - 1 downto 0); --  last 16 bits
+  --
+  --DX : decode
+  --  generic map(
+  --    DECODE_NREG     => CORE_RF_NREG,
+  --    DECODE_NBIT     => CORE_RF_NBIT,
+  --    DECODE_IMM_SIZE => CORE_IMM_SIZE)
+  --  port map(
+  --    DECODE_clk             => CORE_CLK,
+  --    DECODE_rst             => CORE_RST,
+  --    DECODE_sigext_signed   => s_CU_DX_sigext_signed,
+  --    DECODE_sigext_in       => s_DX_IN_sigext_in,
+  --    DECODE_destination_sel => s_CU_DX_destination_sel,
+  --    DECODE_rf_write_en     => s_CU_DX_rf_write_en,
+  --    DECODE_rf_data_write   => s_DX_IN_rf_data_write, -- from wb
+  --    DECODE_rf_addr_write   => s_DX_IN_rf_addr_write, -- from wb
+  --    DECODE_rf_addr_rs      => s_DX_IN_rf_addr_rs,
+  --    DECODE_rf_addr_rt      => s_DX_IN_rf_addr_rt,
+  --    DECODE_rf_addr_rd      => s_DX_IN_rf_addr_rd,
+  --    DECODE_pc_in           => ps_FXDX_pc_in,
+  --    DECODE_npc_in          => ps_FXDX_NPC_IN,
+  --    DECODE_sigext_out      => s_DX_OUT_sigext_out,
+  --    DECODE_rf_addr_dest    => s_DX_OUT_rf_addr_dest,
+  --    DECODE_rf_data_read1   => s_DX_OUT_rf_data_read1,
+  --    DECODE_rf_data_read2   => s_DX_OUT_rf_data_read2,
+  --    DECODE_pc_out          => s_DX_OUT_pc_out,
+  --    DECODE_npc_out         => s_DX_OUT_npc_out);
 
   DX : decode
     generic map(
-      DECODE_NREG     => CORE_RF_NREG,
-      DECODE_NBIT     => CORE_RF_NBIT,
-      DECODE_IMM_SIZE => CORE_IMM_SIZE)
+      DECODE_NREG    => CORE_RF_NREG,
+      DECODE_NBIT    => CORE_RF_NBIT,
+      DECODE_IR_NBIT => CORE_IR_NBIT
+    )
     port map(
       DECODE_clk             => CORE_CLK,
       DECODE_rst             => CORE_RST,
-      DECODE_sigext_signed   => s_CU_DX_sigext_signed,
-      DECODE_sigext_in       => s_DX_IN_sigext_in,
+      DECODE_sigext_op       => s_CU_sigext_op,
+      DECODE_ir              => ps_FXDX_IR_IN,
       DECODE_destination_sel => s_CU_DX_destination_sel,
       DECODE_rf_write_en     => s_CU_DX_rf_write_en,
-      DECODE_rf_data_write   => s_DX_IN_rf_data_write, -- from wb
-      DECODE_rf_addr_write   => s_DX_IN_rf_addr_write, -- from wb
-      DECODE_rf_addr_rs      => s_DX_IN_rf_addr_rs,
-      DECODE_rf_addr_rt      => s_DX_IN_rf_addr_rt,
-      DECODE_rf_addr_rd      => s_DX_IN_rf_addr_rd,
+      DECODE_rf_data_write   => s_DX_IN_rf_data_write,
+      DECODE_rf_addr_write   => s_DX_IN_rf_addr_write,
+      DECODE_rf_read_en_rs   => s_CU_decode_read1_en,
+      DECODE_rf_read_en_rt   => s_CU_decode_read2_en,
       DECODE_pc_in           => ps_FXDX_pc_in,
       DECODE_npc_in          => ps_FXDX_NPC_IN,
       DECODE_sigext_out      => s_DX_OUT_sigext_out,
@@ -440,7 +595,8 @@ begin
       DECODE_rf_data_read1   => s_DX_OUT_rf_data_read1,
       DECODE_rf_data_read2   => s_DX_OUT_rf_data_read2,
       DECODE_pc_out          => s_DX_OUT_pc_out,
-      DECODE_npc_out         => s_DX_OUT_npc_out);
+      DECODE_npc_out         => s_DX_OUT_npc_out
+    );
 
   -----------------------------------------------------------------------------
   --                              DX/EX REGISTERS
@@ -459,7 +615,6 @@ begin
       REG_data_in  => ps_FXDX_pc_in,
       REG_data_out => ps_DXEX_pc
     );
-
 
   --- Pipeline register DX/EX for IR
   IR_DXEX : d_register
@@ -555,6 +710,19 @@ begin
       REG_data_out => ps_DXEX_rf_addr_dest
     );
 
+  BTB_TARGET_DXEX : d_register
+    generic map(
+      REG_NBIT => CORE_PC_NBIT
+    )
+    port map(
+      REG_clk      => CORE_CLK,
+      REG_rst      => CORE_RST,
+      REG_clr      => CORE_DXEX_CLR,
+      REG_enable   => CORE_DXEX_EN,
+      REG_data_in  => ps_FXDX_BTB_TARGET_OUT,
+      REG_data_out => ps_DXEX_BTB_TARGET_OUT
+    );
+
   -----------------------------------------------------------------------------
   --                              EXECUTE
   -----------------------------------------------------------------------------
@@ -587,7 +755,8 @@ begin
       EXE_CU_TOP_MUX      => s_CU_EX_TOP_MUX,
       EXE_CU_BOT_MUX      => s_CU_EX_BOT_MUX,
       EXE_CU_FW_TOP_MUX   => s_CU_EX_FW_TOP_MUX,
-      EXE_CU_FW_BOT_MUX   => s_CU_EX_FW_BOT_MUX
+      EXE_CU_FW_BOT_MUX   => s_CU_EX_FW_BOT_MUX,
+      EXE_BTB_TARGET      => ps_DXEX_BTB_TARGET_OUT
     );
 
   -----------------------------------------------------------------------------
@@ -790,15 +959,17 @@ begin
   s_CU_DX_destination_sel <= CU_DX_destination_sel;
   s_CU_DX_rf_write_en     <= CU_DX_rf_write_en;
   s_CU_DX_sigext_signed   <= CU_DX_sigext_signed;
-  
-  
-  s_CU_EX_IS_BRANCH       <= CU_EX_IS_BRANCH;
-  s_CU_EX_BRANCH_TYPE     <= CU_EX_BRANCH_TYPE;
-  s_CU_EX_ALU_CONTROL     <= CU_EX_ALU_CONTROL;
-  s_CU_EX_TOP_MUX         <= CU_EX_TOP_MUX;
-  s_CU_EX_BOT_MUX         <= CU_EX_BOT_MUX;
-  s_CU_EX_FW_TOP_MUX      <= CU_EX_FW_TOP_MUX;
-  s_CU_EX_FW_BOT_MUX      <= CU_EX_FW_BOT_MUX;
+  s_CU_sigext_op          <= CU_DX_sigext_op;
+  s_CU_decode_read1_en    <= CU_DX_read1_en;
+  s_CU_decode_read2_en    <= CU_DX_read2_en;
+
+  s_CU_EX_IS_BRANCH   <= CU_EX_IS_BRANCH;
+  s_CU_EX_BRANCH_TYPE <= CU_EX_BRANCH_TYPE;
+  s_CU_EX_ALU_CONTROL <= CU_EX_ALU_CONTROL;
+  s_CU_EX_TOP_MUX     <= CU_EX_TOP_MUX;
+  s_CU_EX_BOT_MUX     <= CU_EX_BOT_MUX;
+  s_CU_EX_FW_TOP_MUX  <= CU_EX_FW_TOP_MUX;
+  s_CU_EX_FW_BOT_MUX  <= CU_EX_FW_BOT_MUX;
 
   s_CU_MEM_READNOTWRITE <= CU_MEM_READNOTWRITE;
   s_CU_MEM_SIGNED_LOAD  <= CU_MEM_SIGNED_LOAD;
@@ -806,3 +977,30 @@ begin
 
   s_CU_WB_MUX_CONTROL <= CU_WB_MUX_CONTROL;
 end architecture STR;
+
+configuration CFG_CORE_STR of CORE is
+  for STR
+    for all : fetch
+      use configuration work.CFG_FETCH_STR;
+    end for;
+    for all : decode
+      use configuration work.CFG_DECODE_STR;
+    end for;
+    for all : execute
+      use configuration work.CFG_EXECUTE_STR;
+    end for;
+    for all : memory
+      use configuration work.CFG_MEMORY_STR;
+    end for;
+    for all : writeback
+      use configuration work.CFG_WRITEBACK_STR;
+    end for;
+    for all : d_ff
+      use configuration work.CFG_D_FF_BHV;
+    end for;
+    for all : d_register
+      use configuration work.CFG_D_REGISTER_STR;
+    end for;
+  end for;
+end configuration CFG_CORE_STR;
+

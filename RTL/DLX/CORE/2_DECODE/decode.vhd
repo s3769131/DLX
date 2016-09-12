@@ -12,7 +12,7 @@ entity decode is
         DECODE_rst              :   in  std_logic;
         DECODE_sigext_op        :   in  std_logic_vector(1 downto 0);
         DECODE_ir               :   in  std_logic_vector(DECODE_IR_NBIT-1 downto 0);
-        DECODE_destination_sel  :   in  std_logic; -- wheather destination is rt od rd
+        DECODE_destination_sel  :   in  std_logic_vector; -- wheather destination is rt od rd
         DECODE_rf_write_en      :   in  std_logic;
         DECODE_rf_data_write    :   in  std_logic_vector(DECODE_NBIT-1 downto 0);
         DECODE_rf_addr_write    :   in  std_logic_vector(log2ceil(DECODE_NREG)-1 downto 0);
@@ -38,7 +38,7 @@ architecture str of decode is
             MUX_4to1_in1    :   in  std_logic_vector(MUX_4to1_NBIT-1 downto 0);
             MUX_4to1_in2    :   in  std_logic_vector(MUX_4to1_NBIT-1 downto 0);
             MUX_4to1_in3    :   in  std_logic_vector(MUX_4to1_NBIT-1 downto 0);
-            MUX_4to1_sel    :   in  std_logic;
+            MUX_4to1_sel    :   in  std_logic_vector(1 downto 0);
             MUX_4to1_out    :   out std_logic_vector(MUX_4to1_NBIT-1 downto 0));
     end component mux_4to1;
 
