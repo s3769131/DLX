@@ -361,7 +361,7 @@ begin
   -----------------------------------------------------------------------------
   --                              FX/DX REGISTERS
   -----------------------------------------------------------------------------
-  FETCH_DECODE_REG_PC : d_register
+  FXDX_PC : d_register
     generic map(
       REG_NBIT => CORE_PC_NBIT)
     port map(
