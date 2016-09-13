@@ -2,7 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use work.REGF_pkg.all;
 
-entity BTB is
+entity BTB_simo is
   generic(
     BTB_NBIT    : integer := 32;
     BTB_ENTRIES : integer := 1024);
@@ -17,9 +17,9 @@ entity BTB is
     BTB_EN                   : in  std_logic;
     BTB_RST                  : in  std_logic;
     BTB_CLK                  : in  std_logic);
-end entity BTB;
+end entity BTB_simo;
 
-architecture STR of BTB is
+architecture STR of BTB_simo is
   component decoder
     generic(DEC_NBIT : integer := 5);
     port(

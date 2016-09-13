@@ -2,10 +2,10 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity TB_btb is
-end entity TB_btb;
+entity TB_btb_simo is
+end entity TB_btb_simo;
 
-architecture TEST of TB_btb is
+architecture TEST of TB_btb_simo is
   component BTB
     generic(
       BTB_NBIT    : integer := 32;
