@@ -90,14 +90,16 @@ compile
 ##
 ######################################################################
 
-optimize_registers -clock $clockName -minimum_period_only
 compile -incremental_mapping -map_effort high -ungroup_all
+optimize_registers -clock $clockName -minimum_period_only
 
 set clockGateMinBitWidth 1 ;# minimum bit-width of the cg bank-register
 set clockGateMaxFanout 1024 ;# maximum number of ffd driven by the same cg-element
 set_clock_gating_style -minimum_bitwidth $clockGateMinBitWidth -max_fanout $clockGateMaxFanout -positive_edge_logic {integrated} -control_point before
 
-compile_ultra -incremental -gate_clock
+#compile_ultra -incremental -gate_clock
+
+compile_ultra -gate_clock -timing_high_effort_script
 
 ######################################################################
 ##
