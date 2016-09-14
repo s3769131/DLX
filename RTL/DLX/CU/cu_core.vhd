@@ -25,13 +25,14 @@ end entity;
 
 architecture bhv of cu_core is
   signal s_cu_opcode : std_logic_vector(8 - 1 downto 0);
-  signal s_cu_func   : std_logic_vector(CU_FUNC_NBIT - 1 downto 0);
+  signal s_cu_func   : std_logic_vector(8 - 1 downto 0);
 
 begin
   s_cu_opcode(7 downto 6) <= (others => '0');
   s_cu_opcode(5 downto 0) <= CU_instruction_register(CU_IR_NBIT - 1 downto CU_IR_NBIT - CU_OPCODE_NBIT);
-
-  s_cu_func <= CU_instruction_register(CU_FUNC_NBIT - 1 downto 0);
+  
+  s_cu_func(7 downto 6) <= (others => '0');
+  s_cu_func(5 downto 0) <= CU_instruction_register(CU_FUNC_NBIT - 1 downto 0);
 
   MAIN : process(s_cu_opcode, s_cu_func)
   begin

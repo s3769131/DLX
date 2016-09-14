@@ -194,8 +194,20 @@ begin
   s_internal_ir <= EXE_IR_IN;
   EXE_IR_OUT    <= s_internal_ir;
 
-  s_internal_npc <= EXE_NPC_IN;
+  --s_internal_npc <= EXE_NPC_IN;
   EXE_NPC_OUT    <= s_internal_npc;
+
+NPC_MUX : mux_2to1
+  generic map(
+    MUX_2to1_NBIT => EXE_PC_NBIT
+  )
+  port map(
+    MUX_2to1_in0 => EXE_NPC_IN,
+    MUX_2to1_in1 => s_alu_out,
+    MUX_2to1_sel => s_cond_mux_out,
+    MUX_2to1_out => s_internal_npc
+  );
+
 
   EXE_ALU_OUT <= s_alu_out;
 

@@ -346,13 +346,13 @@ begin
       FETCH_pc_clear           => s_CU_FX_PC_CLR,
       FETCH_btb_prediction_in  => BTB_PREDICTION_IN,
       FETCH_btb_target_in      => BTB_TARGET_IN,
-      FETCH_alu_out            => ps_EXMEM_ALU_OUT,
+      FETCH_alu_out            => ps_EXMEM_NPC_IN,-----OK
       FETCH_ir_in              => s_FX_IN_IR_IN,
       FETCH_ir_out             => s_FX_OUT_IR_OUT,
       FETCH_pc                 => s_FX_OUT_PC,
       FETCH_npc                => s_FX_OUT_NPC,
       FETCH_btb_prediction_out => s_FX_OUT_BTB_PREDICTION_OUT,
-      FETCH_btb_target_out     => s_FX_OUT_btb_target_out); ------??????????????? TODO is necesarry?
+      FETCH_btb_target_out     => s_FX_OUT_btb_target_out);
 
   --- Interface with IROM
   s_FX_IN_IR_IN    <= CORE_ROM_INTERFACE;

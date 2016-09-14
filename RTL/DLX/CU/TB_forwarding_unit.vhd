@@ -8,12 +8,12 @@ end entity TB_forwarding_unit;
 architecture TEST of TB_forwarding_unit is
   component forwarding_unit
     port(
-      FU_EXMEM_IR2016 : in  std_logic_vector(3 downto 0);
-      FU_EXMEM_IR1511 : in  std_logic_vector(3 downto 0);
-      FU_MEMWB_IR2016 : in  std_logic_vector(3 downto 0);
-      FU_MEMWB_IR1511 : in  std_logic_vector(3 downto 0);
-      FU_IDEX_IR1006  : in  std_logic_vector(3 downto 0);
-      FU_IDEX_IR1511  : in  std_logic_vector(3 downto 0);
+      s_EXMEM_IR2016 : in  std_logic_vector(3 downto 0);
+      s_EXMEM_IR1511 : in  std_logic_vector(3 downto 0);
+      s_MEMWB_IR2016 : in  std_logic_vector(3 downto 0);
+      s_MEMWB_IR1511 : in  std_logic_vector(3 downto 0);
+      s_IDEX_IR1006  : in  std_logic_vector(3 downto 0);
+      s_IDEX_IR1511  : in  std_logic_vector(3 downto 0);
       FU_IT_SOURCE    : in  std_logic_vector(1 downto 0);
       FU_TOP_ALU      : out std_logic_vector(1 downto 0);
       FU_BOT_ALU      : out std_logic_vector(1 downto 0)
@@ -35,12 +35,12 @@ architecture TEST of TB_forwarding_unit is
 begin
   UUT : forwarding_unit
     port map(
-      FU_EXMEM_IR2016 => s_EXMEM_IR2016,
-      FU_EXMEM_IR1511 => s_EXMEM_IR1511,
-      FU_MEMWB_IR2016 => s_MEMWB_IR2016,
-      FU_MEMWB_IR1511 => s_MEMWB_IR1511,
-      FU_IDEX_IR1006  => s_IDEX_IR1006,
-      FU_IDEX_IR1511  => s_IDEX_IR1511,
+      s_EXMEM_IR2016 => s_EXMEM_IR2016,
+      s_EXMEM_IR1511 => s_EXMEM_IR1511,
+      s_MEMWB_IR2016 => s_MEMWB_IR2016,
+      s_MEMWB_IR1511 => s_MEMWB_IR1511,
+      s_IDEX_IR1006  => s_IDEX_IR1006,
+      s_IDEX_IR1511  => s_IDEX_IR1511,
       FU_IT_SOURCE    => s_IT_SOURCE,
       FU_TOP_ALU      => s_TOP_ALU,
       FU_BOT_ALU      => s_BOT_ALU
