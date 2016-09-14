@@ -108,7 +108,6 @@ begin
       NPC_SEL_out => s_pc_mux_sel);
 
   FETCH_npc   <=  s_pc_plus4_out;
-  --FETCH_npc <= s_pc_in;
 
   PLUS4_ADDER : CLA
     generic map(
