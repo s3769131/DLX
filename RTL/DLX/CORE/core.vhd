@@ -17,10 +17,10 @@ entity core is
   port(
     CORE_CLK              : in    std_logic;
     CORE_RST              : in    std_logic;
-    CORE_FXDX_EN          : in    std_logic; ---Enable signal for pipeling register FX/ID
-    CORE_FXDX_CLR         : in    std_logic; ---Clear signal (Sync) for pipeling register FX/ID
-    CORE_DXEX_EN          : in    std_logic; ---Enable signal for pipeling register ID/EX
-    CORE_DXEX_CLR         : in    std_logic; ---Clear signal (Sync) for pipeling register ID/EX
+    CORE_IFID_EN          : in    std_logic; ---Enable signal for pipeling register IF/ID
+    CORE_IFID_CLR         : in    std_logic; ---Clear signal (Sync) for pipeling register IF/ID
+    CORE_IDEX_EN          : in    std_logic; ---Enable signal for pipeling register ID/EX
+    CORE_IDEX_CLR         : in    std_logic; ---Clear signal (Sync) for pipeling register ID/EX
     CORE_EXMEM_EN         : in    std_logic; ---Enable signal for pipeling register EX/MEM            
     CORE_EXMEM_CLR        : in    std_logic; ---Clear signal (Sync) for pipeling register EX/MEM   
     CORE_MEMWB_EN         : in    std_logic; ---Enable signal for pipeling register MEM/WB         
@@ -32,14 +32,14 @@ entity core is
     CORE_ROM_INTERFACE    : in    std_logic_vector(CORE_IR_NBIT - 1 downto 0); --
     CORE_ROM_ADDRESS      : out   std_logic_vector(CORE_PC_NBIT - 1 downto 0); --
 
-    CU_FX_PC_EN           : in    std_logic;
-    CU_FX_PC_CLR          : in    std_logic;
-    CU_DX_destination_sel : in    std_logic_vector(1 downto 0);
-    CU_DX_rf_write_en     : in    std_logic;
-    CU_DX_sigext_signed   : in    std_logic;
-    CU_DX_sigext_op       : in    std_logic_vector(1 downto 0);
-    CU_DX_read1_en        : in    std_logic;
-    CU_DX_read2_en        : in    std_logic;
+    CU_IF_PC_EN           : in    std_logic;
+    CU_IF_PC_CLR          : in    std_logic;
+    CU_ID_destination_sel : in    std_logic_vector(1 downto 0);
+    CU_ID_rf_write_en     : in    std_logic;
+    -- CU_ID_sigext_signed   : in    std_logic;
+    CU_ID_sigext_op       : in    std_logic_vector(1 downto 0);
+    CU_ID_read1_en        : in    std_logic;
+    CU_ID_read2_en        : in    std_logic;
     CU_EX_IS_BRANCH       : in    std_logic; -- Signal from CU to identify if the current instruction is a branch (0 is not a branch)
     CU_EX_BRANCH_TYPE     : in    std_logic;
     CU_EX_ALU_CONTROL     : in    std_logic_vector(5 downto 0);
@@ -58,7 +58,12 @@ entity core is
     BTB_WRONG_PREDICTION  : out   std_logic;
     BTB_TARGET_OUT        : out   std_logic_vector(CORE_PC_NBIT - 1 downto 0);
     BTB_CONDITION_OUT     : out   std_logic;
-    BTB_PC_WRITE          : out   std_logic_vector(CORE_PC_NBIT - 1 downto 0)
+    BTB_PC_WRITE          : out   std_logic_vector(CORE_PC_NBIT - 1 downto 0); --
+
+    CORE_IFID_IR          : out   std_logic_vector(CORE_IR_NBIT - 1 downto 0);
+    CORE_IDEX_IR          : out   std_logic_vector(CORE_IR_NBIT - 1 downto 0);
+    CORE_EXMEM_IR         : out   std_logic_vector(CORE_IR_NBIT - 1 downto 0);
+    CORE_MEMWB_IR         : out   std_logic_vector(CORE_IR_NBIT - 1 downto 0)
   );
 end entity core;
 
@@ -217,60 +222,60 @@ architecture STR of core is
   -- constant c_opcode_nbit : integer := 6;
 
   ---Signal to FETCH from ROM
-  signal s_FX_IN_IR_IN : std_logic_vector(CORE_IR_NBIT - 1 downto 0);
+  signal s_IF_IN_IR_IN : std_logic_vector(CORE_IR_NBIT - 1 downto 0);
 
   --- Signal to FETCH from CU
-  signal s_CU_FX_PC_CLR : std_logic;
-  signal s_CU_FX_PC_EN  : std_logic;
+  signal s_CU_IF_PC_CLR : std_logic;
+  signal s_CU_IF_PC_EN  : std_logic;
 
-  -- Signals from FETCH to FX/DX pipelining registers
-  signal s_FX_OUT_IR_OUT             : std_logic_vector(CORE_IR_NBIT - 1 downto 0);
-  signal s_FX_OUT_PC                 : std_logic_vector(CORE_PC_NBIT - 1 downto 0);
-  signal s_FX_OUT_NPC                : std_logic_vector(CORE_PC_NBIT - 1 downto 0);
-  signal s_FX_OUT_BTB_PREDICTION_OUT : std_logic;
-  signal s_FX_OUT_btb_target_out     : std_logic_vector(CORE_PC_NBIT - 1 downto 0);
+  -- Signals from FETCH to IF/ID pipelining registers
+  signal s_IF_OUT_IR_OUT             : std_logic_vector(CORE_IR_NBIT - 1 downto 0);
+  signal s_IF_OUT_PC                 : std_logic_vector(CORE_PC_NBIT - 1 downto 0);
+  signal s_IF_OUT_NPC                : std_logic_vector(CORE_PC_NBIT - 1 downto 0);
+  signal s_IF_OUT_BTB_PREDICTION_OUT : std_logic;
+  signal s_IF_OUT_btb_target_out     : std_logic_vector(CORE_PC_NBIT - 1 downto 0);
 
-  --- Pipelined signals coming from FX/DX pipelining registers to DECODE
-  signal ps_FXDX_IR_IN              : std_logic_vector(CORE_IR_NBIT - 1 downto 0);
-  signal ps_FXDX_BTB_TARGET_OUT     : std_logic_vector(CORE_PC_NBIT - 1 downto 0);
-  signal ps_FXDX_BTB_PREDICTION_OUT : std_logic;
-  signal ps_FXDX_pc_in              : std_logic_vector(CORE_PC_NBIT - 1 downto 0);
-  signal ps_FXDX_NPC_IN             : std_logic_vector(CORE_PC_NBIT - 1 downto 0);
+  --- Pipelined signals coming from IF/ID pipelining registers to DECODE
+  signal ps_IFID_IR_IN              : std_logic_vector(CORE_IR_NBIT - 1 downto 0);
+  signal ps_IFID_BTB_TARGET_OUT     : std_logic_vector(CORE_PC_NBIT - 1 downto 0);
+  signal ps_IFID_BTB_PREDICTION_OUT : std_logic;
+  signal ps_IFID_pc_in              : std_logic_vector(CORE_PC_NBIT - 1 downto 0);
+  signal ps_IFID_NPC_IN             : std_logic_vector(CORE_PC_NBIT - 1 downto 0);
 
   --- Signals input to DECODE stage.
-  --signal s_DX_IN_sigext_in     : std_logic_vector(CORE_IMM_SIZE - 1 downto 0);
-  signal s_DX_IN_rf_data_write : std_logic_vector(CORE_RF_NBIT - 1 downto 0);
-  signal s_DX_IN_rf_addr_write : std_logic_vector(log2ceil(CORE_RF_NREG) - 1 downto 0);
-  --signal s_DX_IN_rf_addr_rs    : std_logic_vector(log2ceil(CORE_RF_NREG) - 1 downto 0);
-  --signal s_DX_IN_rf_addr_rt    : std_logic_vector(log2ceil(CORE_RF_NREG) - 1 downto 0);
-  --signal s_DX_IN_rf_addr_rd    : std_logic_vector(log2ceil(CORE_RF_NREG) - 1 downto 0);
+  --signal s_ID_IN_sigext_in     : std_logic_vector(CORE_IMM_SIZE - 1 downto 0);
+  signal s_ID_IN_rf_data_write : std_logic_vector(CORE_RF_NBIT - 1 downto 0);
+  signal s_ID_IN_rf_addr_write : std_logic_vector(log2ceil(CORE_RF_NREG) - 1 downto 0);
+  --signal s_ID_IN_rf_addr_rs    : std_logic_vector(log2ceil(CORE_RF_NREG) - 1 downto 0);
+  --signal s_ID_IN_rf_addr_rt    : std_logic_vector(log2ceil(CORE_RF_NREG) - 1 downto 0);
+  --signal s_ID_IN_rf_addr_rd    : std_logic_vector(log2ceil(CORE_RF_NREG) - 1 downto 0);
 
   ---Control signal for DECODE
-  signal s_CU_DX_destination_sel : std_logic_vector(1 downto 0); ----- CHANGED
-  signal s_CU_DX_rf_write_en     : std_logic;
-  signal s_CU_DX_sigext_signed   : std_logic;
+  signal s_CU_ID_destination_sel : std_logic_vector(1 downto 0); ----- CHANGED
+  signal s_CU_ID_rf_write_en     : std_logic;
+  -- signal s_CU_ID_sigext_signed   : std_logic;
   signal s_CU_sigext_op          : std_logic_vector(1 downto 0);
   signal s_CU_decode_read1_en    : std_logic;
   signal s_CU_decode_read2_en    : std_logic;
 
-  --- Signal from DECODE to DX/EX pipelining registers
-  signal s_DX_OUT_pc_out        : std_logic_vector(CORE_PC_NBIT - 1 downto 0);
-  signal s_DX_OUT_npc_out       : std_logic_vector(CORE_PC_NBIT - 1 downto 0);
-  signal s_DX_OUT_sigext_out    : std_logic_vector(CORE_ALU_NBIT - 1 downto 0);
-  signal s_DX_OUT_rf_data_read1 : std_logic_vector(CORE_ALU_NBIT - 1 downto 0);
-  signal s_DX_OUT_rf_data_read2 : std_logic_vector(CORE_ALU_NBIT - 1 downto 0);
-  signal s_DX_OUT_rf_addr_dest  : std_logic_vector(log2ceil(CORE_RF_NREG) - 1 downto 0);
+  --- Signal from DECODE to ID/EX pipelining registers
+  signal s_ID_OUT_pc_out        : std_logic_vector(CORE_PC_NBIT - 1 downto 0);
+  signal s_ID_OUT_npc_out       : std_logic_vector(CORE_PC_NBIT - 1 downto 0);
+  signal s_ID_OUT_sigext_out    : std_logic_vector(CORE_ALU_NBIT - 1 downto 0);
+  signal s_ID_OUT_rf_data_read1 : std_logic_vector(CORE_ALU_NBIT - 1 downto 0);
+  signal s_ID_OUT_rf_data_read2 : std_logic_vector(CORE_ALU_NBIT - 1 downto 0);
+  signal s_ID_OUT_rf_addr_dest  : std_logic_vector(log2ceil(CORE_RF_NREG) - 1 downto 0);
 
-  --- Pipelined signals coming from DX/EX pipelining registers to EXECUTE
-  signal ps_DXEX_rf_addr_dest   : std_logic_vector(log2ceil(CORE_RF_NREG) - 1 downto 0);
-  signal ps_DXEX_IR_IN          : std_logic_vector(CORE_IR_NBIT - 1 downto 0);
-  signal ps_DXEX_NPC_IN         : std_logic_vector(CORE_PC_NBIT - 1 downto 0);
-  signal ps_DXEX_RF_IN1         : std_logic_vector(CORE_ALU_NBIT - 1 downto 0);
-  signal ps_DXEX_RF_IN2         : std_logic_vector(CORE_ALU_NBIT - 1 downto 0);
-  signal ps_DXEX_IMM_IN         : std_logic_vector(CORE_ALU_NBIT - 1 downto 0);
-  signal ps_DXEX_PRED_COND      : std_logic;
-  signal ps_DXEX_pc             : std_logic_vector(CORE_PC_NBIT - 1 downto 0);
-  signal ps_DXEX_BTB_TARGET_OUT : std_logic_vector(CORE_PC_NBIT - 1 downto 0);
+  --- Pipelined signals coming from ID/EX pipelining registers to EXECUTE
+  signal ps_IDEX_rf_addr_dest   : std_logic_vector(log2ceil(CORE_RF_NREG) - 1 downto 0);
+  signal ps_IDEX_IR_IN          : std_logic_vector(CORE_IR_NBIT - 1 downto 0);
+  signal ps_IDEX_NPC_IN         : std_logic_vector(CORE_PC_NBIT - 1 downto 0);
+  signal ps_IDEX_RF_IN1         : std_logic_vector(CORE_ALU_NBIT - 1 downto 0);
+  signal ps_IDEX_RF_IN2         : std_logic_vector(CORE_ALU_NBIT - 1 downto 0);
+  signal ps_IDEX_IMM_IN         : std_logic_vector(CORE_ALU_NBIT - 1 downto 0);
+  signal ps_IDEX_PRED_COND      : std_logic;
+  signal ps_IDEX_pc             : std_logic_vector(CORE_PC_NBIT - 1 downto 0);
+  signal ps_IDEX_BTB_TARGET_OUT : std_logic_vector(CORE_PC_NBIT - 1 downto 0);
 
   --- Signals from EXECUTE to EX/MEM pipelining registers  
   signal s_EX_OUT_IR_OUT       : std_logic_vector(CORE_IR_NBIT - 1 downto 0);
@@ -335,83 +340,83 @@ begin
   -----------------------------------------------------------------------------
   --                              FETCH
   -----------------------------------------------------------------------------
-  FX : fetch
+  IF_stage : fetch
     generic map(
       FETCH_PC_NBIT => CORE_PC_NBIT,
       FETCH_IR_NBIT => CORE_IR_NBIT)
     port map(
       FETCH_clk                => CORE_CLK,
       FETCH_rst                => CORE_RST,
-      FETCH_pc_enable          => s_CU_FX_PC_EN,
-      FETCH_pc_clear           => s_CU_FX_PC_CLR,
+      FETCH_pc_enable          => s_CU_IF_PC_EN,
+      FETCH_pc_clear           => s_CU_IF_PC_CLR,
       FETCH_btb_prediction_in  => BTB_PREDICTION_IN,
       FETCH_btb_target_in      => BTB_TARGET_IN,
-      FETCH_alu_out            => ps_EXMEM_NPC_IN,-----OK
-      FETCH_ir_in              => s_FX_IN_IR_IN,
-      FETCH_ir_out             => s_FX_OUT_IR_OUT,
-      FETCH_pc                 => s_FX_OUT_PC,
-      FETCH_npc                => s_FX_OUT_NPC,
-      FETCH_btb_prediction_out => s_FX_OUT_BTB_PREDICTION_OUT,
-      FETCH_btb_target_out     => s_FX_OUT_btb_target_out);
+      FETCH_alu_out            => ps_EXMEM_NPC_IN, -----OK
+      FETCH_ir_in              => s_IF_IN_IR_IN,
+      FETCH_ir_out             => s_IF_OUT_IR_OUT,
+      FETCH_pc                 => s_IF_OUT_PC,
+      FETCH_npc                => s_IF_OUT_NPC,
+      FETCH_btb_prediction_out => s_IF_OUT_BTB_PREDICTION_OUT,
+      FETCH_btb_target_out     => s_IF_OUT_btb_target_out);
 
   --- Interface with IROM
-  s_FX_IN_IR_IN    <= CORE_ROM_INTERFACE;
-  CORE_ROM_ADDRESS <= s_FX_OUT_PC;
+  s_IF_IN_IR_IN    <= CORE_ROM_INTERFACE;
+  CORE_ROM_ADDRESS <= s_IF_OUT_PC;
 
   -----------------------------------------------------------------------------
-  --                              FX/DX REGISTERS
+  --                              IF/ID REGISTERS
   -----------------------------------------------------------------------------
-  FXDX_PC : d_register
+  IFID_PC : d_register
     generic map(
       REG_NBIT => CORE_PC_NBIT)
     port map(
       REG_clk      => CORE_CLK,
       REG_rst      => CORE_RST,
-      REG_clr      => CORE_FXDX_CLR,
-      REG_enable   => CORE_FXDX_EN,
-      REG_data_in  => s_FX_OUT_PC,
-      REG_data_out => ps_FXDX_pc_in);
+      REG_clr      => CORE_IFID_CLR,
+      REG_enable   => CORE_IFID_EN,
+      REG_data_in  => s_IF_OUT_PC,
+      REG_data_out => ps_IFID_pc_in);
 
-  FXDX_NPC : d_register
+  IFID_NPC : d_register
     generic map(
       REG_NBIT => CORE_PC_NBIT)
     port map(
       REG_clk      => CORE_CLK,
       REG_rst      => CORE_RST,
-      REG_clr      => CORE_FXDX_CLR,
-      REG_enable   => CORE_FXDX_EN,
-      REG_data_in  => s_FX_OUT_NPC,
-      REG_data_out => ps_FXDX_NPC_IN);
+      REG_clr      => CORE_IFID_CLR,
+      REG_enable   => CORE_IFID_EN,
+      REG_data_in  => s_IF_OUT_NPC,
+      REG_data_out => ps_IFID_NPC_IN);
 
-  FXDX_IR : d_register
+  IFID_IR : d_register
     generic map(
       REG_NBIT => CORE_IR_NBIT)
     port map(
       REG_clk      => CORE_CLK,
       REG_rst      => CORE_RST,
-      REG_clr      => CORE_FXDX_CLR,
-      REG_enable   => CORE_FXDX_EN,
-      REG_data_in  => s_FX_OUT_IR_OUT,
-      REG_data_out => ps_FXDX_IR_IN);
+      REG_clr      => CORE_IFID_CLR,
+      REG_enable   => CORE_IFID_EN,
+      REG_data_in  => s_IF_OUT_IR_OUT,
+      REG_data_out => ps_IFID_IR_IN);
 
-  FXDX_BTB_TARGET : d_register
+  IFID_BTB_TARGET : d_register
     generic map(
       REG_NBIT => CORE_PC_NBIT)
     port map(
       REG_clk      => CORE_CLK,
       REG_rst      => CORE_RST,
-      REG_clr      => CORE_FXDX_CLR,
-      REG_enable   => CORE_FXDX_EN,
-      REG_data_in  => s_FX_OUT_btb_target_out,
-      REG_data_out => ps_FXDX_BTB_TARGET_OUT);
+      REG_clr      => CORE_IFID_CLR,
+      REG_enable   => CORE_IFID_EN,
+      REG_data_in  => s_IF_OUT_btb_target_out,
+      REG_data_out => ps_IFID_BTB_TARGET_OUT);
 
-  FXDX_BTB_PREDICTION : d_ff
+  IFID_BTB_PREDICTION : d_ff
     port map(
       DFF_clk => CORE_CLK,
       DFF_rst => CORE_RST,
-      DFF_clr => CORE_FXDX_CLR,
-      DFF_d   => s_FX_OUT_BTB_PREDICTION_OUT,
-      DFF_q   => ps_FXDX_BTB_PREDICTION_OUT,
+      DFF_clr => CORE_IFID_CLR,
+      DFF_d   => s_IF_OUT_BTB_PREDICTION_OUT,
+      DFF_q   => ps_IFID_BTB_PREDICTION_OUT,
       DFF_nq  => open);
 
   -----------------------------------------------------------------------------
@@ -419,10 +424,10 @@ begin
   -----------------------------------------------------------------------------
 
 
-  s_DX_IN_rf_addr_write <= s_WB_OUT_RF_ADDR_DEST; -- from write back
-  s_DX_IN_rf_data_write <= s_WB_OUT_DATA_TO_RF;
+  s_ID_IN_rf_addr_write <= s_WB_OUT_RF_ADDR_DEST; -- from write back
+  s_ID_IN_rf_data_write <= s_WB_OUT_DATA_TO_RF;
 
-  DX : decode
+  ID : decode
     generic map(
       DECODE_NREG    => CORE_RF_NREG,
       DECODE_NBIT    => CORE_RF_NBIT,
@@ -432,146 +437,146 @@ begin
       DECODE_clk             => CORE_CLK,
       DECODE_rst             => CORE_RST,
       DECODE_sigext_op       => s_CU_sigext_op,
-      DECODE_ir              => ps_FXDX_IR_IN,
-      DECODE_destination_sel => s_CU_DX_destination_sel,
-      DECODE_rf_write_en     => s_CU_DX_rf_write_en,
-      DECODE_rf_data_write   => s_DX_IN_rf_data_write,
-      DECODE_rf_addr_write   => s_DX_IN_rf_addr_write,
+      DECODE_ir              => ps_IFID_IR_IN,
+      DECODE_destination_sel => s_CU_ID_destination_sel,
+      DECODE_rf_write_en     => s_CU_ID_rf_write_en,
+      DECODE_rf_data_write   => s_ID_IN_rf_data_write,
+      DECODE_rf_addr_write   => s_ID_IN_rf_addr_write,
       DECODE_rf_read_en_rs   => s_CU_decode_read1_en,
       DECODE_rf_read_en_rt   => s_CU_decode_read2_en,
-      DECODE_pc_in           => ps_FXDX_pc_in,
-      DECODE_npc_in          => ps_FXDX_NPC_IN,
-      DECODE_sigext_out      => s_DX_OUT_sigext_out,
-      DECODE_rf_addr_dest    => s_DX_OUT_rf_addr_dest,
-      DECODE_rf_data_read1   => s_DX_OUT_rf_data_read1,
-      DECODE_rf_data_read2   => s_DX_OUT_rf_data_read2,
-      DECODE_pc_out          => s_DX_OUT_pc_out,
-      DECODE_npc_out         => s_DX_OUT_npc_out
+      DECODE_pc_in           => ps_IFID_pc_in,
+      DECODE_npc_in          => ps_IFID_NPC_IN,
+      DECODE_sigext_out      => s_ID_OUT_sigext_out,
+      DECODE_rf_addr_dest    => s_ID_OUT_rf_addr_dest,
+      DECODE_rf_data_read1   => s_ID_OUT_rf_data_read1,
+      DECODE_rf_data_read2   => s_ID_OUT_rf_data_read2,
+      DECODE_pc_out          => s_ID_OUT_pc_out,
+      DECODE_npc_out         => s_ID_OUT_npc_out
     );
 
   -----------------------------------------------------------------------------
-  --                              DX/EX REGISTERS
+  --                              ID/EX REGISTERS
   -----------------------------------------------------------------------------
 
-  --- Pipeline register DX/EX for IR
-  DXEX_PC : d_register
+  --- Pipeline register ID/EX for IR
+  IDEX_PC : d_register
     generic map(
       REG_NBIT => CORE_PC_NBIT
     )
     port map(
       REG_clk      => CORE_CLK,
       REG_rst      => CORE_RST,
-      REG_clr      => CORE_DXEX_CLR,
-      REG_enable   => CORE_DXEX_EN,
-      REG_data_in  => ps_FXDX_pc_in,
-      REG_data_out => ps_DXEX_pc
+      REG_clr      => CORE_IDEX_CLR,
+      REG_enable   => CORE_IDEX_EN,
+      REG_data_in  => ps_IFID_pc_in,
+      REG_data_out => ps_IDEX_pc
     );
 
-  --- Pipeline register DX/EX for IR
-  DXEX_IR : d_register
+  --- Pipeline register ID/EX for IR
+  IDEX_IR : d_register
     generic map(
       REG_NBIT => CORE_IR_NBIT
     )
     port map(
       REG_clk      => CORE_CLK,
       REG_rst      => CORE_RST,
-      REG_clr      => CORE_DXEX_CLR,
-      REG_enable   => CORE_DXEX_EN,
-      REG_data_in  => ps_FXDX_IR_IN,
-      REG_data_out => ps_DXEX_IR_IN
+      REG_clr      => CORE_IDEX_CLR,
+      REG_enable   => CORE_IDEX_EN,
+      REG_data_in  => ps_IFID_IR_IN,
+      REG_data_out => ps_IDEX_IR_IN
     );
 
-  --- Pipeline register DX/EX for NPC
-  DXEX_NPC : d_register
+  --- Pipeline register ID/EX for NPC
+  IDEX_NPC : d_register
     generic map(
       REG_NBIT => CORE_PC_NBIT
     )
     port map(
       REG_clk      => CORE_CLK,
       REG_rst      => CORE_RST,
-      REG_clr      => CORE_DXEX_CLR,
-      REG_enable   => CORE_DXEX_EN,
-      REG_data_in  => s_DX_OUT_npc_out,
-      REG_data_out => ps_DXEX_NPC_IN
+      REG_clr      => CORE_IDEX_CLR,
+      REG_enable   => CORE_IDEX_EN,
+      REG_data_in  => s_ID_OUT_npc_out,
+      REG_data_out => ps_IDEX_NPC_IN
     );
 
-  --- Pipeline register DX/EX for RF read data at port 1 
-  DXEX_RF_IN1 : d_register
+  --- Pipeline register ID/EX for RF read data at port 1 
+  IDEX_RF_IN1 : d_register
     generic map(
       REG_NBIT => CORE_ALU_NBIT
     )
     port map(
       REG_clk      => CORE_CLK,
       REG_rst      => CORE_RST,
-      REG_clr      => CORE_DXEX_CLR,
-      REG_enable   => CORE_DXEX_EN,
-      REG_data_in  => s_DX_OUT_rf_data_read1,
-      REG_data_out => ps_DXEX_RF_IN1
+      REG_clr      => CORE_IDEX_CLR,
+      REG_enable   => CORE_IDEX_EN,
+      REG_data_in  => s_ID_OUT_rf_data_read1,
+      REG_data_out => ps_IDEX_RF_IN1
     );
 
-  --- Pipeline register DX/EX for immediate    
-  DXEX_IMM_IN : d_register
+  --- Pipeline register ID/EX for immediate    
+  IDEX_IMM_IN : d_register
     generic map(
       REG_NBIT => CORE_DATA_NBIT
     )
     port map(
       REG_clk      => CORE_CLK,
       REG_rst      => CORE_RST,
-      REG_clr      => CORE_DXEX_CLR,
-      REG_enable   => CORE_DXEX_EN,
-      REG_data_in  => s_DX_OUT_sigext_out,
-      REG_data_out => ps_DXEX_IMM_IN
+      REG_clr      => CORE_IDEX_CLR,
+      REG_enable   => CORE_IDEX_EN,
+      REG_data_in  => s_ID_OUT_sigext_out,
+      REG_data_out => ps_IDEX_IMM_IN
     );
 
-  --- Pipeline register DX/EX for RF read data at port 2
-  DXEX_RF_IN2 : d_register
+  --- Pipeline register ID/EX for RF read data at port 2
+  IDEX_RF_IN2 : d_register
     generic map(
       REG_NBIT => CORE_PC_NBIT
     )
     port map(
       REG_clk      => CORE_CLK,
       REG_rst      => CORE_RST,
-      REG_clr      => CORE_DXEX_CLR,
-      REG_enable   => CORE_DXEX_EN,
-      REG_data_in  => s_DX_OUT_rf_data_read2,
-      REG_data_out => ps_DXEX_RF_IN2
+      REG_clr      => CORE_IDEX_CLR,
+      REG_enable   => CORE_IDEX_EN,
+      REG_data_in  => s_ID_OUT_rf_data_read2,
+      REG_data_out => ps_IDEX_RF_IN2
     );
 
-  --- Pipeline register DX/EX for predicted condition
+  --- Pipeline register ID/EX for predicted condition
 
-  DXEX_PRED_COND : d_ff
+  IDEX_PRED_COND : d_ff
     port map(
       DFF_clk => CORE_CLK,
       DFF_rst => CORE_RST,
-      DFF_clr => CORE_DXEX_CLR,
-      DFF_d   => ps_FXDX_BTB_PREDICTION_OUT,
-      DFF_q   => ps_DXEX_PRED_COND,
+      DFF_clr => CORE_IDEX_CLR,
+      DFF_d   => ps_IFID_BTB_PREDICTION_OUT,
+      DFF_q   => ps_IDEX_PRED_COND,
       DFF_nq  => open);
 
-  DXEX_RF_ADDR_DEST : d_register
+  IDEX_RF_ADDR_DEST : d_register
     generic map(
       REG_NBIT => log2ceil(CORE_RF_NREG)
     )
     port map(
       REG_clk      => CORE_CLK,
       REG_rst      => CORE_RST,
-      REG_clr      => CORE_DXEX_CLR,
-      REG_enable   => CORE_DXEX_EN,
-      REG_data_in  => s_DX_OUT_rf_addr_dest,
-      REG_data_out => ps_DXEX_rf_addr_dest
+      REG_clr      => CORE_IDEX_CLR,
+      REG_enable   => CORE_IDEX_EN,
+      REG_data_in  => s_ID_OUT_rf_addr_dest,
+      REG_data_out => ps_IDEX_rf_addr_dest
     );
 
-  DXEX_BTB_TARGET : d_register
+  IDEX_BTB_TARGET : d_register
     generic map(
       REG_NBIT => CORE_PC_NBIT
     )
     port map(
       REG_clk      => CORE_CLK,
       REG_rst      => CORE_RST,
-      REG_clr      => CORE_DXEX_CLR,
-      REG_enable   => CORE_DXEX_EN,
-      REG_data_in  => ps_FXDX_BTB_TARGET_OUT,
-      REG_data_out => ps_DXEX_BTB_TARGET_OUT
+      REG_clr      => CORE_IDEX_CLR,
+      REG_enable   => CORE_IDEX_EN,
+      REG_data_in  => ps_IFID_BTB_TARGET_OUT,
+      REG_data_out => ps_IDEX_BTB_TARGET_OUT
     );
 
   -----------------------------------------------------------------------------
@@ -585,14 +590,14 @@ begin
       EXE_ALU_NBIT => CORE_ALU_NBIT
     )
     port map(
-      EXE_IR_IN           => ps_DXEX_IR_IN,
-      EXE_NPC_IN          => ps_DXEX_NPC_IN,
+      EXE_IR_IN           => ps_IDEX_IR_IN,
+      EXE_NPC_IN          => ps_IDEX_NPC_IN,
       EXE_IR_OUT          => s_EX_OUT_IR_OUT,
       EXE_NPC_OUT         => s_EX_OUT_NPC_OUT,
-      EXE_RF_IN1          => ps_DXEX_RF_IN1,
-      EXE_IMM_IN          => ps_DXEX_IMM_IN,
-      EXE_RF_IN2          => ps_DXEX_RF_IN2,
-      EXE_PRED_COND       => ps_DXEX_PRED_COND,
+      EXE_RF_IN1          => ps_IDEX_RF_IN1,
+      EXE_IMM_IN          => ps_IDEX_IMM_IN,
+      EXE_RF_IN2          => ps_IDEX_RF_IN2,
+      EXE_PRED_COND       => ps_IDEX_PRED_COND,
       EXE_CALC_COND       => s_EX_OUT_CALC_COND,
       EXE_WRONG_COND      => s_EX_OUT_WRONG_COND,
       EXE_WRONG_TARGET    => s_EX_OUT_WRONG_TARGET,
@@ -607,14 +612,14 @@ begin
       EXE_CU_BOT_MUX      => s_CU_EX_BOT_MUX,
       EXE_CU_FW_TOP_MUX   => s_CU_EX_FW_TOP_MUX,
       EXE_CU_FW_BOT_MUX   => s_CU_EX_FW_BOT_MUX,
-      EXE_BTB_TARGET      => ps_DXEX_BTB_TARGET_OUT
+      EXE_BTB_TARGET      => ps_IDEX_BTB_TARGET_OUT
     );
 
   BTB_WRONG_TARGET     <= s_EX_OUT_WRONG_TARGET;
   BTB_WRONG_PREDICTION <= s_EX_OUT_WRONG_COND;
   BTB_TARGET_OUT       <= s_EX_OUT_ALU_OUT; -- This one or the pipelined signal?
   BTB_CONDITION_OUT    <= s_EX_OUT_CALC_COND;
-  BTB_PC_WRITE         <= ps_DXEX_pc;
+  BTB_PC_WRITE         <= ps_IDEX_pc;
   -----------------------------------------------------------------------------
   --                             EX/MEM REGISTERS
   -----------------------------------------------------------------------------
@@ -667,7 +672,7 @@ begin
       REG_rst      => CORE_RST,
       REG_clr      => CORE_EXMEM_CLR,
       REG_enable   => CORE_EXMEM_EN,
-      REG_data_in  => ps_DXEX_RF_IN2,
+      REG_data_in  => ps_IDEX_RF_IN2,
       REG_data_out => ps_EXMEM_DATA_IN
     );
 
@@ -680,7 +685,7 @@ begin
       REG_rst      => CORE_RST,
       REG_clr      => CORE_EXMEM_CLR,
       REG_enable   => CORE_EXMEM_EN,
-      REG_data_in  => ps_DXEX_rf_addr_dest,
+      REG_data_in  => ps_IDEX_rf_addr_dest,
       REG_data_out => ps_EXMEM_rf_addr_dest
     );
 
@@ -809,15 +814,15 @@ begin
   s_FW_MEM_FROM_WB  <= ps_MEMWB_DATA_FROM_MEM;
 
   --- Control signals
-  s_CU_FX_PC_CLR <= CU_FX_PC_CLR;
-  s_CU_FX_PC_EN  <= CU_FX_PC_EN;
+  s_CU_IF_PC_CLR <= CU_IF_PC_CLR;
+  s_CU_IF_PC_EN  <= CU_IF_PC_EN;
 
-  s_CU_DX_destination_sel <= CU_DX_destination_sel;
-  s_CU_DX_rf_write_en     <= CU_DX_rf_write_en;
-  s_CU_DX_sigext_signed   <= CU_DX_sigext_signed;
-  s_CU_sigext_op          <= CU_DX_sigext_op;
-  s_CU_decode_read1_en    <= CU_DX_read1_en;
-  s_CU_decode_read2_en    <= CU_DX_read2_en;
+  s_CU_ID_destination_sel <= CU_ID_destination_sel;
+  s_CU_ID_rf_write_en     <= CU_ID_rf_write_en;
+  -- s_CU_ID_sigext_signed   <= CU_ID_sigext_signed;
+  s_CU_sigext_op          <= CU_ID_sigext_op;
+  s_CU_decode_read1_en    <= CU_ID_read1_en;
+  s_CU_decode_read2_en    <= CU_ID_read2_en;
 
   s_CU_EX_IS_BRANCH   <= CU_EX_IS_BRANCH;
   s_CU_EX_BRANCH_TYPE <= CU_EX_BRANCH_TYPE;
@@ -832,6 +837,12 @@ begin
   s_CU_MEM_LOAD_TYPE    <= CU_MEM_LOAD_TYPE;
 
   s_CU_WB_MUX_CONTROL <= CU_WB_MUX_CONTROL;
+
+  CORE_IFID_IR  <= ps_IFID_IR_IN;
+  CORE_IDEX_IR  <= ps_IDEX_IR_IN;
+  CORE_EXMEM_IR <= ps_EXMEM_IR_IN;
+  CORE_MEMWB_IR <= ps_MEMWB_IR_IN;
+
 end architecture STR;
 
 configuration CFG_CORE_STR of CORE is

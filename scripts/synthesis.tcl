@@ -50,7 +50,7 @@ define_design_lib  -path $libDir $blockName
 source ./RTL/analyze.tcl
 
 # ELABORATE DESIGN
-elaborate -lib $blockName CFG_CORE_STR
+elaborate -lib $blockName CFG_DLX_STR
 
 ######################################################################
 ##
