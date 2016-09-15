@@ -161,7 +161,7 @@ begin
 
   EX : d_register
     generic map(
-      REG_NBIT => 16
+      REG_NBIT => 17
     ) port map(
       REG_clk => CU_CLK,
       REG_rst => CU_RST,
