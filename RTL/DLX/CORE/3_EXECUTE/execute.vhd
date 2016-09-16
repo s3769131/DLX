@@ -91,18 +91,20 @@ architecture STR of execute is
     );
   end component EQ_COMPARATOR;
 
-  signal s_internal_ir       : std_logic_vector(EXE_IR_NBIT - 1 downto 0); -- Internal replica of input IR_IN
-  signal s_internal_npc      : std_logic_vector(EXE_PC_NBIT - 1 downto 0); -- Internal replica of input NPC_IN
-  signal s_top_mux_out       : std_logic_vector(EXE_ALU_NBIT - 1 downto 0); -- Out signal from TOP_MUX
-  signal s_bot_mux_out       : std_logic_vector(EXE_ALU_NBIT - 1 downto 0); -- Out signal from BOT_MUX
-  signal s_top_fw_mux_out    : std_logic_vector(EXE_ALU_NBIT - 1 downto 0); -- Out signal from TOP_FW_MUX
-  signal s_bot_fw_mux_out    : std_logic_vector(EXE_ALU_NBIT - 1 downto 0); -- Out signal from BOT_FW_MUX
-  signal s_alu_out           : std_logic_vector(EXE_ALU_NBIT - 1 downto 0); -- Out signal from ALU
-  signal s_zero_comp_out     : std_logic;
-  signal s_zero_comp_out_inv : std_logic;
-  signal s_cond_mux_out      : std_logic;
-  signal s_wrong_target      : std_logic;
-
+  signal s_internal_ir            : std_logic_vector(EXE_IR_NBIT - 1 downto 0); -- Internal replica of input IR_IN
+  signal s_internal_npc           : std_logic_vector(EXE_PC_NBIT - 1 downto 0); -- Internal replica of input NPC_IN
+  signal s_top_mux_out            : std_logic_vector(EXE_ALU_NBIT - 1 downto 0); -- Out signal from TOP_MUX
+  signal s_bot_mux_out            : std_logic_vector(EXE_ALU_NBIT - 1 downto 0); -- Out signal from BOT_MUX
+  signal s_top_fw_mux_out         : std_logic_vector(EXE_ALU_NBIT - 1 downto 0); -- Out signal from TOP_FW_MUX
+  signal s_bot_fw_mux_out         : std_logic_vector(EXE_ALU_NBIT - 1 downto 0); -- Out signal from BOT_FW_MUX
+  signal s_alu_out                : std_logic_vector(EXE_ALU_NBIT - 1 downto 0); -- Out signal from ALU
+  signal s_zero_comp_out          : std_logic;
+  signal s_zero_comp_out_inv      : std_logic;
+  signal s_cond_mux_out           : std_logic;
+  signal s_wrong_target           : std_logic;
+  signal s_cond_mux_out_is_branch : std_logic;
+  
+  
 begin
   TOP_MUX : mux_2to1
     generic map(
@@ -194,20 +196,21 @@ begin
   s_internal_ir <= EXE_IR_IN;
   EXE_IR_OUT    <= s_internal_ir;
 
-  --s_internal_npc <= EXE_NPC_IN;
-  EXE_NPC_OUT    <= s_internal_npc;
+  s_internal_npc <= EXE_NPC_IN;
+  -- EXE_NPC_OUT    <= s_internal_npc;
 
-NPC_MUX : mux_2to1
-  generic map(
-    MUX_2to1_NBIT => EXE_PC_NBIT
-  )
-  port map(
-    MUX_2to1_in0 => EXE_NPC_IN,
-    MUX_2to1_in1 => s_alu_out,
-    MUX_2to1_sel => s_cond_mux_out,
-    MUX_2to1_out => s_internal_npc
-  );
 
+  s_cond_mux_out_is_branch <= s_cond_mux_out and EXE_CU_IS_BRANCH;
+  NPC_MUX : mux_2to1
+    generic map(
+      MUX_2to1_NBIT => EXE_PC_NBIT
+    )
+    port map(
+      MUX_2to1_in0 => EXE_NPC_IN,
+      MUX_2to1_in1 => s_alu_out,
+      MUX_2to1_sel => s_cond_mux_out_is_branch,
+      MUX_2to1_out => EXE_NPC_OUT
+    );
 
   EXE_ALU_OUT <= s_alu_out;
 
