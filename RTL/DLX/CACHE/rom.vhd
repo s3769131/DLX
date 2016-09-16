@@ -45,7 +45,7 @@ begin
   
   process(ROM_RST, ROM_CLK)
   begin                                 -- process FILL_MEM_P
-    if (ROM_RST = '1') then
+    if (ROM_RST = '0') then
     else
       if ROM_CLK'event and ROM_CLK = '1' then
         if (ROM_ENABLE = '1') then
