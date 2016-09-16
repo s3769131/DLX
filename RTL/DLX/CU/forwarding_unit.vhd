@@ -190,7 +190,7 @@ begin
 
   FW : process(s_it_EXMEM, s_comp_result, s_it_IDEX, s_it_MEMWB, s_IDEX_IR1006, s_IDEX_IR1511) is
   begin
-    if (s_IDEX_IR1006 = (others => '0')) or (s_IDEX_IR1511 = (others => '0')) then
+    if (s_IDEX_IR1006 = "00000") or (s_IDEX_IR1511 = "00000") then
       FW_TOP_ALU <= SOURCE_NO;
       FW_BOT_ALU <= SOURCE_NO;
 
