@@ -5,4 +5,4 @@ add wave -color orange -label IFID_PC          sim:/tb_dlx/UUT/core_inst/IFID_PC
 add wave -color orange -label IFID_NPC         sim:/tb_dlx/UUT/core_inst/IFID_NPC/REG_data_out
 add wave -color purple -label IFID_IR          sim:/tb_dlx/UUT/core_inst/IFID_IR/REG_data_out
 add wave -color purple -label IFID_BTB_TARGET  sim:/tb_dlx/UUT/core_inst/IFID_BTB_TARGET/REG_data_out
-add wave -color green  -label IFID_BTB_PREDICT sim:/tb_dlx/UUT/core_inst/IFID_BTB_PREDICTION/REG_data_out
+add wave -color green  -label IFID_BTB_PREDICT sim:/tb_dlx/UUT/core_inst/IFID_BTB_PREDICTION/DFF_q
