@@ -91,10 +91,10 @@ architecture TEST of TB_DLX is
   signal s_DRAM_EN           : std_logic;
 
 begin
-  s_DRAM_ADDRESS(c_ADDR_NBIT - 1 downto log2ceil(c_DRAM_ENTRIES)) <= (others  => '0');
-  
-  s_ROM_ADDRESS(c_ADDR_NBIT-1 downto log2ceil(c_ROM_ENTRIES)) <= (others  => '0');
-  
+  s_DRAM_ADDRESS(c_ADDR_NBIT - 1 downto log2ceil(c_DRAM_ENTRIES) * 4) <= (others => '0');
+
+  s_ROM_ADDRESS(c_ADDR_NBIT - 1 downto log2ceil(c_ROM_ENTRIES) * 4) <= (others => '0');
+
   UUT : component DLX
     generic map(
       DLX_PC_NBIT   => c_PC_NBIT,
@@ -128,7 +128,7 @@ begin
     port map(
       ROM_CLK        => s_DLX_CLK,
       ROM_RST        => s_DLX_RST,
-      ROM_ADDRESS    => s_ROM_ADDRESS(log2ceil(c_ROM_ENTRIES)-1 downto 0),
+      ROM_ADDRESS    => s_ROM_ADDRESS(log2ceil(c_ROM_ENTRIES) * 4 - 1 downto 0),
       ROM_ENABLE     => s_ROM_EN,
       ROM_DATA_READY => s_ROM_DATA_READY,
       ROM_DATA_OUT   => s_ROM_INTERFACE
@@ -145,7 +145,7 @@ begin
     port map(
       DRAM_CLK          => s_DLX_CLK,
       DRAM_RST          => s_DLX_RST,
-      DRAM_ADDRESS      => s_DRAM_ADDRESS(log2ceil(c_DRAM_ENTRIES)-1 downto 0),
+      DRAM_ADDRESS      => s_DRAM_ADDRESS(log2ceil(c_DRAM_ENTRIES) * 4 - 1 downto 0),
       DRAM_ENABLE       => s_DRAM_EN,
       DRAM_READNOTWRITE => s_DRAM_READNOTWRITE,
       DRAM_DATA_READY   => s_DRAM_DATA_READY,
