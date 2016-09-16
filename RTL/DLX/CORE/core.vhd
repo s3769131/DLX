@@ -770,7 +770,7 @@ begin
       REG_rst      => CORE_RST,
       REG_clr      => CORE_MEMWB_CLR,
       REG_enable   => CORE_MEMWB_EN,
-      REG_data_in  => ps_EXMEM_DATA_IN,
+      REG_data_in  => ps_EXMEM_ALU_OUT,
       REG_data_out => ps_MEMWB_DATA_FROM_ALU
     );
   MEMWB_RF_ADDR_DEST : d_register
