@@ -5,10 +5,9 @@ use ieee.numeric_std.all;
 --use ieee.std_logic_textio.all;
 use work.MEM_pkg.all;
 
-
 -- Instruction memory for DLX
 -- Memory filled by a process which reads from a file
--- file name is "test.asm.mem"
+
 entity ROM is
   generic(
     ROM_FILE_PATH : string;
@@ -27,31 +26,30 @@ entity ROM is
 end ROM;
 
 architecture BHV of ROM is
-  
- -- type MEMORY_TYPE is array (natural range <>, natural range <>) of std_logic;
 
+  -- type MEMORY_TYPE is array (natural range <>, natural range <>) of std_logic;
 
-  signal ROM : MEMORY_TYPE(ROM_ENTRIES - 1 downto 0, ROM_WORD_SIZE - 1 downto 0) := initilize_mem_from_file(ROM_ENTRIES, ROM_WORD_SIZE, ROM_FILE_PATH);
-  
-  signal data_out : std_logic_vector(ROM_WORD_SIZE-1 downto 0);
-  signal valid : std_logic;
-  
+  signal ROM : MEMORY_TYPE(ROM_ENTRIES * ROM_WORD_SIZE / 8 - 1 downto 0, 7 downto 0) := initilize_mem_from_file(ROM_ENTRIES, ROM_WORD_SIZE, ROM_FILE_PATH);
 
+  signal data_out : std_logic_vector(ROM_WORD_SIZE - 1 downto 0);
+  signal valid    : std_logic;
 
- -- signal count : integer;               -- range 0 to (ROM_DATA_DELAY + 1) := 0;
+-- signal count : integer;               -- range 0 to (ROM_DATA_DELAY + 1) := 0;
 
 begin
-  
-  
   process(ROM_RST, ROM_CLK)
   begin                                 -- process FILL_MEM_P
     if (ROM_RST = '0') then
     else
       if ROM_CLK'event and ROM_CLK = '1' then
         if (ROM_ENABLE = '1') then
-          for i in 0 to ROM_WORD_SIZE-1 loop
-            data_out(i) <= ROM(to_integer(unsigned(ROM_ADDRESS)),i);  --to_integer(unsigned(ROM_ADDRESS)
+          
+          for i in 0 to ROM_WORD_SIZE / 8 - 1 loop
+            for j in 0 to 7 loop
+              data_out(i * 8 + j) <= ROM(to_integer(unsigned(ROM_ADDRESS) + i), j); --to_integer(unsigned(ROM_ADDRESS)
+            end loop;
           end loop;
+
           valid <= '1';
         else
           valid <= '0';

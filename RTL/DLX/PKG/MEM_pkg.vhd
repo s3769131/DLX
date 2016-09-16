@@ -3,7 +3,6 @@ use ieee.std_logic_1164.all;
 use std.textio.all;
 use ieee.std_logic_textio.all;
 
-
 package MEM_pkg is
   -- First index: entry number
   -- Second index: bit number
@@ -15,10 +14,13 @@ package MEM_pkg is
   procedure HEX_TO_BITV(L : inout LINE; VALUE : out BIT_VECTOR);
   procedure HEX_TO_UV(L : inout LINE; VALUE : out STD_ULOGIC_VECTOR);
   procedure HEX_TO_LV(L : inout LINE; VALUE : out STD_LOGIC_VECTOR);
-    
-  procedure rewrite_contenent(MEMORY : in MEMORY_TYPE; ENTRIES : natural; NBIT: integer; FILEPATH : string);
-  
+
+  procedure rewrite_contenent(MEMORY : in MEMORY_TYPE; ENTRIES : natural; NBIT : integer; FILEPATH : string);
+
   impure function initilize_mem_from_file(ENTRIES : integer; WORD_SIZE : integer; FILE_PATH : string) return MEMORY_TYPE;
+
+ -- impure function read_from_mem(MEMORY : in MEMORY_TYPE; ADDRESS : in integer) return integer;
+
 end package MEM_pkg;
 
 package body MEM_pkg is
@@ -144,7 +146,7 @@ package body MEM_pkg is
   end HEX_TO_LV;
 
   impure function initilize_mem_from_file(ENTRIES : integer; WORD_SIZE : integer; FILE_PATH : string) return MEMORY_TYPE is
-    variable tmp_mem : MEMORY_TYPE(ENTRIES - 1 downto 0, WORD_SIZE - 1 downto 0);
+    variable tmp_mem : MEMORY_TYPE(ENTRIES * WORD_SIZE / 8 - 1 downto 0, 7 downto 0);
 
     variable file_line : line;
     variable index     : integer := 0;
@@ -155,13 +157,15 @@ package body MEM_pkg is
   begin
     file_open(mem_fp, FILE_PATH, read_mode);
 
-    while (not endfile(mem_fp) and index < ENTRIES) loop
+    while (not endfile(mem_fp) and index < ENTRIES * WORD_SIZE / 8) loop
       readline(mem_fp, file_line);
       HEX_TO_LV(file_line, tmp_data);
-      for i in 0 to tmp_data'high loop
-        tmp_mem(index, i) := tmp_data(i);
+      for i in 0 to WORD_SIZE / 8  - 1 loop
+        for j in 0 to 7 loop
+          tmp_mem(index + i, j) := tmp_data(8 * i + j);
+        end loop;
       end loop;
-      index := index + 1;
+      index := index + WORD_SIZE / 8;
     end loop;
 
     file_close(mem_fp);
@@ -169,24 +173,22 @@ package body MEM_pkg is
     return tmp_mem;
   end function initilize_mem_from_file;
 
-
-  procedure rewrite_contenent(MEMORY : in MEMORY_TYPE; ENTRIES : natural; NBIT: integer; FILEPATH : string) is
+  procedure rewrite_contenent(MEMORY : in MEMORY_TYPE; ENTRIES : natural; NBIT : integer; FILEPATH : string) is
     variable index : natural range 0 to ENTRIES;
     file wr_file : text;
-    variable line_in : line;
-    variable tmp_data : std_logic_vector ( NBIT -1 downto 0);
+    variable line_in  : line;
+    variable tmp_data : std_logic_vector(NBIT - 1 downto 0);
   begin
     index := 0;
     file_open(wr_file, FILEPATH, WRITE_MODE);
     while index < ENTRIES loop
-    for i in 0 to NBIT - 1 loop
-      tmp_data(i) := MEMORY(index,i);
-    end loop;
+      for i in 0 to NBIT - 1 loop
+        tmp_data(i) := MEMORY(index, i);
+      end loop;
       hwrite(line_in, tmp_data);
       writeline(wr_file, line_in);
       index := index + 1;
     end loop;
   end rewrite_contenent;
-
 
 end package body MEM_pkg;
