@@ -34,8 +34,8 @@ begin
   WR_PROCESS : process(DRAM_CLK, DRAM_RST)
   begin                                 -- process
     if DRAM_RST = '1' then              -- asynchronous reset (active low)
-      for index in 0 to DRAM_ENTRIES - 1 loop
-        for i in 0 to DRAM_WORDSIZE - 1 loop
+      for index in 0 to DRAM_ENTRIES * DRAM_WORDSIZE - 1 loop
+        for i in 0 to 7 loop
           DRAM(index, i) <= '0';
         end loop;
       end loop;
