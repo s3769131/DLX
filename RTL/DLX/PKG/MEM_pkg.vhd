@@ -19,7 +19,7 @@ package MEM_pkg is
 
   impure function initilize_mem_from_file(ENTRIES : integer; WORD_SIZE : integer; FILE_PATH : string) return MEMORY_TYPE;
 
- -- impure function read_from_mem(MEMORY : in MEMORY_TYPE; ADDRESS : in integer) return integer;
+-- impure function read_from_mem(MEMORY : in MEMORY_TYPE; ADDRESS : in integer) return integer;
 
 end package MEM_pkg;
 
@@ -160,7 +160,7 @@ package body MEM_pkg is
     while (not endfile(mem_fp) and index < ENTRIES * WORD_SIZE / 8) loop
       readline(mem_fp, file_line);
       HEX_TO_LV(file_line, tmp_data);
-      for i in 0 to WORD_SIZE / 8  - 1 loop
+      for i in 0 to WORD_SIZE / 8 - 1 loop
         for j in 0 to 7 loop
           tmp_mem(index + i, j) := tmp_data(8 * i + j);
         end loop;
@@ -181,13 +181,18 @@ package body MEM_pkg is
   begin
     index := 0;
     file_open(wr_file, FILEPATH, WRITE_MODE);
-    while index < ENTRIES loop
-      for i in 0 to NBIT - 1 loop
-        tmp_data(i) := MEMORY(index, i);
+    while index < ENTRIES * NBIT / 8 loop
+      for i in 0 to NBIT / 8 loop
+        for j in 0 to 7 loop
+          tmp_data(i * 8 + j) := MEMORY(index + i, j); --to_integer(unsigned(ROM_ADDRESS)
+        end loop;
       end loop;
+      --for i in 0 to NBIT - 1 loop
+      --  tmp_data(i) := MEMORY(index, i);
+      --end loop;
       hwrite(line_in, tmp_data);
       writeline(wr_file, line_in);
-      index := index + 1;
+      index := index + 4;
     end loop;
   end rewrite_contenent;
 
