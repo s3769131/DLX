@@ -174,7 +174,7 @@ package body MEM_pkg is
   end function initilize_mem_from_file;
 
   procedure rewrite_contenent(MEMORY : in MEMORY_TYPE; ENTRIES : natural; NBIT : integer; FILEPATH : string) is
-    variable index : natural range 0 to ENTRIES;
+    variable index : natural range 0 to ENTRIES * NBIT / 8;
     file wr_file : text;
     variable line_in  : line;
     variable tmp_data : std_logic_vector(NBIT - 1 downto 0);
