@@ -188,44 +188,48 @@ begin
       COMP_RES => s_comp_result(9)
     );
 
-  FW : process(s_it_EXMEM, s_comp_result, s_it_IDEX, s_it_MEMWB) is
+  FW : process(s_it_EXMEM, s_comp_result, s_it_IDEX, s_it_MEMWB, s_IDEX_IR1006, s_IDEX_IR1511) is
   begin
-    if s_comp_result(0) = '1' and (s_it_EXMEM = IT_REG_REG) then
+    if (s_IDEX_IR1006 = (others => '0')) or (s_IDEX_IR1511 = (others => '0')) then
+      FW_TOP_ALU <= SOURCE_NO;
+      FW_BOT_ALU <= SOURCE_NO;
+
+    elsif s_comp_result(0) = '1' and (s_it_EXMEM = IT_REG_REG) then
       FW_TOP_ALU <= SOURCE_ALU1;
       FW_BOT_ALU <= SOURCE_NO;
-      
+
     elsif s_comp_result(1) = '1' and (s_it_EXMEM = IT_REG_REG) and (s_it_IDEX = IT_REG_REG) then
       FW_TOP_ALU <= SOURCE_NO;
       FW_BOT_ALU <= SOURCE_ALU1;
-      
-    elsif s_comp_result(2) = '1' and (s_it_MEMWB = IT_REG_REG)  then
+
+    elsif s_comp_result(2) = '1' and (s_it_MEMWB = IT_REG_REG) then
       FW_TOP_ALU <= SOURCE_ALU2;
       FW_BOT_ALU <= SOURCE_NO;
-      
+
     elsif s_comp_result(3) = '1' and (s_it_MEMWB = IT_REG_REG) and (s_it_IDEX = IT_REG_REG) then
       FW_TOP_ALU <= SOURCE_NO;
       FW_BOT_ALU <= SOURCE_ALU2;
-      
-    elsif s_comp_result(4) = '1' and (s_it_EXMEM = IT_IMM)  then
+
+    elsif s_comp_result(4) = '1' and (s_it_EXMEM = IT_IMM) then
       FW_TOP_ALU <= SOURCE_ALU1;
       FW_BOT_ALU <= SOURCE_NO;
-      
+
     elsif s_comp_result(5) = '1' and (s_it_EXMEM = IT_IMM) and (s_it_IDEX = IT_REG_REG) then
       FW_TOP_ALU <= SOURCE_NO;
       FW_BOT_ALU <= SOURCE_ALU1;
-      
+
     elsif s_comp_result(6) = '1' and (s_it_MEMWB = IT_IMM) then
       FW_TOP_ALU <= SOURCE_ALU2;
       FW_BOT_ALU <= SOURCE_NO;
-      
+
     elsif s_comp_result(7) = '1' and (s_it_MEMWB = IT_IMM) and (s_it_IDEX = IT_REG_REG) then
       FW_TOP_ALU <= SOURCE_NO;
       FW_BOT_ALU <= SOURCE_ALU2;
-      
-    elsif s_comp_result(8) = '1' and (s_it_MEMWB = IT_LD_ST)  then
+
+    elsif s_comp_result(8) = '1' and (s_it_MEMWB = IT_LD_ST) then
       FW_TOP_ALU <= SOURCE_MEM;
       FW_BOT_ALU <= SOURCE_NO;
-      
+
     elsif s_comp_result(9) = '1' and (s_it_MEMWB = IT_LD_ST) and (s_it_IDEX = IT_REG_REG) then
       FW_TOP_ALU <= SOURCE_NO;
       FW_BOT_ALU <= SOURCE_MEM;
