@@ -182,7 +182,7 @@ package body MEM_pkg is
     index := 0;
     file_open(wr_file, FILEPATH, WRITE_MODE);
     while index < ENTRIES * NBIT / 8 loop
-      for i in 0 to NBIT / 8 loop
+      for i in 0 to NBIT / 8 - 1 loop
         for j in 0 to 7 loop
           tmp_data(i * 8 + j) := MEMORY(index + i, j); --to_integer(unsigned(ROM_ADDRESS)
         end loop;
