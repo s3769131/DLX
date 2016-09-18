@@ -44,7 +44,7 @@ architecture STR of forwarding_unit is
   signal s_EXMEM_IR1511 : std_logic_vector(4 downto 0);
   signal s_MEMWB_IR2016 : std_logic_vector(4 downto 0);
   signal s_MEMWB_IR1511 : std_logic_vector(4 downto 0);
-  signal s_IDEX_IR1006  : std_logic_vector(4 downto 0);
+  signal s_IDEX_IR2016  : std_logic_vector(4 downto 0);
   signal s_IDEX_IR1511  : std_logic_vector(4 downto 0);
 
   signal s_comp_result : std_logic_vector(9 downto 0);
@@ -56,9 +56,11 @@ architecture STR of forwarding_unit is
 begin
   s_EXMEM_IR2016 <= FW_EXMEM_IR(20 downto 16);
   s_EXMEM_IR1511 <= FW_EXMEM_IR(15 downto 11);
+  
   s_MEMWB_IR2016 <= FW_MEMWB_IR(20 downto 16);
   s_MEMWB_IR1511 <= FW_MEMWB_IR(15 downto 11);
-  s_IDEX_IR1006  <= FW_IDEX_IR(10 downto 06);
+  
+  s_IDEX_IR2016  <= FW_IDEX_IR(20 downto 16);
   s_IDEX_IR1511  <= FW_IDEX_IR(15 downto 11);
 
   ITD_IDEX : instruction_type_decoder
@@ -93,8 +95,8 @@ begin
       COMP_NBIT => 5
     )
     port map(
-      COMP_A   => s_EXMEM_IR2016,
-      COMP_B   => s_IDEX_IR1006,
+      COMP_A   => s_EXMEM_IR1511,
+      COMP_B   => s_IDEX_IR2016,
       COMP_RES => s_comp_result(0)
     );
   ---
@@ -103,7 +105,7 @@ begin
       COMP_NBIT => 5
     )
     port map(
-      COMP_A   => s_EXMEM_IR2016,
+      COMP_A   => s_EXMEM_IR1511,
       COMP_B   => s_IDEX_IR1511,
       COMP_RES => s_comp_result(1)
     );
@@ -113,8 +115,8 @@ begin
       COMP_NBIT => 5
     )
     port map(
-      COMP_A   => s_MEMWB_IR2016,
-      COMP_B   => s_IDEX_IR1006,
+      COMP_A   => s_MEMWB_IR1511,
+      COMP_B   => s_IDEX_IR2016,
       COMP_RES => s_comp_result(2)
     );
 
@@ -123,7 +125,7 @@ begin
       COMP_NBIT => 5
     )
     port map(
-      COMP_A   => s_MEMWB_IR2016,
+      COMP_A   => s_MEMWB_IR1511,
       COMP_B   => s_IDEX_IR1511,
       COMP_RES => s_comp_result(3)
     );
@@ -133,8 +135,8 @@ begin
       COMP_NBIT => 5
     )
     port map(
-      COMP_A   => s_EXMEM_IR1511,
-      COMP_B   => s_IDEX_IR1006,
+      COMP_A   => s_EXMEM_IR2016,
+      COMP_B   => s_IDEX_IR2016,
       COMP_RES => s_comp_result(4)
     );
 
@@ -143,7 +145,7 @@ begin
       COMP_NBIT => 5
     )
     port map(
-      COMP_A   => s_EXMEM_IR1511,
+      COMP_A   => s_EXMEM_IR2016,
       COMP_B   => s_IDEX_IR1511,
       COMP_RES => s_comp_result(5)
     );
@@ -153,8 +155,8 @@ begin
       COMP_NBIT => 5
     )
     port map(
-      COMP_A   => s_MEMWB_IR1511,
-      COMP_B   => s_IDEX_IR1006,
+      COMP_A   => s_MEMWB_IR2016,
+      COMP_B   => s_IDEX_IR2016,
       COMP_RES => s_comp_result(6)
     );
 
@@ -163,7 +165,7 @@ begin
       COMP_NBIT => 5
     )
     port map(
-      COMP_A   => s_MEMWB_IR1511,
+      COMP_A   => s_MEMWB_IR2016,
       COMP_B   => s_IDEX_IR1511,
       COMP_RES => s_comp_result(7)
     );
@@ -173,8 +175,8 @@ begin
       COMP_NBIT => 5
     )
     port map(
-      COMP_A   => s_MEMWB_IR1511,
-      COMP_B   => s_IDEX_IR1006,
+      COMP_A   => s_MEMWB_IR2016,
+      COMP_B   => s_IDEX_IR2016,
       COMP_RES => s_comp_result(8)
     );
 
@@ -183,14 +185,14 @@ begin
       COMP_NBIT => 5
     )
     port map(
-      COMP_A   => s_MEMWB_IR1511,
+      COMP_A   => s_MEMWB_IR2016,
       COMP_B   => s_IDEX_IR1511,
       COMP_RES => s_comp_result(9)
     );
 
-  FW : process(s_it_EXMEM, s_comp_result, s_it_IDEX, s_it_MEMWB, s_IDEX_IR1006, s_IDEX_IR1511) is
+  FW : process(s_it_EXMEM, s_comp_result, s_it_IDEX, s_it_MEMWB, s_IDEX_IR2016, s_IDEX_IR1511) is
   begin
-    if (s_IDEX_IR1006 = "00000") or (s_IDEX_IR1511 = "00000") then
+    if (s_IDEX_IR2016 = "00000") or (s_IDEX_IR1511 = "00000") then
       FW_TOP_ALU <= SOURCE_NO;
       FW_BOT_ALU <= SOURCE_NO;
 
