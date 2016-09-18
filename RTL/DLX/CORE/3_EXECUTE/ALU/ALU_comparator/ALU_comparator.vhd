@@ -37,13 +37,12 @@ architecture str of ALU_comparator is
     signal gt_matrix    :   std_logic_matrix;
     signal lt_matrix    :   std_logic_matrix;
 
-signal s_op1_le_op2   : std_logic;
-signal s_op1_lt_op2   : std_logic;
-signal s_op1_gt_op2   : std_logic;
-signal s_op1_ge_op2   : std_logic;
-signal s_op1_eq_op2   : std_logic;
-signal s_op1_ne_op2   : std_logic;
-
+    signal s_op1_le_op2   : std_logic;
+    signal s_op1_lt_op2   : std_logic;
+    signal s_op1_gt_op2   : std_logic;
+    signal s_op1_ge_op2   : std_logic;
+    signal s_op1_eq_op2   : std_logic;
+    signal s_op1_ne_op2   : std_logic;
 
 begin
 
@@ -72,8 +71,8 @@ begin
         end generate;
     end generate;
 
-    s_op1_lt_op2 <=  lt_matrix(0)(0) xor (ALU_COMP_signed and (ALU_COMP_op1(0) xor ALU_COMP_op2(0)));
-    s_op1_gt_op2 <=  gt_matrix(0)(0) xor (ALU_COMP_signed and (ALU_COMP_op1(0) xor ALU_COMP_op2(0)));
+    s_op1_lt_op2 <=  lt_matrix(0)(0) xor (ALU_COMP_signed and (ALU_COMP_op1(ALU_COMP_NBIT-1) xor ALU_COMP_op2(ALU_COMP_NBIT-1)));
+    s_op1_gt_op2 <=  gt_matrix(0)(0) xor (ALU_COMP_signed and (ALU_COMP_op1(ALU_COMP_NBIT-1) xor ALU_COMP_op2(ALU_COMP_NBIT-1)));
 
     s_op1_eq_op2 <=  s_op1_lt_op2 nor s_op1_gt_op2;
     s_op1_ne_op2 <=  s_op1_lt_op2 or s_op1_gt_op2;
