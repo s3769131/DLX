@@ -40,12 +40,15 @@ architecture STR of forwarding_unit is
   constant SOURCE_ALU2 : std_logic_vector(1 downto 0) := "10";
   constant SOURCE_MEM  : std_logic_vector(1 downto 0) := "11";
 
-  signal s_EXMEM_IR2016 : std_logic_vector(4 downto 0);
-  signal s_EXMEM_IR1511 : std_logic_vector(4 downto 0);
-  signal s_MEMWB_IR2016 : std_logic_vector(4 downto 0);
-  signal s_MEMWB_IR1511 : std_logic_vector(4 downto 0);
-  signal s_IDEX_IR2016  : std_logic_vector(4 downto 0);
-  signal s_IDEX_IR1511  : std_logic_vector(4 downto 0);
+  signal s_EXMEM_IR_rt : std_logic_vector(4 downto 0);
+  signal s_EXMEM_IR_rd : std_logic_vector(4 downto 0);
+
+  signal s_MEMWB_IR_rt : std_logic_vector(4 downto 0);
+  signal s_MEMWB_IR_rd : std_logic_vector(4 downto 0);
+
+  signal s_IDEX_IR_rt : std_logic_vector(4 downto 0);
+  signal s_IDEX_IR_rd : std_logic_vector(4 downto 0);
+  signal s_IDEX_IR_rs : std_logic_vector(4 downto 0);
 
   signal s_comp_result : std_logic_vector(9 downto 0);
 
@@ -54,14 +57,15 @@ architecture STR of forwarding_unit is
   signal s_it_MEMWB : std_logic_vector(1 downto 0);
 
 begin
-  s_EXMEM_IR2016 <= FW_EXMEM_IR(20 downto 16);
-  s_EXMEM_IR1511 <= FW_EXMEM_IR(15 downto 11);
-  
-  s_MEMWB_IR2016 <= FW_MEMWB_IR(20 downto 16);
-  s_MEMWB_IR1511 <= FW_MEMWB_IR(15 downto 11);
-  
-  s_IDEX_IR2016  <= FW_IDEX_IR(20 downto 16);
-  s_IDEX_IR1511  <= FW_IDEX_IR(15 downto 11);
+  s_EXMEM_IR_rt <= FW_EXMEM_IR(20 downto 16);
+  s_EXMEM_IR_rd <= FW_EXMEM_IR(15 downto 11);
+
+  s_MEMWB_IR_rt <= FW_MEMWB_IR(20 downto 16);
+  s_MEMWB_IR_rd <= FW_MEMWB_IR(15 downto 11);
+
+  s_IDEX_IR_rt <= FW_IDEX_IR(20 downto 16);
+  s_IDEX_IR_rd <= FW_IDEX_IR(15 downto 11);
+  s_IDEX_IR_rs <= FW_IDEX_IR(25 downto 21);
 
   ITD_IDEX : instruction_type_decoder
     generic map(
@@ -90,156 +94,219 @@ begin
       ITD_IT => s_IT_MEMWB
     );
 
-  COMP0 : EQ_COMPARATOR
-    generic map(
-      COMP_NBIT => 5
-    )
-    port map(
-      COMP_A   => s_EXMEM_IR1511,
-      COMP_B   => s_IDEX_IR2016,
-      COMP_RES => s_comp_result(0)
-    );
-  ---
-  COMP1 : EQ_COMPARATOR
-    generic map(
-      COMP_NBIT => 5
-    )
-    port map(
-      COMP_A   => s_EXMEM_IR1511,
-      COMP_B   => s_IDEX_IR1511,
-      COMP_RES => s_comp_result(1)
-    );
-
-  COMP2 : EQ_COMPARATOR
-    generic map(
-      COMP_NBIT => 5
-    )
-    port map(
-      COMP_A   => s_MEMWB_IR1511,
-      COMP_B   => s_IDEX_IR2016,
-      COMP_RES => s_comp_result(2)
-    );
-
-  COMP3 : EQ_COMPARATOR
-    generic map(
-      COMP_NBIT => 5
-    )
-    port map(
-      COMP_A   => s_MEMWB_IR1511,
-      COMP_B   => s_IDEX_IR1511,
-      COMP_RES => s_comp_result(3)
-    );
-
-  COMP4 : EQ_COMPARATOR
-    generic map(
-      COMP_NBIT => 5
-    )
-    port map(
-      COMP_A   => s_EXMEM_IR2016,
-      COMP_B   => s_IDEX_IR2016,
-      COMP_RES => s_comp_result(4)
-    );
-
-  COMP5 : EQ_COMPARATOR
-    generic map(
-      COMP_NBIT => 5
-    )
-    port map(
-      COMP_A   => s_EXMEM_IR2016,
-      COMP_B   => s_IDEX_IR1511,
-      COMP_RES => s_comp_result(5)
-    );
-
-  COMP6 : EQ_COMPARATOR
-    generic map(
-      COMP_NBIT => 5
-    )
-    port map(
-      COMP_A   => s_MEMWB_IR2016,
-      COMP_B   => s_IDEX_IR2016,
-      COMP_RES => s_comp_result(6)
-    );
-
-  COMP7 : EQ_COMPARATOR
-    generic map(
-      COMP_NBIT => 5
-    )
-    port map(
-      COMP_A   => s_MEMWB_IR2016,
-      COMP_B   => s_IDEX_IR1511,
-      COMP_RES => s_comp_result(7)
-    );
-
-  COMP8 : EQ_COMPARATOR
-    generic map(
-      COMP_NBIT => 5
-    )
-    port map(
-      COMP_A   => s_MEMWB_IR2016,
-      COMP_B   => s_IDEX_IR2016,
-      COMP_RES => s_comp_result(8)
-    );
-
-  COMP9 : EQ_COMPARATOR
-    generic map(
-      COMP_NBIT => 5
-    )
-    port map(
-      COMP_A   => s_MEMWB_IR2016,
-      COMP_B   => s_IDEX_IR1511,
-      COMP_RES => s_comp_result(9)
-    );
-
-  FW : process(s_it_EXMEM, s_comp_result, s_it_IDEX, s_it_MEMWB, s_IDEX_IR2016, s_IDEX_IR1511) is
+  FW_PROC : process(s_EXMEM_IR_rd, s_EXMEM_IR_rt, s_IDEX_IR_rs, s_IDEX_IR_rt, s_it_EXMEM, s_it_IDEX) is
   begin
-    if (s_IDEX_IR2016 = "00000") or (s_IDEX_IR1511 = "00000") then
+    if (s_IDEX_IR_rt = "00000") or (s_IDEX_IR_rs = "00000") then
       FW_TOP_ALU <= SOURCE_NO;
       FW_BOT_ALU <= SOURCE_NO;
 
-    elsif s_comp_result(0) = '1' and (s_it_EXMEM = IT_REG_REG) then
-      FW_TOP_ALU <= SOURCE_ALU1;
-      FW_BOT_ALU <= SOURCE_NO;
+    -- Source (EXMEM) is reg-to-reg and Dest is reg-to-reg
+    elsif s_it_EXMEM = IT_REG_REG and s_it_IDEX = IT_REG_REG then
+      if s_EXMEM_IR_rd = s_IDEX_IR_rs then
+        FW_TOP_ALU <= SOURCE_ALU1;
+        FW_BOT_ALU <= SOURCE_NO;
+      elsif s_EXMEM_IR_rd = s_IDEX_IR_rt then
+        FW_TOP_ALU <= SOURCE_NO;
+        FW_BOT_ALU <= SOURCE_ALU1;
+      else
+        FW_TOP_ALU <= SOURCE_NO;
+        FW_BOT_ALU <= SOURCE_NO;
+      end if;
 
-    elsif s_comp_result(1) = '1' and (s_it_EXMEM = IT_REG_REG) and (s_it_IDEX = IT_REG_REG) then
-      FW_TOP_ALU <= SOURCE_NO;
-      FW_BOT_ALU <= SOURCE_ALU1;
+    -- Source (EXMEM) is reg-to-reg and Dest is immediate
+    elsif s_it_EXMEM = IT_REG_REG and s_it_IDEX = IT_IMM then
+      if s_EXMEM_IR_rd = s_IDEX_IR_rs then
+        FW_TOP_ALU <= SOURCE_ALU1;
+        FW_BOT_ALU <= SOURCE_NO;
+      else
+        FW_TOP_ALU <= SOURCE_NO;
+        FW_BOT_ALU <= SOURCE_NO;
+      end if;
 
-    elsif s_comp_result(2) = '1' and (s_it_MEMWB = IT_REG_REG) then
-      FW_TOP_ALU <= SOURCE_ALU2;
-      FW_BOT_ALU <= SOURCE_NO;
+    -- Source (EXMEM) is Imm and Dest is reg-to-reg
+    elsif s_it_EXMEM = IT_IMM and s_it_IDEX = IT_REG_REG then
+      if s_EXMEM_IR_rt = s_IDEX_IR_rs then
+        FW_TOP_ALU <= SOURCE_ALU1;
+        FW_BOT_ALU <= SOURCE_NO;
+      elsif s_EXMEM_IR_rt = s_IDEX_IR_rt then
+        FW_TOP_ALU <= SOURCE_NO;
+        FW_BOT_ALU <= SOURCE_ALU1;
+      else
+        FW_TOP_ALU <= SOURCE_NO;
+        FW_BOT_ALU <= SOURCE_NO;
+      end if;
 
-    elsif s_comp_result(3) = '1' and (s_it_MEMWB = IT_REG_REG) and (s_it_IDEX = IT_REG_REG) then
-      FW_TOP_ALU <= SOURCE_NO;
-      FW_BOT_ALU <= SOURCE_ALU2;
+    -- Source (EXMEM) is Immediate and Dest is immediate
+    elsif s_it_EXMEM = IT_REG_REG and s_it_IDEX = IT_IMM then
+      if s_EXMEM_IR_rt = s_IDEX_IR_rs then
+        FW_TOP_ALU <= SOURCE_ALU1;
+        FW_BOT_ALU <= SOURCE_NO;
+      else
+        FW_TOP_ALU <= SOURCE_NO;
+        FW_BOT_ALU <= SOURCE_NO;
+      end if;
 
-    elsif s_comp_result(4) = '1' and (s_it_EXMEM = IT_IMM) then
-      FW_TOP_ALU <= SOURCE_ALU1;
-      FW_BOT_ALU <= SOURCE_NO;
-
-    elsif s_comp_result(5) = '1' and (s_it_EXMEM = IT_IMM) and (s_it_IDEX = IT_REG_REG) then
-      FW_TOP_ALU <= SOURCE_NO;
-      FW_BOT_ALU <= SOURCE_ALU1;
-
-    elsif s_comp_result(6) = '1' and (s_it_MEMWB = IT_IMM) then
-      FW_TOP_ALU <= SOURCE_ALU2;
-      FW_BOT_ALU <= SOURCE_NO;
-
-    elsif s_comp_result(7) = '1' and (s_it_MEMWB = IT_IMM) and (s_it_IDEX = IT_REG_REG) then
-      FW_TOP_ALU <= SOURCE_NO;
-      FW_BOT_ALU <= SOURCE_ALU2;
-
-    elsif s_comp_result(8) = '1' and (s_it_MEMWB = IT_LD_ST) then
-      FW_TOP_ALU <= SOURCE_MEM;
-      FW_BOT_ALU <= SOURCE_NO;
-
-    elsif s_comp_result(9) = '1' and (s_it_MEMWB = IT_LD_ST) and (s_it_IDEX = IT_REG_REG) then
-      FW_TOP_ALU <= SOURCE_NO;
-      FW_BOT_ALU <= SOURCE_MEM;
+    --elsif s_EXMEM_IR_rd = s_IDEX_IR_rs and (s_it_EXMEM = IT_REG_REG or s_it_EXMEM = IT_IMM) and (s_it_IDEX = IT_REG_REG or s_it_IDEX = IT_IMM) then
+    --elsif s_EXMEM_IR_rd = s_IDEX_IR_rt and (s_it_EXMEM = IT_REG_REG) and (s_it_IDEX = IT_REG_REG) then
+    --  FW_TOP_ALU <= SOURCE_NO;
+    --  FW_BOT_ALU <= SOURCE_ALU1;
     else
       FW_TOP_ALU <= SOURCE_NO;
       FW_BOT_ALU <= SOURCE_NO;
     end if;
-  end process FW;
+
+  end process FW_PROC;
+
+-- COMP0 : EQ_COMPARATOR
+--   generic map(
+--     COMP_NBIT => 5
+--   )
+--   port map(
+--     COMP_A   => s_EXMEM_IR_rd,
+--     COMP_B   => s_IDEX_IR_rt,
+--     COMP_RES => s_comp_result(0)
+--   );
+-- ---
+-- COMP1 : EQ_COMPARATOR
+--   generic map(
+--     COMP_NBIT => 5
+--   )
+--   port map(
+--     COMP_A   => s_EXMEM_IR_rd,
+--     COMP_B   => s_IDEX_IR_rd,
+--     COMP_RES => s_comp_result(1)
+--   );
+--
+-- COMP2 : EQ_COMPARATOR
+--   generic map(
+--     COMP_NBIT => 5
+--   )
+--   port map(
+--     COMP_A   => s_MEMWB_IR_rd,
+--     COMP_B   => s_IDEX_IR_rt,
+--     COMP_RES => s_comp_result(2)
+--   );
+--
+-- COMP3 : EQ_COMPARATOR
+--   generic map(
+--     COMP_NBIT => 5
+--   )
+--   port map(
+--     COMP_A   => s_MEMWB_IR_rd,
+--     COMP_B   => s_IDEX_IR_rd,
+--     COMP_RES => s_comp_result(3)
+--   );
+--
+-- COMP4 : EQ_COMPARATOR
+--   generic map(
+--     COMP_NBIT => 5
+--   )
+--   port map(
+--     COMP_A   => s_EXMEM_IR_rt,
+--     COMP_B   => s_IDEX_IR_rt,
+--     COMP_RES => s_comp_result(4)
+--   );
+--
+-- COMP5 : EQ_COMPARATOR
+--   generic map(
+--     COMP_NBIT => 5
+--   )
+--   port map(
+--     COMP_A   => s_EXMEM_IR_rt,
+--     COMP_B   => s_IDEX_IR_rd,
+--     COMP_RES => s_comp_result(5)
+--   );
+--
+-- COMP6 : EQ_COMPARATOR
+--   generic map(
+--     COMP_NBIT => 5
+--   )
+--   port map(
+--     COMP_A   => s_MEMWB_IR_rt,
+--     COMP_B   => s_IDEX_IR_rt,
+--     COMP_RES => s_comp_result(6)
+--   );
+--
+-- COMP7 : EQ_COMPARATOR
+--   generic map(
+--     COMP_NBIT => 5
+--   )
+--   port map(
+--     COMP_A   => s_MEMWB_IR_rt,
+--     COMP_B   => s_IDEX_IR_rd,
+--     COMP_RES => s_comp_result(7)
+--   );
+--
+-- COMP8 : EQ_COMPARATOR
+--   generic map(
+--     COMP_NBIT => 5
+--   )
+--   port map(
+--     COMP_A   => s_MEMWB_IR_rt,
+--     COMP_B   => s_IDEX_IR_rt,
+--     COMP_RES => s_comp_result(8)
+--   );
+--
+-- COMP9 : EQ_COMPARATOR
+--   generic map(
+--     COMP_NBIT => 5
+--   )
+--   port map(
+--     COMP_A   => s_MEMWB_IR_rt,
+--     COMP_B   => s_IDEX_IR_rd,
+--     COMP_RES => s_comp_result(9)
+--   );
+--
+-- FW : process(s_it_EXMEM, s_comp_result, s_it_IDEX, s_it_MEMWB, s_IDEX_IR_rt, s_IDEX_IR_rd) is
+-- begin
+--   if (s_IDEX_IR_rt = "00000") or (s_IDEX_IR_rd = "00000") then
+--     FW_TOP_ALU <= SOURCE_NO;
+--     FW_BOT_ALU <= SOURCE_NO;
+--
+--   elsif s_comp_result(0) = '1' and (s_it_EXMEM = IT_REG_REG) then
+--     FW_TOP_ALU <= SOURCE_ALU1;
+--     FW_BOT_ALU <= SOURCE_NO;
+--
+--   elsif s_comp_result(1) = '1' and (s_it_EXMEM = IT_REG_REG) and (s_it_IDEX = IT_REG_REG) then
+--     FW_TOP_ALU <= SOURCE_NO;
+--     FW_BOT_ALU <= SOURCE_ALU1;
+--
+--   elsif s_comp_result(2) = '1' and (s_it_MEMWB = IT_REG_REG) then
+--     FW_TOP_ALU <= SOURCE_ALU2;
+--     FW_BOT_ALU <= SOURCE_NO;
+--
+--   elsif s_comp_result(3) = '1' and (s_it_MEMWB = IT_REG_REG) and (s_it_IDEX = IT_REG_REG) then
+--     FW_TOP_ALU <= SOURCE_NO;
+--     FW_BOT_ALU <= SOURCE_ALU2;
+--
+--   elsif s_comp_result(4) = '1' and (s_it_EXMEM = IT_IMM) then
+--     FW_TOP_ALU <= SOURCE_ALU1;
+--     FW_BOT_ALU <= SOURCE_NO;
+--
+--   elsif s_comp_result(5) = '1' and (s_it_EXMEM = IT_IMM) and (s_it_IDEX = IT_REG_REG) then
+--     FW_TOP_ALU <= SOURCE_NO;
+--     FW_BOT_ALU <= SOURCE_ALU1;
+--
+--   elsif s_comp_result(6) = '1' and (s_it_MEMWB = IT_IMM) then
+--     FW_TOP_ALU <= SOURCE_ALU2;
+--     FW_BOT_ALU <= SOURCE_NO;
+--
+--   elsif s_comp_result(7) = '1' and (s_it_MEMWB = IT_IMM) and (s_it_IDEX = IT_REG_REG) then
+--     FW_TOP_ALU <= SOURCE_NO;
+--     FW_BOT_ALU <= SOURCE_ALU2;
+--
+--   elsif s_comp_result(8) = '1' and (s_it_MEMWB = IT_LD_ST) then
+--     FW_TOP_ALU <= SOURCE_MEM;
+--     FW_BOT_ALU <= SOURCE_NO;
+--
+--   elsif s_comp_result(9) = '1' and (s_it_MEMWB = IT_LD_ST) and (s_it_IDEX = IT_REG_REG) then
+--     FW_TOP_ALU <= SOURCE_NO;
+--     FW_BOT_ALU <= SOURCE_MEM;
+--   else
+--     FW_TOP_ALU <= SOURCE_NO;
+--     FW_BOT_ALU <= SOURCE_NO;
+--   end if;
+-- end process FW;
 
 --  ALU_TOP_FORWARD : process(s_comp_result, FU_IT_SOURCE)
 --    variable v_comp_result : integer;
