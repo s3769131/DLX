@@ -137,7 +137,7 @@ begin
       end if;
 
     -- Source (EXMEM) is Immediate and Dest is immediate
-    elsif s_it_EXMEM = IT_REG_REG and s_it_IDEX = IT_IMM then
+    elsif s_it_EXMEM = IT_IMM and s_it_IDEX = IT_IMM then
       if s_EXMEM_IR_rt = s_IDEX_IR_rs then
         FW_TOP_ALU <= SOURCE_ALU1;
         FW_BOT_ALU <= SOURCE_NO;
