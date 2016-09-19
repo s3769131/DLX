@@ -1,7 +1,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
-use work.SHIFTER_pkg.all;
+use work.ALU_pkg.all;
 
 entity TB_ALU_shifter is
 end TB_ALU_shifter;

@@ -14,7 +14,7 @@ entity ALU_shifter is
         ALU_SHIFTER_result          :      out    std_logic_vector(ALU_SHIFTER_NBIT-1 downto 0));
 end entity ALU_shifter;
 
-architecture dflow of shifter is
+architecture dflow of ALU_shifter is
 
     type std_logic_matrix is array (ALU_SHIFTER_NBIT-1 downto 0) of std_logic_vector(ALU_SHIFTER_NBIT-1 downto 0);
 
@@ -74,7 +74,7 @@ begin
 
 end architecture dflow;
 
-configuration CFG_ALU_SHIFTER_DFLOW of shifter is
+configuration CFG_ALU_SHIFTER_DFLOW of ALU_shifter is
     for dflow
         for LEFT_ROW_GEN
             for LEFT_COL_GEN
@@ -92,7 +92,7 @@ configuration CFG_ALU_SHIFTER_DFLOW of shifter is
                 end for;
             end for;
         end for;
-        for RESULT_LEFT_RIGHT_MUX
+        for RESULT_LEFT_RIGHT_MUX : mux_2to1
             use configuration work.CFG_MUX_2to1_BHV;
         end for;
     end for;

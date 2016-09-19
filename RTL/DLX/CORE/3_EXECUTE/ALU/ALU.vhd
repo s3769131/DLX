@@ -206,7 +206,7 @@ configuration CFG_ALU_STR of ALU is
       use configuration work.CFG_ALU_CONTROL_BHV;
     end for;
     for SHIFTER : ALU_shifter
-      use configuration work.CFG_ALU_SHIFTER_STR;
+      use configuration work.CFG_ALU_SHIFTER_DFLOW;
     end for;
     for ADDER : CLA
       use configuration work.CFG_CLA_STR;
