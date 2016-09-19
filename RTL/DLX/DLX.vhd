@@ -56,7 +56,7 @@ architecture STR of DLX is
       CU_IF_PC_CLR          : in    std_logic;
       CU_ID_destination_sel : in    std_logic_vector(1 downto 0);
       CU_ID_rf_write_en     : in    std_logic;
-  --    CU_ID_sigext_signed   : in    std_logic;
+      --    CU_ID_sigext_signed   : in    std_logic;
       CU_ID_sigext_op       : in    std_logic_vector(1 downto 0);
       CU_ID_read1_en        : in    std_logic;
       CU_ID_read2_en        : in    std_logic;
@@ -122,7 +122,9 @@ architecture STR of DLX is
       CU_WB_MUX_CONTROL     : out std_logic_vector(1 downto 0);
       CU_IDEX_IR            : in  std_logic_vector(CU_IR_NBIT - 1 downto 0);
       CU_EXMEM_IR           : in  std_logic_vector(CU_IR_NBIT - 1 downto 0);
-      CU_MEMWB_IR           : in  std_logic_vector(CU_IR_NBIT - 1 downto 0)
+      CU_MEMWB_IR           : in  std_logic_vector(CU_IR_NBIT - 1 downto 0);
+      CU_wrong_prediction   : in  std_logic;
+      CU_wrong_target       : in  std_logic
     );
   end component cu;
 
@@ -142,7 +144,7 @@ architecture STR of DLX is
   signal s_IF_PC_CLR          : std_logic;
   signal s_ID_destination_sel : std_logic_vector(1 downto 0);
   signal s_ID_rf_write_en     : std_logic;
- -- signal s_ID_sigext_signed   : std_logic;
+  -- signal s_ID_sigext_signed   : std_logic;
   signal s_ID_sigext_op       : std_logic_vector(1 downto 0);
   signal s_ID_read1_en        : std_logic;
   signal s_ID_read2_en        : std_logic;
@@ -157,13 +159,14 @@ architecture STR of DLX is
   signal s_MEM_SIGNED_LOAD    : std_logic;
   signal s_MEM_LOAD_TYPE      : std_logic_vector(1 downto 0);
   signal s_WB_MUX_CONTROL     : std_logic_vector(1 downto 0);
-  signal s_PREDICTION_IN      : std_logic;
-  signal s_TARGET_IN          : std_logic_vector(DLX_PC_NBIT - 1 downto 0);
-  signal s_WRONG_TARGET       : std_logic;
-  signal s_WRONG_PREDICTION   : std_logic;
-  signal s_TARGET_OUT         : std_logic_vector(DLX_PC_NBIT - 1 downto 0);
-  signal s_CONDITION_OUT      : std_logic;
-  signal s_PC_WRITE           : std_logic_vector(DLX_PC_NBIT - 1 downto 0);
+
+  signal s_PREDICTION_IN    : std_logic := '0';
+  signal s_TARGET_IN        : std_logic_vector(DLX_PC_NBIT - 1 downto 0) := (others  => '0');
+  signal s_WRONG_TARGET     : std_logic;
+  signal s_WRONG_PREDICTION : std_logic;
+  signal s_TARGET_OUT       : std_logic_vector(DLX_PC_NBIT - 1 downto 0);
+  signal s_CONDITION_OUT    : std_logic;
+  signal s_PC_WRITE         : std_logic_vector(DLX_PC_NBIT - 1 downto 0);
 
   signal s_IFID_IR  : std_logic_vector(DLX_IR_NBIT - 1 downto 0);
   signal s_IDEX_IR  : std_logic_vector(DLX_IR_NBIT - 1 downto 0);
@@ -268,7 +271,9 @@ begin
       CU_WB_MUX_CONTROL     => s_WB_MUX_CONTROL,
       CU_IDEX_IR            => s_IDEX_IR,
       CU_EXMEM_IR           => s_EXMEM_IR,
-      CU_MEMWB_IR           => s_MEMWB_IR
+      CU_MEMWB_IR           => s_MEMWB_IR,
+      CU_wrong_prediction   => s_WRONG_TARGET,
+      CU_wrong_target       => s_WRONG_PREDICTION
     );
 
   DRAM_READNOTWRITE <= s_MEM_READNOTWRITE;
@@ -276,6 +281,5 @@ end architecture STR;
 
 configuration CFG_DLX_STR of DLX is
   for STR
-    
   end for;
 end configuration CFG_DLX_STR;

@@ -45,7 +45,10 @@ entity cu is
 
     CU_IDEX_IR            : in  std_logic_vector(CU_IR_NBIT - 1 downto 0);
     CU_EXMEM_IR           : in  std_logic_vector(CU_IR_NBIT - 1 downto 0);
-    CU_MEMWB_IR           : in  std_logic_vector(CU_IR_NBIT - 1 downto 0)
+    CU_MEMWB_IR           : in  std_logic_vector(CU_IR_NBIT - 1 downto 0); --
+
+    CU_wrong_prediction   : in  std_logic;
+    CU_wrong_target       : in  std_logic
   );
 end entity cu;
 
@@ -111,21 +114,21 @@ architecture STR of cu is
     );
   end component forwarding_unit;
 
---  signal s_instruction_register : std_logic_vector(CU_IR_NBIT - 1 downto 0);
-  signal s_decode_signed_ext    : std_logic_vector(1 downto 0);
-  signal s_decode_dest_sel      : std_logic_vector(1 downto 0);
-  signal s_decode_read1_en      : std_logic;
-  signal s_decode_read2_en      : std_logic;
-  signal s_execute_branch_type  : std_logic;
-  signal s_execute_alu_op       : std_logic_vector(5 downto 0);
-  signal s_execute_top_mux      : std_logic;
-  signal s_execute_bottom_mux   : std_logic;
-  signal s_execute_is_branch    : std_logic;
-  signal s_memory_r_not_w       : std_logic;
-  signal s_memory_signed_load   : std_logic;
-  signal s_memory_load_type     : std_logic_vector(1 downto 0);
-  signal s_writeback_write_en   : std_logic;
-  signal s_writeback_mux        : std_logic_vector(1 downto 0);
+  --  signal s_instruction_register : std_logic_vector(CU_IR_NBIT - 1 downto 0);
+  signal s_decode_signed_ext   : std_logic_vector(1 downto 0);
+  signal s_decode_dest_sel     : std_logic_vector(1 downto 0);
+  signal s_decode_read1_en     : std_logic;
+  signal s_decode_read2_en     : std_logic;
+  signal s_execute_branch_type : std_logic;
+  signal s_execute_alu_op      : std_logic_vector(5 downto 0);
+  signal s_execute_top_mux     : std_logic;
+  signal s_execute_bottom_mux  : std_logic;
+  signal s_execute_is_branch   : std_logic;
+  signal s_memory_r_not_w      : std_logic;
+  signal s_memory_signed_load  : std_logic;
+  signal s_memory_load_type    : std_logic_vector(1 downto 0);
+  signal s_writeback_write_en  : std_logic;
+  signal s_writeback_mux       : std_logic_vector(1 downto 0);
 
   signal s_idexmemwb : std_logic_vector(22 downto 0);
   signal s_exmemwb   : std_logic_vector(16 downto 0);
@@ -215,14 +218,14 @@ begin
       DRAM_DATA_READY => CU_DRAM_DATA_READY,
       ROM_EN          => CU_ROM_EN,
       DRAM_EN         => CU_DRAM_EN,
-      IFID_CLR        => CU_IFID_CLR,
-      IFID_EN         => CU_IFID_EN,
-      IDEX_CLR        => CU_IDEX_CLR,
-      IDEX_EN         => CU_IDEX_EN,
-      EXMEM_CLR       => CU_EXMEM_CLR,
-      EXMEM_EN        => CU_EXMEM_EN,
-      MEMWB_CLR       => CU_MEMWB_CLR,
-      MEMWB_EN        => CU_MEMWB_EN
+      IFID_CLR        => open,          --CU_IFID_CLR,
+      IFID_EN         => open,          --CU_IFID_EN,
+      IDEX_CLR        => open,          --CU_IDEX_CLR,
+      IDEX_EN         => open,          --CU_IDEX_EN,
+      EXMEM_CLR       => open,          --CU_EXMEM_CLR,
+      EXMEM_EN        => open,          --CU_EXMEM_EN,
+      MEMWB_CLR       => open,          --CU_MEMWB_CLR,
+      MEMWB_EN        => open           --CU_MEMWB_EN
     );
 
   s_idexmemwb(22 downto 21) <= s_decode_signed_ext;
@@ -264,11 +267,33 @@ begin
   CU_IF_PC_EN  <= '1';
   CU_IF_PC_CLR <= '0';
 
+  process (CU_wrong_prediction, CU_wrong_target)
+  begin
+    if CU_wrong_prediction = '1' or CU_wrong_target = '1' then
+      CU_IFID_CLR  <= '1';
+      CU_IFID_EN   <= '1';
+      CU_IDEX_CLR  <= '1';
+      CU_IDEX_EN   <= '1';
+      CU_EXMEM_CLR <= '1';
+      CU_EXMEM_EN  <= '1';
+      CU_MEMWB_CLR <= '0';
+      CU_MEMWB_EN  <= '1';
+    else
+      CU_IFID_CLR  <= '0';
+      CU_IFID_EN   <= '1';
+      CU_IDEX_CLR  <= '0';
+      CU_IDEX_EN   <= '1';
+      CU_EXMEM_CLR <= '0';
+      CU_EXMEM_EN  <= '1';
+      CU_MEMWB_CLR <= '0';
+      CU_MEMWB_EN  <= '1';
+    end if;
+  end process;
+
 end architecture STR;
 
 configuration CFG_CU_STR of CU is
   for STR
-    
   end for;
 end configuration CFG_CU_STR;
 
