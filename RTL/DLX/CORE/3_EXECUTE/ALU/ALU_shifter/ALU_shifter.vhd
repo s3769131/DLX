@@ -8,7 +8,7 @@ entity ALU_shifter is
         ALU_SHIFTER_NBIT  :  integer  := 32);
     port(
         ALU_SHIFTER_operand         :      in  std_logic_vector(ALU_SHIFTER_NBIT-1 downto 0);
-        ALU_SHIFTER_n_shift         :      in  std_logic_vector(ALU_SHIFTER_NBIT-1 downto 0);
+        ALU_SHIFTER_n_shift         :      in  std_logic_vector(log2ceil(ALU_SHIFTER_NBIT)-1 downto 0);
         ALU_SHIFTER_left_not_right  :      in  std_logic;
         ALU_SHIFTER_logic_not_arith    :    in  std_logic;
         ALU_SHIFTER_result          :      out    std_logic_vector(ALU_SHIFTER_NBIT-1 downto 0));
