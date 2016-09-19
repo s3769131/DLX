@@ -172,7 +172,7 @@ begin
       ALU_COMP_signed     => s_control_comparator_signed,
       ALU_COMP_op1_le_op2 => s_comparator_mux_in(0),
       ALU_COMP_op1_lt_op2 => s_comparator_mux_in(1),
-      ALU_COMP_op1_eq_op2 => s_comparator_mux_in(2),
+      ALU_COMP_op1_eq_op2  => s_comparator_mux_in(2),
       ALU_COMP_op1_ne_op2 => s_comparator_mux_in(3),
       ALU_COMP_op1_ge_op2 => s_comparator_mux_in(4),
       ALU_COMP_op1_gt_op2 => s_comparator_mux_in(5));
