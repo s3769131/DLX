@@ -116,7 +116,7 @@ architecture str of ALU is
   signal s_adder_result       : std_logic_vector(ALU_NBIT - 1 downto 0);
   signal s_logic_unit_result  : std_logic_vector(ALU_NBIT - 1 downto 0);
   signal s_comparator_result  : std_logic_vector(ALU_NBIT - 1 downto 0);
-  signal s_comparator_mux_in  : std_logic_vector(0 to 7);
+  signal s_comparator_mux_in  : std_logic_vector(7 downto 0);
   signal s_comparator_mux_out : std_logic;
 
 begin
