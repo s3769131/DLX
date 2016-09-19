@@ -644,7 +644,7 @@ begin
     port map(
       REG_clk      => CORE_CLK,
       REG_rst      => CORE_RST,
-      REG_clr      => CORE_EXMEM_CLR,
+      REG_clr      => CORE_MEMWB_CLR,
       REG_enable   => CORE_EXMEM_EN,
       REG_data_in  => s_EX_OUT_NPC_OUT,
       REG_data_out => ps_EXMEM_NPC_IN
