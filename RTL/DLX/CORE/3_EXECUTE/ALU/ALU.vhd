@@ -38,8 +38,8 @@ architecture str of ALU is
     port(
       ALU_SHIFTER_operand     : in  std_logic_vector(ALU_SHIFTER_NBIT - 1 downto 0);
       ALU_SHIFTER_n_shift     : in  std_logic_vector(log2ceil(ALU_SHIFTER_NBIT) - 1 downto 0);
-      ALU_SHIFTER_left_right  : in  std_logic;
-      ALU_SHIFTER_logic_arith : in  std_logic;
+      ALU_SHIFTER_left_not_right  : in  std_logic;
+      ALU_SHIFTER_logic_not_arith : in  std_logic;
       ALU_SHIFTER_result      : out std_logic_vector(ALU_SHIFTER_NBIT - 1 downto 0));
   end component;
 
@@ -137,8 +137,8 @@ begin
     port map(
       ALU_SHIFTER_operand     => ALU_operand1,
       ALU_SHIFTER_n_shift     => ALU_operand2(log2ceil(ALU_NBIT) - 1 downto 0),
-      ALU_SHIFTER_left_right  => s_control_shifter_left_right,
-      ALU_SHIFTER_logic_arith => s_control_shifter_logic_arith,
+      ALU_SHIFTER_left_not_right  => s_control_shifter_left_right,
+      ALU_SHIFTER_logic_not_arith => s_control_shifter_logic_arith,
       ALU_SHIFTER_result      => s_shifter_result);
 
   ADDER : CLA
