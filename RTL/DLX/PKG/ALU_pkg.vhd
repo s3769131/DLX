@@ -38,10 +38,10 @@ package ALU_pkg is
   constant set_less_equal_signed      : std_logic_vector(ALU_OP_NBIT - 1 downto 0) := "100001";
   constant set_less_than_unsigned     : std_logic_vector(ALU_OP_NBIT - 1 downto 0) := "100010";
   constant set_less_than_signed       : std_logic_vector(ALU_OP_NBIT - 1 downto 0) := "100011";
-  constant shift_left_arith           : std_logic_vector(ALU_OP_NBIT - 1 downto 0) := "000100";
-  constant shift_left_logic           : std_logic_vector(ALU_OP_NBIT - 1 downto 0) := "000000";
-  constant shift_right_arith          : std_logic_vector(ALU_OP_NBIT - 1 downto 0) := "001100";
-  constant shift_right_logic          : std_logic_vector(ALU_OP_NBIT - 1 downto 0) := "001000";
+  constant shift_right_logic          : std_logic_vector(ALU_OP_NBIT - 1 downto 0) := "000100";
+  constant shift_right_arith          : std_logic_vector(ALU_OP_NBIT - 1 downto 0) := "000000";
+  constant shift_left_logic           : std_logic_vector(ALU_OP_NBIT - 1 downto 0) := "001100";
+  constant shift_left_arith           : std_logic_vector(ALU_OP_NBIT - 1 downto 0) := "001000";
   constant subtraction                : std_logic_vector(ALU_OP_NBIT - 1 downto 0) := "011000";
 
 end ALU_pkg;

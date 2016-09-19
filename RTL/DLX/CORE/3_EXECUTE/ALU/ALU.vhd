@@ -136,7 +136,7 @@ begin
       ALU_SHIFTER_NBIT => ALU_NBIT)
     port map(
       ALU_SHIFTER_operand     => ALU_operand1,
-      ALU_SHIFTER_n_shift     => ALU_operand2(log2ceil(ALU_NBIT) - 1 downto 0),
+      ALU_SHIFTER_n_shift     => ALU_operand2,
       ALU_SHIFTER_left_right  => s_control_shifter_left_right,
       ALU_SHIFTER_logic_arith => s_control_shifter_logic_arith,
       ALU_SHIFTER_result      => s_shifter_result);
@@ -172,10 +172,10 @@ begin
       ALU_COMP_signed     => s_control_comparator_signed,
       ALU_COMP_op1_le_op2 => s_comparator_mux_in(0),
       ALU_COMP_op1_lt_op2 => s_comparator_mux_in(1),
-      ALU_COMP_op1_gt_op2 => s_comparator_mux_in(2),
-      ALU_COMP_op1_ge_op2 => s_comparator_mux_in(3),
-      ALU_COMP_op1_eq_op2 => s_comparator_mux_in(4),
-      ALU_COMP_op1_ne_op2 => s_comparator_mux_in(5));
+      ALU_COMP_op1_eq_op2 => s_comparator_mux_in(2),
+      ALU_COMP_op1_ne_op2 => s_comparator_mux_in(3),
+      ALU_COMP_op1_ge_op2 => s_comparator_mux_in(4),
+      ALU_COMP_op1_gt_op2 => s_comparator_mux_in(5));
 
   COMPARATOR_MUX : bit_multiplexer
     generic map(
