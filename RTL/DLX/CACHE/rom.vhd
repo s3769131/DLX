@@ -37,11 +37,11 @@ architecture BHV of ROM is
 -- signal count : integer;               -- range 0 to (ROM_DATA_DELAY + 1) := 0;
 
 begin
-  process(ROM_RST, ROM_CLK)
+  process(ROM_RST, ROM_CLK, ROM_ADDRESS, ROM_ENABLE)
   begin                                 -- process FILL_MEM_P
     if (ROM_RST = '0') then
     else
-      if ROM_CLK'event and ROM_CLK = '1' then
+     -- if ROM_CLK'event and ROM_CLK = '1' then
         if (ROM_ENABLE = '1') then
           
           for i in 0 to ROM_WORD_SIZE / 8 - 1 loop
@@ -54,7 +54,7 @@ begin
         else
           valid <= '0';
         end if;
-      end if;
+    --  end if;
     end if;
   end process;
 
