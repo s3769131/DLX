@@ -160,8 +160,8 @@ architecture STR of DLX is
   signal s_MEM_LOAD_TYPE      : std_logic_vector(1 downto 0);
   signal s_WB_MUX_CONTROL     : std_logic_vector(1 downto 0);
 
-  signal s_PREDICTION_IN    : std_logic;
-  signal s_TARGET_IN        : std_logic_vector(DLX_PC_NBIT - 1 downto 0);
+  signal s_PREDICTION_IN    : std_logic := '0';
+  signal s_TARGET_IN        : std_logic_vector(DLX_PC_NBIT - 1 downto 0) := (others  => '0');
   signal s_WRONG_TARGET     : std_logic;
   signal s_WRONG_PREDICTION : std_logic;
   signal s_TARGET_OUT       : std_logic_vector(DLX_PC_NBIT - 1 downto 0);
