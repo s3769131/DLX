@@ -45,7 +45,7 @@ begin
             CU_decode_read1_en     <= '1'; --  read
             CU_decode_read2_en     <= '1'; --  read
             CU_execute_branch_type <= '0'; --  don't care
-            CU_execute_alu_op      <= "000000"; --  sll
+            CU_execute_alu_op      <= "001100"; --  sll
             CU_execute_top_mux     <= '1'; --  take rs
             CU_execute_bottom_mux  <= '1'; --  take rt
             CU_execute_is_branch   <= '0'; --  is not branch
@@ -60,7 +60,7 @@ begin
             CU_decode_read1_en     <= '1'; --  read
             CU_decode_read2_en     <= '1'; --  read
             CU_execute_branch_type <= '0'; --  don't care
-            CU_execute_alu_op      <= "001000"; --  srl
+            CU_execute_alu_op      <= "000100"; --  srl
             CU_execute_top_mux     <= '1'; --  take rs
             CU_execute_bottom_mux  <= '1'; --  take rt
             CU_execute_is_branch   <= '0'; --  is not branch
@@ -75,7 +75,7 @@ begin
             CU_decode_read1_en     <= '1'; --  read
             CU_decode_read2_en     <= '1'; --  read
             CU_execute_branch_type <= '0'; --  don't care
-            CU_execute_alu_op      <= "001100"; --  sra
+            CU_execute_alu_op      <= "000000"; --  sra
             CU_execute_top_mux     <= '1'; --  take rs
             CU_execute_bottom_mux  <= '1'; --  take rt
             CU_execute_is_branch   <= '0'; --  is not branch
@@ -557,7 +557,7 @@ begin
         CU_decode_read1_en     <= '1';  --  read
         CU_decode_read2_en     <= '0';  --  don't read
         CU_execute_branch_type <= '0';  --  don't care
-        CU_execute_alu_op      <= "000000"; --  sll
+        CU_execute_alu_op      <= "001100"; --  sll
         CU_execute_top_mux     <= '1';  --  take rs
         CU_execute_bottom_mux  <= '0';  --  read extended immediate from imm_in
         CU_execute_is_branch   <= '0';  --  is not branch
@@ -587,7 +587,7 @@ begin
         CU_decode_read1_en     <= '1';  --  read
         CU_decode_read2_en     <= '0';  --  don't read
         CU_execute_branch_type <= '0';  --  don't care
-        CU_execute_alu_op      <= "001000"; --  srl
+        CU_execute_alu_op      <= "000100"; --  srl
         CU_execute_top_mux     <= '1';  --  take rs
         CU_execute_bottom_mux  <= '0';  --  read extended immediate from imm_in
         CU_execute_is_branch   <= '0';  --  is not branch
@@ -602,7 +602,7 @@ begin
         CU_decode_read1_en     <= '1';  --  read
         CU_decode_read2_en     <= '0';  --  don't read
         CU_execute_branch_type <= '0';  --  don't care
-        CU_execute_alu_op      <= "001100"; --  sra
+        CU_execute_alu_op      <= "000000"; --  sra
         CU_execute_top_mux     <= '1';  --  take rs
         CU_execute_bottom_mux  <= '0';  --  read extended immediate from imm_in
         CU_execute_is_branch   <= '0';  --  is not branch
