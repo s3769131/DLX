@@ -18,7 +18,7 @@ add wave -color yellow -radix HEX -label EX_WRONG_TARGET  sim:/tb_dlx/UUT/core_i
 add wave -color yellow -radix HEX -label EX_ALU_OUT       sim:/tb_dlx/UUT/core_inst/EX/EXE_ALU_OUT
 
 
-add wave -color purple -radix BIN -label EX_CU_IS_BRANCH   sim:/tb_dlx/UUT/core_inst/EX/EXE_CU_IS_JUMP
+add wave -color purple -radix BIN -label EX_CU_IS_JUMP   sim:/tb_dlx/UUT/core_inst/EX/EXE_CU_IS_JUMP
 add wave -color purple -radix BIN -label EX_CU_IS_BRANCH   sim:/tb_dlx/UUT/core_inst/EX/EXE_CU_IS_BRANCH
 add wave -color purple -radix BIN -label EX_CU_BRANCH_TYPE sim:/tb_dlx/UUT/core_inst/EX/EXE_CU_BRANCH_TYPE
 add wave -color purple -radix BIN -label EX_CU_ALU_CONTROL sim:/tb_dlx/UUT/core_inst/EX/EXE_CU_ALU_CONTROL
