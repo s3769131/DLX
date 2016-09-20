@@ -160,6 +160,7 @@ begin
       s_DRAM_INTERFACE <= (others => 'Z');
     else
       if (s_DRAM_READNOTWRITE = '0') then
+        s_DRAM_INTERFACE <= (others => 'Z');
         s_DRAM_DLX       <= (others => 'Z');
         s_DRAM_INTERFACE <= s_DRAM_DLX;
       end if;
