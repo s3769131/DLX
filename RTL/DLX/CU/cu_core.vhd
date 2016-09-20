@@ -787,7 +787,7 @@ begin
         CU_decode_signed_ext   <= "10"; --  extend as 16 bits signed immediate
         CU_decode_dest_sel     <= "01"; --  use rt as destination
         CU_decode_read1_en     <= '1';  --  read
-        CU_decode_read2_en     <= '0';  --  don't read
+        CU_decode_read2_en     <= '1';  --  don't read
         CU_execute_branch_type <= '0';  --  don't care
         CU_execute_alu_op      <= "010000"; --  add
         CU_execute_top_mux     <= '1';  --  take rs
