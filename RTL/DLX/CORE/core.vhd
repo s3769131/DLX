@@ -358,7 +358,7 @@ begin
       FETCH_pc_clear           => s_CU_IF_PC_CLR,
       FETCH_btb_prediction_in  => BTB_PREDICTION_IN,
       FETCH_btb_target_in      => BTB_TARGET_IN,
-      FETCH_alu_out            => s_EX_OUT_NPC_OUT, -----OK
+      FETCH_alu_out            => s_EX_OUT_ALU_OUT, -----OK
       FETCH_ir_in              => s_IF_IN_IR_IN,
       FETCH_ir_out             => s_IF_OUT_IR_OUT,
       FETCH_pc                 => s_IF_OUT_PC,

@@ -200,22 +200,22 @@ begin
   EXE_IR_OUT    <= s_internal_ir;
 
   s_internal_npc <= EXE_NPC_IN;
-  -- EXE_NPC_OUT    <= s_internal_npc;
+   EXE_NPC_OUT    <= s_internal_npc;
 
 
-  s_cond_mux_out_is_branch <= s_cond_mux_out and EXE_CU_IS_BRANCH;
-  NPC_MUX : mux_2to1
-    generic map(
-      MUX_2to1_NBIT => EXE_PC_NBIT
-    )
-    port map(
-      MUX_2to1_in0 => EXE_NPC_IN,
-      MUX_2to1_in1 => s_alu_out,
-      MUX_2to1_sel => s_cond_mux_out_is_branch,
-      MUX_2to1_out => s_NPC_OUT
-    );
-
-EXE_NPC_OUT <= s_NPC_OUT when EXE_CU_is_jump = '0' else s_alu_out;
+-- s_cond_mux_out_is_branch <= s_cond_mux_out and EXE_CU_IS_BRANCH;
+-- NPC_MUX : mux_2to1
+--   generic map(
+--     MUX_2to1_NBIT => EXE_PC_NBIT
+--   )
+--   port map(
+--     MUX_2to1_in0 => EXE_NPC_IN,
+--     MUX_2to1_in1 => s_alu_out,
+--     MUX_2to1_sel => s_cond_mux_out_is_branch,
+--     MUX_2to1_out => s_NPC_OUT
+--   );
+--
+-- EXE_NPC_OUT <= s_NPC_OUT when EXE_CU_is_jump = '0' else s_alu_out;
 
 
   EXE_ALU_OUT <= s_alu_out;
