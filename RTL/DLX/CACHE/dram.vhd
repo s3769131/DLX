@@ -34,7 +34,7 @@ begin
   WR_PROCESS : process(DRAM_CLK, DRAM_RST)
   begin                                 -- process
     if DRAM_RST = '0' then              -- asynchronous reset (active low)
-      for index in 0 to DRAM_ENTRIES * DRAM_WORDSIZE - 1 loop
+      for index in 0 to DRAM_ENTRIES * DRAM_WORDSIZE / 8 - 1 loop
         for i in 0 to 7 loop
           DRAM(index, i) <= '0';
         end loop;
@@ -50,7 +50,7 @@ begin
           --  DRAM(to_integer(unsigned(DRAM_ADDRESS)), i) <= DRAM_INOUT_DATA(i);
           --end loop;
 
-          for i in 0 to DRAM_WORDSIZE / 8 - 1 loop
+          for i in 0 to (DRAM_WORDSIZE / 8) - 1 loop
             for j in 0 to 7 loop
               DRAM(to_integer(unsigned(DRAM_ADDRESS) + i), j) <= DRAM_INOUT_DATA(i * 8 + j); --to_integer(unsigned(ROM_ADDRESS)
             end loop;
@@ -58,7 +58,7 @@ begin
 
           mem_ready <= '1';
         else
-          for i in 0 to DRAM_WORDSIZE / 8 - 1 loop
+          for i in 0 to (DRAM_WORDSIZE / 8) - 1 loop
             for j in 0 to 7 loop
               tmp_data(i * 8 + j) <= DRAM(to_integer(unsigned(DRAM_ADDRESS) + i), j); --to_integer(unsigned(ROM_ADDRESS)
             end loop;
