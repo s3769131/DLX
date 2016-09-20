@@ -51,6 +51,7 @@ entity core is
     CU_MEM_SIGNED_LOAD    : in    std_logic;
     CU_MEM_LOAD_TYPE      : in    std_logic_vector(1 downto 0);
     CU_WB_MUX_CONTROL     : in    std_logic_vector(1 downto 0); --
+    CU_IS_JUMP_AND_LINK   : in    std_logic; --
 
     BTB_PREDICTION_IN     : in    std_logic;
     BTB_TARGET_IN         : in    std_logic_vector(CORE_PC_NBIT - 1 downto 0);
@@ -74,20 +75,20 @@ architecture STR of core is
       FETCH_IR_NBIT : integer := 32
     );
     port(
-     FETCH_clk                : in  std_logic; --  clk signal
-    FETCH_rst                : in  std_logic; --  reset signal, active low
-    FETCH_pc_enable          : in  std_logic; --  enable signal for program counter
-    FETCH_pc_clear           : in  std_logic; --  clear signal for program counter
-    FETCH_branch_pred_error  : in  std_logic; --  set if a misprediction is detected by the execute stage
-    FETCH_btb_prediction_in  : in  std_logic; --  taken/not taken prediction by the btb
-    FETCH_btb_target_in      : in  std_logic_vector(FETCH_PC_NBIT - 1 downto 0); --  target prediction by the btb
-    FETCH_alu_out            : in  std_logic_vector(FETCH_PC_NBIT - 1 downto 0); --  correct branch target
-    FETCH_ir_in              : in  std_logic_vector(FETCH_IR_NBIT - 1 downto 0); --  instruction register from cache
-    FETCH_ir_out             : out std_logic_vector(FETCH_IR_NBIT - 1 downto 0);
-    FETCH_btb_prediction_out : out std_logic; --  taken/not taken prediction by the btb
-    FETCH_btb_target_out     : out std_logic_vector(FETCH_PC_NBIT - 1 downto 0);
-    FETCH_pc                 : out std_logic_vector(FETCH_PC_NBIT - 1 downto 0); --  pc of the current instruction
-    FETCH_npc                : out std_logic_vector(FETCH_PC_NBIT - 1 downto 0) 
+      FETCH_clk                : in  std_logic; --  clk signal
+      FETCH_rst                : in  std_logic; --  reset signal, active low
+      FETCH_pc_enable          : in  std_logic; --  enable signal for program counter
+      FETCH_pc_clear           : in  std_logic; --  clear signal for program counter
+      FETCH_branch_pred_error  : in  std_logic; --  set if a misprediction is detected by the execute stage
+      FETCH_btb_prediction_in  : in  std_logic; --  taken/not taken prediction by the btb
+      FETCH_btb_target_in      : in  std_logic_vector(FETCH_PC_NBIT - 1 downto 0); --  target prediction by the btb
+      FETCH_alu_out            : in  std_logic_vector(FETCH_PC_NBIT - 1 downto 0); --  correct branch target
+      FETCH_ir_in              : in  std_logic_vector(FETCH_IR_NBIT - 1 downto 0); --  instruction register from cache
+      FETCH_ir_out             : out std_logic_vector(FETCH_IR_NBIT - 1 downto 0);
+      FETCH_btb_prediction_out : out std_logic; --  taken/not taken prediction by the btb
+      FETCH_btb_target_out     : out std_logic_vector(FETCH_PC_NBIT - 1 downto 0);
+      FETCH_pc                 : out std_logic_vector(FETCH_PC_NBIT - 1 downto 0); --  pc of the current instruction
+      FETCH_npc                : out std_logic_vector(FETCH_PC_NBIT - 1 downto 0)
     );
   end component fetch;
 
@@ -226,9 +227,9 @@ architecture STR of core is
   signal s_IF_IN_IR_IN : std_logic_vector(CORE_IR_NBIT - 1 downto 0);
 
   --- Signal to FETCH from CU
-  signal s_CU_IF_PC_CLR : std_logic;
-  signal s_CU_IF_PC_EN  : std_logic;
-signal s_IF_branch_pred_error : std_logic;
+  signal s_CU_IF_PC_CLR              : std_logic;
+  signal s_CU_IF_PC_EN               : std_logic;
+  signal s_IF_branch_pred_error      : std_logic;
   -- Signals from FETCH to IF/ID pipelining registers
   signal s_IF_OUT_IR_OUT             : std_logic_vector(CORE_IR_NBIT - 1 downto 0);
   signal s_IF_OUT_PC                 : std_logic_vector(CORE_PC_NBIT - 1 downto 0);
@@ -341,13 +342,13 @@ begin
   -----------------------------------------------------------------------------
   --                              FETCH
   -----------------------------------------------------------------------------
-  s_IF_branch_pred_error  <= s_EX_OUT_WRONG_COND or s_EX_OUT_WRONG_TARGET;
+  s_IF_branch_pred_error <= s_EX_OUT_WRONG_COND or s_EX_OUT_WRONG_TARGET;
   IF_stage : fetch
     generic map(
       FETCH_PC_NBIT => CORE_PC_NBIT,
       FETCH_IR_NBIT => CORE_IR_NBIT)
     port map(
-      fetch_branch_pred_error => s_IF_branch_pred_error,
+      fetch_branch_pred_error  => s_IF_branch_pred_error,
       FETCH_clk                => CORE_CLK,
       FETCH_rst                => CORE_RST,
       FETCH_pc_enable          => s_CU_IF_PC_EN,
@@ -809,7 +810,7 @@ begin
       WB_CU_MUX_CONTROL => s_CU_WB_MUX_CONTROL
     );
 
-  s_WB_OUT_RF_ADDR_DEST <= ps_MEMWB_rf_addr_dest;
+  s_WB_OUT_RF_ADDR_DEST <= ps_MEMWB_rf_addr_dest when CU_IS_JUMP_AND_LINK = '0' else "11111";
 
   --- Forwarding data
   s_FW_ALU_FROM_MEM <= ps_EXMEM_ALU_OUT;

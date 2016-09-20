@@ -20,7 +20,8 @@ entity cu_core is
     CU_memory_signed_load   : out std_logic;
     CU_memory_load_type     : out std_logic_vector(1 downto 0);
     CU_writeback_write_en   : out std_logic;
-    CU_writeback_mux        : out std_logic_vector(1 downto 0));
+    CU_writeback_mux        : out std_logic_vector(1 downto 0);
+    CU_is_jump_and_link     : out std_logic);
 end entity;
 
 architecture bhv of cu_core is
@@ -30,7 +31,7 @@ architecture bhv of cu_core is
 begin
   s_cu_opcode(7 downto 6) <= (others => '0');
   s_cu_opcode(5 downto 0) <= CU_instruction_register(CU_IR_NBIT - 1 downto CU_IR_NBIT - CU_OPCODE_NBIT);
-  
+
   s_cu_func(7 downto 6) <= (others => '0');
   s_cu_func(5 downto 0) <= CU_instruction_register(CU_FUNC_NBIT - 1 downto 0);
 
@@ -581,7 +582,7 @@ begin
         CU_memory_load_type    <= "00"; --  don't care
         CU_writeback_write_en  <= '0';  --  don't write to rf
         CU_writeback_mux       <= "00"; --  don't care
-     
+
       when dlx_seqi =>
         CU_decode_signed_ext   <= "10"; --  extend as 16 bits signed immediate
         CU_decode_dest_sel     <= "01"; --  use rt as destination
@@ -597,9 +598,9 @@ begin
         CU_memory_load_type    <= "00"; --  don't care
         CU_writeback_write_en  <= '1';  --  write to rf
         CU_writeback_mux       <= "01"; --  write data from ALU
-        
-        
-        when dlx_snei =>
+
+
+      when dlx_snei =>
         CU_decode_signed_ext   <= "10"; --  extend as 16 bits signed immediate
         CU_decode_dest_sel     <= "01"; --  use rt as destination
         CU_decode_read1_en     <= '1';  --  read
@@ -614,8 +615,8 @@ begin
         CU_memory_load_type    <= "00"; --  don't care
         CU_writeback_write_en  <= '1';  --  write to rf
         CU_writeback_mux       <= "01"; --  write data from ALU
-      
-      
+
+
       when dlx_srli =>
         CU_decode_signed_ext   <= "00"; --  extend as 16 bits unsigned immedaite
         CU_decode_dest_sel     <= "01"; --  use rt as destination
@@ -873,6 +874,14 @@ begin
         CU_writeback_mux       <= "00"; --  don't care
     end case;
   end process;
+
+  JAL : process(s_cu_opcode)
+  begin
+    case s_cu_opcode is
+      when dlx_jal => CU_is_jump_and_link <= '1';
+      when others  => CU_is_jump_and_link <= '0';
+    end case;
+  end process JAL;
 
 end architecture bhv;
 

@@ -71,6 +71,7 @@ architecture STR of DLX is
       CU_MEM_SIGNED_LOAD    : in    std_logic;
       CU_MEM_LOAD_TYPE      : in    std_logic_vector(1 downto 0);
       CU_WB_MUX_CONTROL     : in    std_logic_vector(1 downto 0);
+      CU_IS_JUMP_AND_LINK   : in    std_logic;
       BTB_PREDICTION_IN     : in    std_logic;
       BTB_TARGET_IN         : in    std_logic_vector(CORE_PC_NBIT - 1 downto 0);
       BTB_WRONG_TARGET      : out   std_logic;
@@ -124,7 +125,8 @@ architecture STR of DLX is
       CU_EXMEM_IR           : in  std_logic_vector(CU_IR_NBIT - 1 downto 0);
       CU_MEMWB_IR           : in  std_logic_vector(CU_IR_NBIT - 1 downto 0);
       CU_wrong_prediction   : in  std_logic;
-      CU_wrong_target       : in  std_logic
+      CU_wrong_target       : in  std_logic;
+      CU_IS_JUMP_AND_LINK   : out    std_logic
     );
   end component cu;
 
@@ -172,6 +174,8 @@ architecture STR of DLX is
   signal s_IDEX_IR  : std_logic_vector(DLX_IR_NBIT - 1 downto 0);
   signal s_EXMEM_IR : std_logic_vector(DLX_IR_NBIT - 1 downto 0);
   signal s_MEMWB_IR : std_logic_vector(DLX_IR_NBIT - 1 downto 0);
+  
+ signal IS_JUMP_AND_LINK   :    std_logic;
 
 begin
   core_inst : core
@@ -218,6 +222,7 @@ begin
       CU_MEM_SIGNED_LOAD    => s_MEM_SIGNED_LOAD,
       CU_MEM_LOAD_TYPE      => s_MEM_LOAD_TYPE,
       CU_WB_MUX_CONTROL     => s_WB_MUX_CONTROL,
+      cu_is_jump_and_link => is_jump_and_link,
       BTB_PREDICTION_IN     => s_PREDICTION_IN,
       BTB_TARGET_IN         => s_TARGET_IN,
       BTB_WRONG_TARGET      => s_WRONG_TARGET,
@@ -273,7 +278,8 @@ begin
       CU_EXMEM_IR           => s_EXMEM_IR,
       CU_MEMWB_IR           => s_MEMWB_IR,
       CU_wrong_prediction   => s_WRONG_TARGET,
-      CU_wrong_target       => s_WRONG_PREDICTION
+      CU_wrong_target       => s_WRONG_PREDICTION,
+      CU_IS_JUMP_AND_LINK  => IS_JUMP_AND_LINK
     );
 
   DRAM_READNOTWRITE <= s_MEM_READNOTWRITE;
