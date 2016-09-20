@@ -55,8 +55,8 @@ begin
               DRAM(to_integer(unsigned(DRAM_ADDRESS) + i), j) <= DRAM_INOUT_DATA(i * 8 + j); --to_integer(unsigned(ROM_ADDRESS)
             end loop;
           end loop;
-
           mem_ready <= '1';
+      
         else
           for i in 0 to (DRAM_WORDSIZE / 8) - 1 loop
             for j in 0 to 7 loop

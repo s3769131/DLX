@@ -29,7 +29,7 @@ architecture RTL of TB_dram is
   constant c_FILEPATH_DUMP : string   := "./dram_dump.hex";
   constant c_FILEPATH_INIT : string   := "./dram_init.hex";
   constant c_WORDSIZE      : integer  := 32;
-  constant c_ENTRIES       : positive := 2 ** 16;
+  constant c_ENTRIES       : positive := 2 ** 7;
   constant c_DUMPTIME      : time     := 1 us;
 
   signal s_CLK          : std_logic := '0';
