@@ -203,7 +203,7 @@ begin
    EXE_NPC_OUT    <= s_internal_npc;
 
 
--- s_cond_mux_out_is_branch <= s_cond_mux_out and EXE_CU_IS_BRANCH;
+ --s_cond_mux_out_is_branch <= s_cond_mux_out and EXE_CU_IS_BRANCH;
 -- NPC_MUX : mux_2to1
 --   generic map(
 --     MUX_2to1_NBIT => EXE_PC_NBIT
