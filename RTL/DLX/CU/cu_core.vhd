@@ -542,7 +542,7 @@ begin
         CU_decode_dest_sel     <= "11"; --  force register 31 as destination
         CU_decode_read1_en     <= '1';  --  read
         CU_decode_read2_en     <= '0';  --  don't read
-        CU_execute_branch_type <= '1';  --  jalr is always taken
+        CU_execute_branch_type <= '0';  --  jalr is always taken
         CU_execute_alu_op      <= "010000"; --  add immediate target to 0
         CU_execute_top_mux     <= '1';  --  read rs
         CU_execute_bottom_mux  <= '1';  --  read all zero from RF_in2
@@ -878,7 +878,7 @@ begin
   JAL : process(s_cu_opcode)
   begin
     case s_cu_opcode is
-      when dlx_jal => CU_is_jump_and_link <= '1';
+      when dlx_jal | dlx_jalr => CU_is_jump_and_link <= '1';
       when others  => CU_is_jump_and_link <= '0';
     end case;
   end process JAL;
