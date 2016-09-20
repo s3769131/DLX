@@ -96,7 +96,7 @@ begin
 
   FW_PROC : process(s_EXMEM_IR_rd, s_EXMEM_IR_rt, s_IDEX_IR_rs, s_IDEX_IR_rt, s_it_EXMEM, s_it_IDEX, s_MEMWB_IR_rd, s_MEMWB_IR_rt, s_it_MEMWB) is
   begin
-    if (s_IDEX_IR_rt = "00000" and (s_it_IDEX = IT_IMM or s_it_IDEX = IT_BR_J)) or (s_IDEX_IR_rs = "00000") then
+    if (s_IDEX_IR_rt = "00000" and (s_it_IDEX = IT_REG_REG)) or (s_IDEX_IR_rs = "00000") then
       FW_TOP_ALU <= SOURCE_NO;
       FW_BOT_ALU <= SOURCE_NO;
 
