@@ -75,7 +75,7 @@ architecture TEST of TB_DLX is
   constant c_RF_NREG   : positive := 32;
   constant c_RF_NBIT   : positive := 32;
 
-  constant c_ROM_ENTRIES  : positive := 64;
+  constant c_ROM_ENTRIES  : positive := 256;
   constant c_DRAM_ENTRIES : positive := 64;
 
   signal s_DLX_CLK           : std_logic := '0';
@@ -121,7 +121,7 @@ begin
 
   IROM : ROM
     generic map(
-      ROM_FILE_PATH => "./rom_firmware.hex",
+      ROM_FILE_PATH => "./test_programs/store/store_dump.txt",
       ROM_ENTRIES   => c_ROM_ENTRIES,
       ROM_WORD_SIZE => c_DATA_NBIT
     )
