@@ -360,7 +360,7 @@ begin
         CU_decode_dest_sel     <= "00"; --  don't care
         CU_decode_read1_en     <= '0';  --  don't read
         CU_decode_read2_en     <= '0';  --  don't read
-        CU_execute_branch_type <= '1';  --  j is always taken
+        CU_execute_branch_type <= '0';  --  j is always taken
         CU_execute_alu_op      <= "010000"; --  add immediate target to 0
         CU_execute_top_mux     <= '0';  --  read the NPC
         CU_execute_bottom_mux  <= '0';  --  read extended immediate from imm_in
