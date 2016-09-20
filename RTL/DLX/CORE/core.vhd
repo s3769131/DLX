@@ -318,6 +318,7 @@ architecture STR of core is
   signal s_MEM_OUT_DATA_OUT    : std_logic_vector(CORE_DATA_NBIT - 1 downto 0);
 
   --- Interface signal for DRAM 
+  signal s_DRAM_DLX_OUT : std_logic_vector(CORE_DATA_NBIT - 1 downto 0);
   signal s_DRAM_INTERFACE : std_logic_vector(CORE_DATA_NBIT - 1 downto 0);
 
   --- Control signals for MEMORY
@@ -717,14 +718,18 @@ begin
       MEM_ADDRESS_OUT     => s_MEM_OUT_ADDRESS_OUT,
       MEM_DATA_IN         => ps_EXMEM_DATA_IN,
       MEM_DATA_OUT        => s_MEM_OUT_DATA_OUT,
-      MEM_INTERFACE       => s_DRAM_INTERFACE,
+      MEM_INTERFACE       => s_DRAM_DLX_OUT,
       MEM_CU_READNOTWRITE => s_CU_MEM_READNOTWRITE,
       MEM_CU_SIGNED_LOAD  => s_CU_MEM_SIGNED_LOAD,
       MEM_CU_LOAD_TYPE    => s_CU_MEM_LOAD_TYPE
     );
 
   CORE_DRAM_ADDRESS   <= s_MEM_OUT_ADDRESS_OUT;
-  CORE_DRAM_INTERFACE <= s_DRAM_INTERFACE; ---??
+  
+  --CORE_DRAM_INTERFACE <= s_DRAM_INTERFACE; ---??
+
+ s_DRAM_DLX_OUT <= CORE_DRAM_INTERFACE when  s_CU_MEM_READNOTWRITE = '1' else (others => 'Z');
+ CORE_DRAM_INTERFACE <= s_DRAM_DLX_OUT when  s_CU_MEM_READNOTWRITE = '0' else (others => 'Z');
 
   -----------------------------------------------------------------------------
   --                             MEM/WB REGISTERS
