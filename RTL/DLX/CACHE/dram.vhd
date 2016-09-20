@@ -34,46 +34,44 @@ begin
   WR_PROCESS : process(DRAM_CLK, DRAM_RST, DRAM, DRAM_ADDRESS, DRAM_ENABLE, DRAM_INOUT_DATA, DRAM_READNOTWRITE)
   begin                                 -- process
     if DRAM_RST = '0' then              -- asynchronous reset (active low)
-     -- for index in 0 to DRAM_ENTRIES * DRAM_WORDSIZE / 8 - 1 loop
-     --   for i in 0 to 7 loop
-     --     DRAM(index, i) <= '0';
-     --   end loop;
-     -- end loop;
+      -- for index in 0 to DRAM_ENTRIES * DRAM_WORDSIZE / 8 - 1 loop
+      --   for i in 0 to 7 loop
+      --     DRAM(index, i) <= '0';
+      --   end loop;
+      -- end loop;
 
       int_data_ready <= '0';
       mem_ready      <= '0';
 
-   -- elsif DRAM_CLK'event and DRAM_CLK = '1' then -- rising clock edge
-      if (DRAM_ENABLE = '1') then
-        if (DRAM_READNOTWRITE = '0') then
-          --for i in 0 to DRAM_WORDSIZE - 1 loop
-          --  DRAM(to_integer(unsigned(DRAM_ADDRESS)), i) <= DRAM_INOUT_DATA(i);
-          --end loop;
+    -- elsif DRAM_CLK'event and DRAM_CLK = '1' then -- rising clock edge
+    elsif (DRAM_ENABLE = '1') then
+      if (DRAM_READNOTWRITE = '0') then
+        --for i in 0 to DRAM_WORDSIZE - 1 loop
+        --  DRAM(to_integer(unsigned(DRAM_ADDRESS)), i) <= DRAM_INOUT_DATA(i);
+        --end loop;
 
-          for i in 0 to (DRAM_WORDSIZE / 8) - 1 loop
-            for j in 0 to 7 loop
-              DRAM(to_integer(unsigned(DRAM_ADDRESS) + i), j) <= DRAM_INOUT_DATA(i * 8 + j); --to_integer(unsigned(ROM_ADDRESS)
-            end loop;
+        for i in 0 to (DRAM_WORDSIZE / 8) - 1 loop
+          for j in 0 to 7 loop
+            DRAM(to_integer(unsigned(DRAM_ADDRESS) + i), j) <= DRAM_INOUT_DATA(i * 8 + j); --to_integer(unsigned(ROM_ADDRESS)
           end loop;
-          mem_ready <= '1';
-      
-        elsif (DRAM_READNOTWRITE = '1') then 
-          
-          for i in 0 to (DRAM_WORDSIZE / 8) - 1 loop
-            for j in 0 to 7 loop
-              tmp_data(i * 8 + j) <= DRAM(to_integer(unsigned(DRAM_ADDRESS) + i), j); --to_integer(unsigned(ROM_ADDRESS)
-            end loop;
-          end loop;
+        end loop;
+        mem_ready <= '1';
 
-          int_data_ready <= '1';
-        end if;
-      else
-        mem_ready      <= '0';
-        int_data_ready <= '0';
+      elsif (DRAM_READNOTWRITE = '1') then
+        for i in 0 to (DRAM_WORDSIZE / 8) - 1 loop
+          for j in 0 to 7 loop
+            tmp_data(i * 8 + j) <= DRAM(to_integer(unsigned(DRAM_ADDRESS) + i), j); --to_integer(unsigned(ROM_ADDRESS)
+          end loop;
+        end loop;
+
+        int_data_ready <= '1';
       end if;
+    else
+      mem_ready      <= '0';
+      int_data_ready <= '0';
     end if;
-  end process;
 
+  end process;
   DRAM_INOUT_DATA <= tmp_data when (DRAM_READNOTWRITE = '1') else (others => 'Z'); -- to cache
   DRAM_DATA_READY <= int_data_ready or mem_ready; --delay add
 
