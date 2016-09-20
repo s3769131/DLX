@@ -256,7 +256,7 @@ begin
 
   s_wb <= ps_memwb(3 downto 0);
 
-  s_exmemwb <= s_idexmemwb(19 downto 0);
+  s_exmemwb <= s_idexmemwb(18 downto 0);
 
   CU_ID_sigext_op       <= s_idexmemwb(24 downto 23);
   CU_ID_destination_sel <= s_idexmemwb(22 downto 21);
