@@ -31,7 +31,7 @@ architecture BHV of DRAM is
 
 begin
   --write_process
-  WR_PROCESS : process(DRAM_CLK, DRAM_RST)
+  WR_PROCESS : process(DRAM_CLK, DRAM_RST, DRAM, DRAM_ADDRESS, DRAM_ENABLE, DRAM_INOUT_DATA, DRAM_READNOTWRITE)
   begin                                 -- process
     if DRAM_RST = '0' then              -- asynchronous reset (active low)
      -- for index in 0 to DRAM_ENTRIES * DRAM_WORDSIZE / 8 - 1 loop
@@ -43,7 +43,7 @@ begin
       int_data_ready <= '0';
       mem_ready      <= '0';
 
-    elsif DRAM_CLK'event and DRAM_CLK = '1' then -- rising clock edge
+   -- elsif DRAM_CLK'event and DRAM_CLK = '1' then -- rising clock edge
       if (DRAM_ENABLE = '1') then
         if (DRAM_READNOTWRITE = '0') then
           --for i in 0 to DRAM_WORDSIZE - 1 loop
