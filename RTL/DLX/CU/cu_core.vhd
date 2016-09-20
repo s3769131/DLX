@@ -375,9 +375,9 @@ begin
         CU_decode_dest_sel     <= "11"; --  force register 31 as destination
         CU_decode_read1_en     <= '0';  --  don't read
         CU_decode_read2_en     <= '0';  --  don't read
-        CU_execute_branch_type <= '1';  --  jal is always taken
+        CU_execute_branch_type <= '0';  --  jal is always taken
         CU_execute_alu_op      <= "010000"; --  add immediate target to 0
-        CU_execute_top_mux     <= '1';  --  read all zero from RF_in1
+        CU_execute_top_mux     <= '0';  --  read NPC
         CU_execute_bottom_mux  <= '0';  --  read extended immediate from imm_in
         CU_execute_is_branch   <= '1';  --  is branch
         CU_memory_r_not_w      <= '1';  --  don't write anything
