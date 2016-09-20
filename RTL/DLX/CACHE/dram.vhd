@@ -58,6 +58,7 @@ begin
           mem_ready <= '1';
       
         else
+          
           for i in 0 to (DRAM_WORDSIZE / 8) - 1 loop
             for j in 0 to 7 loop
               tmp_data(i * 8 + j) <= DRAM(to_integer(unsigned(DRAM_ADDRESS) + i), j); --to_integer(unsigned(ROM_ADDRESS)
