@@ -33,7 +33,7 @@ begin
   --write_process
   WR_PROCESS : process(DRAM_CLK, DRAM_RST)
   begin                                 -- process
-    if DRAM_RST = '1' then              -- asynchronous reset (active low)
+    if DRAM_RST = '0' then              -- asynchronous reset (active low)
       for index in 0 to DRAM_ENTRIES * DRAM_WORDSIZE - 1 loop
         for i in 0 to 7 loop
           DRAM(index, i) <= '0';
