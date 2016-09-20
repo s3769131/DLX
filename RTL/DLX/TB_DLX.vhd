@@ -88,7 +88,7 @@ architecture TEST of TB_DLX is
   signal s_DRAM_READNOTWRITE : std_logic;
   signal s_DRAM_DATA_READY   : std_logic;
   signal s_DRAM_INTERFACE    : std_logic_vector(c_DATA_NBIT - 1 downto 0);
-  signal s_DRAM_DLX    : std_logic_vector(c_DATA_NBIT - 1 downto 0);
+  signal s_DRAM_DLX          : std_logic_vector(c_DATA_NBIT - 1 downto 0);
   signal s_DRAM_EN           : std_logic;
 
 begin
@@ -152,20 +152,19 @@ begin
       DRAM_DATA_READY   => s_DRAM_DATA_READY,
       DRAM_INOUT_DATA   => s_DRAM_INTERFACE
     );
-    
-    process(s_DRAM_READNOTWRITE, s_DRAM_INTERFACE, s_DRAM_DLX)
+
+  process(s_DRAM_READNOTWRITE, s_DRAM_INTERFACE, s_DRAM_DLX)
   begin
     if (s_DRAM_READNOTWRITE = '1') then
-      s_DRAM_DLX <= s_DRAM_INTERFACE;
-      s_DRAM_INTERFACE            <= (others => 'Z');
+      s_DRAM_DLX       <= s_DRAM_INTERFACE;
+      s_DRAM_INTERFACE <= (others => 'Z');
     else
       if (s_DRAM_READNOTWRITE = '0') then
-        s_DRAM_DLX <= s_DRAM_INTERFACE;
-        s_DRAM_INTERFACE            <= s_DRAM_DLX;
+        s_DRAM_DLX       <= (others => 'Z');
+        s_DRAM_INTERFACE <= s_DRAM_DLX;
       end if;
     end if;
   end process;
-    
 
   CLK_PROC : process
   begin

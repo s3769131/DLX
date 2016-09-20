@@ -33,7 +33,7 @@ architecture RTL of TB_dram is
   constant c_DUMPTIME      : time     := 1 us;
 
   signal s_CLK          : std_logic := '0';
-  signal s_RST          : std_logic := '1';
+  signal s_RST          : std_logic := '0';
   signal s_ADDRESS      : std_logic_vector(log2ceil(c_ENTRIES) - 1 downto 0);
   signal s_ENABLE       : std_logic := '0';
   signal s_READNOTWRITE : std_logic := '0';
@@ -69,7 +69,7 @@ begin
   STIM : process
   begin
     wait for 0.5 ns;
-    s_RST <= '0';
+    s_RST <= '1';
     for i in 0 to c_ENTRIES - 1 loop
       s_ENABLE       <= '1';
       s_ADDRESS      <= std_logic_vector(to_unsigned(i, log2ceil(c_ENTRIES)));
