@@ -126,7 +126,7 @@ architecture STR of DLX is
       CU_MEMWB_IR           : in  std_logic_vector(CU_IR_NBIT - 1 downto 0);
       CU_wrong_prediction   : in  std_logic;
       CU_wrong_target       : in  std_logic;
-      CU_IS_JUMP_AND_LINK   : out    std_logic
+      CU_is_jump_and_link   : out    std_logic
     );
   end component cu;
 
@@ -279,7 +279,7 @@ begin
       CU_MEMWB_IR           => s_MEMWB_IR,
       CU_wrong_prediction   => s_WRONG_TARGET,
       CU_wrong_target       => s_WRONG_PREDICTION,
-      CU_IS_JUMP_AND_LINK  => IS_JUMP_AND_LINK
+      CU_is_jump_and_link  => IS_JUMP_AND_LINK
     );
 
   DRAM_READNOTWRITE <= s_MEM_READNOTWRITE;
