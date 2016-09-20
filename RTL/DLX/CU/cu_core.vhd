@@ -16,6 +16,7 @@ entity cu_core is
     CU_execute_top_mux      : out std_logic;
     CU_execute_bottom_mux   : out std_logic;
     CU_execute_is_branch    : out std_logic;
+    CU_execute_is_jump    : out std_logic;
     CU_memory_r_not_w       : out std_logic;
     CU_memory_signed_load   : out std_logic;
     CU_memory_load_type     : out std_logic_vector(1 downto 0);
@@ -878,10 +879,22 @@ begin
   JAL : process(s_cu_opcode)
   begin
     case s_cu_opcode is
+      
       when dlx_jal | dlx_jalr => CU_is_jump_and_link <= '1';
       when others  => CU_is_jump_and_link <= '0';
     end case;
   end process JAL;
+
+  J : process(s_cu_opcode)
+  begin
+    case s_cu_opcode is
+      when dlx_j | dlx_jal | dlx_beqz | dlx_bnez | dlx_jr | dlx_jalr => CU_execute_is_jump  <= '1';
+      when others  => CU_execute_is_jump <= '0';
+    end case;
+  end process J;
+
+
+
 
 end architecture bhv;
 

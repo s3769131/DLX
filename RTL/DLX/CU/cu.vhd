@@ -38,6 +38,7 @@ entity cu is
     CU_EX_BOT_MUX         : out std_logic;
     CU_EX_FW_TOP_MUX      : out std_logic_vector(1 downto 0);
     CU_EX_FW_BOT_MUX      : out std_logic_vector(1 downto 0);
+    CU_execute_is_jump    : out std_logic;
     CU_MEM_READNOTWRITE   : out std_logic;
     CU_MEM_SIGNED_LOAD    : out std_logic;
     CU_MEM_LOAD_TYPE      : out std_logic_vector(1 downto 0);
@@ -78,6 +79,7 @@ architecture STR of cu is
       CU_execute_top_mux      : out std_logic;
       CU_execute_bottom_mux   : out std_logic;
       CU_execute_is_branch    : out std_logic;
+      CU_execute_is_jump : out std_logic;
       CU_memory_r_not_w       : out std_logic;
       CU_memory_signed_load   : out std_logic;
       CU_memory_load_type     : out std_logic_vector(1 downto 0);
@@ -125,6 +127,7 @@ architecture STR of cu is
   signal s_execute_top_mux     : std_logic;
   signal s_execute_bottom_mux  : std_logic;
   signal s_execute_is_branch   : std_logic;
+  signal s_execute_is_jump   : std_logic;
   signal s_memory_r_not_w      : std_logic;
   signal s_memory_signed_load  : std_logic;
   signal s_memory_load_type    : std_logic_vector(1 downto 0);
@@ -132,12 +135,12 @@ architecture STR of cu is
   signal s_writeback_mux       : std_logic_vector(1 downto 0);
   signal is_jump_and_link      : std_logic;
 
-  signal s_idexmemwb : std_logic_vector(23 downto 0);
-  signal s_exmemwb   : std_logic_vector(17 downto 0);
+  signal s_idexmemwb : std_logic_vector(24 downto 0);
+  signal s_exmemwb   : std_logic_vector(18 downto 0);
   signal s_memwb     : std_logic_vector(7 downto 0);
   signal s_wb        : std_logic_vector(3 downto 0);
 
-  signal ps_exmemwb : std_logic_vector(17 downto 0);
+  signal ps_exmemwb : std_logic_vector(18 downto 0);
   signal ps_memwb   : std_logic_vector(7 downto 0);
   signal ps_wb      : std_logic_vector(3 downto 0);
 
@@ -157,6 +160,7 @@ begin
       CU_execute_top_mux      => s_execute_top_mux,
       CU_execute_bottom_mux   => s_execute_bottom_mux,
       CU_execute_is_branch    => s_execute_is_branch,
+      CU_execute_is_jump    => s_execute_is_jump,
       CU_memory_r_not_w       => s_memory_r_not_w,
       CU_memory_signed_load   => s_memory_signed_load,
       CU_memory_load_type     => s_memory_load_type,
@@ -167,7 +171,7 @@ begin
 
   EX : d_register
     generic map(
-      REG_NBIT => 18
+      REG_NBIT => 19
     ) port map(
       REG_clk => CU_CLK,
       REG_rst => CU_RST,
@@ -231,15 +235,16 @@ begin
       MEMWB_EN        => open           --CU_MEMWB_EN
     );
 
-  s_idexmemwb(23 downto 22) <= s_decode_signed_ext;
-  s_idexmemwb(21 downto 20) <= s_decode_dest_sel;
-  s_idexmemwb(19)           <= s_decode_read1_en;
-  s_idexmemwb(18)           <= s_decode_read2_en;
-  s_idexmemwb(17)           <= s_execute_branch_type;
-  s_idexmemwb(16 downto 11) <= s_execute_alu_op;
-  s_idexmemwb(10)           <= s_execute_top_mux;
-  s_idexmemwb(9)            <= s_execute_bottom_mux;
-  s_idexmemwb(8)            <= s_execute_is_branch;
+  s_idexmemwb(24 downto 23) <= s_decode_signed_ext;
+  s_idexmemwb(22 downto 21) <= s_decode_dest_sel;
+  s_idexmemwb(10)           <= s_decode_read1_en;
+  s_idexmemwb(19)           <= s_decode_read2_en;
+  s_idexmemwb(18)           <= s_execute_branch_type;
+  s_idexmemwb(17 downto 12) <= s_execute_alu_op;
+  s_idexmemwb(11)           <= s_execute_top_mux;
+  s_idexmemwb(10)            <= s_execute_bottom_mux;
+  s_idexmemwb(9)            <= s_execute_is_branch;
+  s_idexmemwb(8)            <= s_execute_is_jump;
   s_idexmemwb(7)            <= s_memory_r_not_w;
   s_idexmemwb(6)            <= s_memory_signed_load;
   s_idexmemwb(5 downto 4)   <= s_memory_load_type;
@@ -253,15 +258,16 @@ begin
 
   s_exmemwb <= s_idexmemwb(17 downto 0);
 
-  CU_ID_sigext_op       <= s_idexmemwb(23 downto 22);
-  CU_ID_destination_sel <= s_idexmemwb(21 downto 20);
-  CU_ID_read1_en        <= s_idexmemwb(19);
-  CU_ID_read2_en        <= s_idexmemwb(18);
-  CU_EX_BRANCH_TYPE     <= ps_exmemwb(17);
-  CU_EX_ALU_CONTROL     <= ps_exmemwb(16 downto 11);
-  CU_EX_TOP_MUX         <= ps_exmemwb(10);
-  CU_EX_BOT_MUX         <= ps_exmemwb(9);
-  CU_EX_IS_BRANCH       <= ps_exmemwb(8);
+  CU_ID_sigext_op       <= s_idexmemwb(24 downto 23);
+  CU_ID_destination_sel <= s_idexmemwb(22 downto 21);
+  CU_ID_read1_en        <= s_idexmemwb(20);
+  CU_ID_read2_en        <= s_idexmemwb(19);
+  CU_EX_BRANCH_TYPE     <= ps_exmemwb(18);
+  CU_EX_ALU_CONTROL     <= ps_exmemwb(17 downto 12);
+  CU_EX_TOP_MUX         <= ps_exmemwb(11);
+  CU_EX_BOT_MUX         <= ps_exmemwb(10);
+  CU_EX_IS_BRANCH       <= ps_exmemwb(9);
+  CU_execute_is_jump  <= ps_exmemwb(8);
   CU_MEM_READNOTWRITE   <= ps_memwb(7);
   CU_MEM_SIGNED_LOAD    <= ps_memwb(6);
   CU_MEM_LOAD_TYPE      <= ps_memwb(5 downto 4);

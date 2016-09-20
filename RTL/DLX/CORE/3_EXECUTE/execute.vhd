@@ -29,7 +29,8 @@ entity execute is
     EXE_WRONG_COND      : out std_logic; -- Signal to identify the condition in which the predicted branch condition is wrong (may be useless)
     EXE_WRONG_TARGET    : out std_logic; -- Signal to identify the condition in which the predicted branch target is wrong (may be useless)
     EXE_ALU_OUT         : out std_logic_vector(EXE_ALU_NBIT - 1 downto 0); -- Output of ALU logic
-
+    
+    EXE_CU_is_jump : in std_logic;
     EXE_CU_IS_BRANCH    : in  std_logic; -- Signal from CU to identify if the current instruction is a branch (0 is not a branch)
     EXE_CU_BRANCH_TYPE  : in  std_logic; -- Identify the type of branch under execution (0 for bz, 1 for bnz)
     EXE_CU_ALU_CONTROL  : in  std_logic_vector(5 downto 0); -- Control signal for ALU operation selection
@@ -93,6 +94,8 @@ architecture STR of execute is
 
   signal s_internal_ir            : std_logic_vector(EXE_IR_NBIT - 1 downto 0); -- Internal replica of input IR_IN
   signal s_internal_npc           : std_logic_vector(EXE_PC_NBIT - 1 downto 0); -- Internal replica of input NPC_IN
+  signal s_npc_out           : std_logic_vector(EXE_PC_NBIT - 1 downto 0); -- Internal replica of input NPC_IN
+
   signal s_top_mux_out            : std_logic_vector(EXE_ALU_NBIT - 1 downto 0); -- Out signal from TOP_MUX
   signal s_bot_mux_out            : std_logic_vector(EXE_ALU_NBIT - 1 downto 0); -- Out signal from BOT_MUX
   signal s_top_fw_mux_out         : std_logic_vector(EXE_ALU_NBIT - 1 downto 0); -- Out signal from TOP_FW_MUX
@@ -209,8 +212,11 @@ begin
       MUX_2to1_in0 => EXE_NPC_IN,
       MUX_2to1_in1 => s_alu_out,
       MUX_2to1_sel => s_cond_mux_out_is_branch,
-      MUX_2to1_out => EXE_NPC_OUT
+      MUX_2to1_out => s_NPC_OUT
     );
+
+EXE_NPC_OUT <= s_NPC_OUT when EXE_CU_is_jump = '0' else s_alu_out;
+
 
   EXE_ALU_OUT <= s_alu_out;
 

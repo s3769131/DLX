@@ -60,6 +60,7 @@ architecture STR of DLX is
       CU_ID_sigext_op       : in    std_logic_vector(1 downto 0);
       CU_ID_read1_en        : in    std_logic;
       CU_ID_read2_en        : in    std_logic;
+      CU_EX_IS_JUMP         : in    std_logic;
       CU_EX_IS_BRANCH       : in    std_logic;
       CU_EX_BRANCH_TYPE     : in    std_logic;
       CU_EX_ALU_CONTROL     : in    std_logic_vector(5 downto 0);
@@ -110,6 +111,7 @@ architecture STR of DLX is
       CU_ID_sigext_op       : out std_logic_vector(1 downto 0);
       CU_ID_read1_en        : out std_logic;
       CU_ID_read2_en        : out std_logic;
+      CU_execute_is_jump    : out std_logic;
       CU_EX_IS_BRANCH       : out std_logic;
       CU_EX_BRANCH_TYPE     : out std_logic;
       CU_EX_ALU_CONTROL     : out std_logic_vector(5 downto 0);
@@ -126,7 +128,7 @@ architecture STR of DLX is
       CU_MEMWB_IR           : in  std_logic_vector(CU_IR_NBIT - 1 downto 0);
       CU_wrong_prediction   : in  std_logic;
       CU_wrong_target       : in  std_logic;
-      CU_is_jump_and_link   : out    std_logic
+      CU_is_jump_and_link   : out std_logic
     );
   end component cu;
 
@@ -150,6 +152,7 @@ architecture STR of DLX is
   signal s_ID_sigext_op       : std_logic_vector(1 downto 0);
   signal s_ID_read1_en        : std_logic;
   signal s_ID_read2_en        : std_logic;
+  signal s_EX_IS_JUMP         : std_logic;
   signal s_EX_IS_BRANCH       : std_logic;
   signal s_EX_BRANCH_TYPE     : std_logic;
   signal s_EX_ALU_CONTROL     : std_logic_vector(5 downto 0);
@@ -162,8 +165,8 @@ architecture STR of DLX is
   signal s_MEM_LOAD_TYPE      : std_logic_vector(1 downto 0);
   signal s_WB_MUX_CONTROL     : std_logic_vector(1 downto 0);
 
-  signal s_PREDICTION_IN    : std_logic := '0';
-  signal s_TARGET_IN        : std_logic_vector(DLX_PC_NBIT - 1 downto 0) := (others  => '0');
+  signal s_PREDICTION_IN    : std_logic                                  := '0';
+  signal s_TARGET_IN        : std_logic_vector(DLX_PC_NBIT - 1 downto 0) := (others => '0');
   signal s_WRONG_TARGET     : std_logic;
   signal s_WRONG_PREDICTION : std_logic;
   signal s_TARGET_OUT       : std_logic_vector(DLX_PC_NBIT - 1 downto 0);
@@ -174,8 +177,8 @@ architecture STR of DLX is
   signal s_IDEX_IR  : std_logic_vector(DLX_IR_NBIT - 1 downto 0);
   signal s_EXMEM_IR : std_logic_vector(DLX_IR_NBIT - 1 downto 0);
   signal s_MEMWB_IR : std_logic_vector(DLX_IR_NBIT - 1 downto 0);
-  
- signal IS_JUMP_AND_LINK   :    std_logic;
+
+  signal IS_JUMP_AND_LINK : std_logic;
 
 begin
   core_inst : core
@@ -211,6 +214,7 @@ begin
       CU_ID_sigext_op       => s_ID_sigext_op,
       CU_ID_read1_en        => s_ID_read1_en,
       CU_ID_read2_en        => s_ID_read2_en,
+      cu_ex_is_jump         => s_EX_IS_JUMP,
       CU_EX_IS_BRANCH       => s_EX_IS_BRANCH,
       CU_EX_BRANCH_TYPE     => s_EX_BRANCH_TYPE,
       CU_EX_ALU_CONTROL     => s_EX_ALU_CONTROL,
@@ -222,7 +226,7 @@ begin
       CU_MEM_SIGNED_LOAD    => s_MEM_SIGNED_LOAD,
       CU_MEM_LOAD_TYPE      => s_MEM_LOAD_TYPE,
       CU_WB_MUX_CONTROL     => s_WB_MUX_CONTROL,
-      cu_is_jump_and_link => is_jump_and_link,
+      cu_is_jump_and_link   => is_jump_and_link,
       BTB_PREDICTION_IN     => s_PREDICTION_IN,
       BTB_TARGET_IN         => s_TARGET_IN,
       BTB_WRONG_TARGET      => s_WRONG_TARGET,
@@ -263,6 +267,7 @@ begin
       CU_ID_sigext_op       => s_ID_sigext_op,
       CU_ID_read1_en        => s_ID_read1_en,
       CU_ID_read2_en        => s_ID_read2_en,
+      CU_execute_is_jump    => s_EX_IS_JUMP,
       CU_EX_IS_BRANCH       => s_EX_IS_BRANCH,
       CU_EX_BRANCH_TYPE     => s_EX_BRANCH_TYPE,
       CU_EX_ALU_CONTROL     => s_EX_ALU_CONTROL,
@@ -279,7 +284,7 @@ begin
       CU_MEMWB_IR           => s_MEMWB_IR,
       CU_wrong_prediction   => s_WRONG_TARGET,
       CU_wrong_target       => s_WRONG_PREDICTION,
-      CU_is_jump_and_link  => IS_JUMP_AND_LINK
+      CU_is_jump_and_link   => IS_JUMP_AND_LINK
     );
 
   DRAM_READNOTWRITE <= s_MEM_READNOTWRITE;
