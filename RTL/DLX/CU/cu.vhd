@@ -237,7 +237,7 @@ begin
 
   s_idexmemwb(24 downto 23) <= s_decode_signed_ext;
   s_idexmemwb(22 downto 21) <= s_decode_dest_sel;
-  s_idexmemwb(10)           <= s_decode_read1_en;
+  s_idexmemwb(20)           <= s_decode_read1_en;
   s_idexmemwb(19)           <= s_decode_read2_en;
   s_idexmemwb(18)           <= s_execute_branch_type;
   s_idexmemwb(17 downto 12) <= s_execute_alu_op;
@@ -278,9 +278,9 @@ begin
   CU_IF_PC_EN  <= '1';
   CU_IF_PC_CLR <= '0';
 
-  process(CU_wrong_prediction, CU_wrong_target, ps_exmemwb)
+  process(CU_wrong_prediction, CU_wrong_target)
   begin
-    if CU_wrong_prediction = '1' or CU_wrong_target = '1' or ps_exmemwb(8) = '1' then
+    if CU_wrong_prediction = '1' or CU_wrong_target = '1'  then
       CU_IFID_CLR  <= '1';
       CU_IFID_EN   <= '1';
       CU_IDEX_CLR  <= '1';
