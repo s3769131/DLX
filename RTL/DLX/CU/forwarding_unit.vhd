@@ -137,7 +137,7 @@ begin
       end if;
 
     -- Source (EXMEM) is Immediate and Dest is immediate
-    elsif s_it_EXMEM = IT_IMM and (s_it_IDEX = IT_IMM or s_it_IDEX = IT_BR_J) then
+    elsif (s_it_EXMEM = IT_IMM or s_it_EXMEM = IT_BR_J) and (s_it_IDEX = IT_IMM or s_it_IDEX = IT_BR_J) then
       if s_EXMEM_IR_rt = s_IDEX_IR_rs then
         FW_TOP_ALU <= SOURCE_ALU1;
         FW_BOT_ALU <= SOURCE_NO;
@@ -145,9 +145,7 @@ begin
         FW_TOP_ALU <= SOURCE_NO;
         FW_BOT_ALU <= SOURCE_NO;
       end if;
-      
-      
-      
+
     -- Source (MEMWB) is reg-to-reg and Dest is reg-to-reg
     elsif s_it_MEMWB = IT_REG_REG and s_it_IDEX = IT_REG_REG then
       if s_MEMWB_IR_rd = s_IDEX_IR_rs then
@@ -193,18 +191,17 @@ begin
         FW_TOP_ALU <= SOURCE_NO;
         FW_BOT_ALU <= SOURCE_NO;
       end if;
-      
-      
-      elsif s_it_MEMWB = IT_LD_ST and (s_it_IDEX = IT_IMM or s_it_IDEX = IT_BR_J) then
+
+    elsif s_it_MEMWB = IT_LD_ST and (s_it_IDEX = IT_IMM or s_it_IDEX = IT_BR_J) then
       if s_MEMWB_IR_rt = s_IDEX_IR_rs then
         FW_TOP_ALU <= SOURCE_MEM;
-        FW_BOT_ALU <= SOURCE_NO;    
+        FW_BOT_ALU <= SOURCE_NO;
       else
         FW_TOP_ALU <= SOURCE_NO;
         FW_BOT_ALU <= SOURCE_NO;
       end if;
-      
-       -- Source (MEMWB) is reg-to-reg and Dest is immediate
+
+    -- Source (MEMWB) is reg-to-reg and Dest is immediate
     elsif s_it_MEMWB = IT_LD_ST and (s_it_IDEX = IT_REG_REG) then
       if s_MEMWB_IR_rt = s_IDEX_IR_rs then
         FW_TOP_ALU <= SOURCE_MEM;
@@ -216,11 +213,6 @@ begin
         FW_TOP_ALU <= SOURCE_NO;
         FW_BOT_ALU <= SOURCE_NO;
       end if;
-      
-      
-        
-      
-      
 
     --elsif s_EXMEM_IR_rd = s_IDEX_IR_rs and (s_it_EXMEM = IT_REG_REG or s_it_EXMEM = IT_IMM) and (s_it_IDEX = IT_REG_REG or s_it_IDEX = IT_IMM) then
     --elsif s_EXMEM_IR_rd = s_IDEX_IR_rt and (s_it_EXMEM = IT_REG_REG) and (s_it_IDEX = IT_REG_REG) then
