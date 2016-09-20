@@ -358,7 +358,7 @@ begin
             CU_writeback_mux       <= "00"; --  don't care
         end case;
       when dlx_j =>
-        CU_decode_signed_ext   <= "01"; --  extend as 23 bits unsigned immediate
+        CU_decode_signed_ext   <= "11"; --  extend as 23 bits unsigned immediate
         CU_decode_dest_sel     <= "00"; --  don't care
         CU_decode_read1_en     <= '0';  --  don't read
         CU_decode_read2_en     <= '0';  --  don't read
@@ -373,7 +373,7 @@ begin
         CU_writeback_write_en  <= '0';  --  don't write anything
         CU_writeback_mux       <= "00"; --  don't care
       when dlx_jal =>
-        CU_decode_signed_ext   <= "01"; --  extend as 23 bits unsigned immedaite
+        CU_decode_signed_ext   <= "11"; --  extend as 23 bits unsigned immedaite
         CU_decode_dest_sel     <= "11"; --  force register 31 as destination
         CU_decode_read1_en     <= '0';  --  don't read
         CU_decode_read2_en     <= '0';  --  don't read
