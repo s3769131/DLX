@@ -57,7 +57,7 @@ begin
           end loop;
           mem_ready <= '1';
       
-        else
+        elsif (DRAM_READNOTWRITE = '1') then 
           
           for i in 0 to (DRAM_WORDSIZE / 8) - 1 loop
             for j in 0 to 7 loop
