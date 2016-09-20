@@ -74,7 +74,7 @@ begin
     end if;
   end process;
 
-  DRAM_INOUT_DATA <= tmp_data when int_data_ready = '1' else (others => 'Z'); -- to cache
+  DRAM_INOUT_DATA <= tmp_data when (int_data_ready = '1' and DRAM_READNOTWRITE = '1') else (others => 'Z'); -- to cache
   DRAM_DATA_READY <= int_data_ready or mem_ready; --delay add
 
   process
