@@ -278,9 +278,9 @@ begin
   CU_IF_PC_EN  <= '1';
   CU_IF_PC_CLR <= '0';
 
-  process(CU_wrong_prediction, CU_wrong_target, CU_execute_is_jump)
+  process(CU_wrong_prediction, CU_wrong_target, ps_exmemwb)
   begin
-    if CU_wrong_prediction = '1' or CU_wrong_target = '1' or CU_execute_is_jump = '1' then
+    if CU_wrong_prediction = '1' or CU_wrong_target = '1' or ps_exmemwb(8) = '1' then
       CU_IFID_CLR  <= '1';
       CU_IFID_EN   <= '1';
       CU_IDEX_CLR  <= '1';
