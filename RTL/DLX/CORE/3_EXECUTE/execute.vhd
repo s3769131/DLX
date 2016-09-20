@@ -115,7 +115,7 @@ begin
     )
     port map(
       MUX_2to1_in0 => s_internal_npc,
-      MUX_2to1_in1 => EXE_RF_IN1,
+      MUX_2to1_in1 => s_top_fw_mux_out,
       MUX_2to1_sel => EXE_CU_TOP_MUX,
       MUX_2to1_out => s_top_mux_out
     );
@@ -136,7 +136,7 @@ begin
       MUX_4to1_NBIT => EXE_ALU_NBIT
     )
     port map(
-      MUX_4to1_in0 => s_top_mux_out,
+      MUX_4to1_in0 => EXE_RF_IN1,
       MUX_4to1_in1 => EXE_FW_ALU_FROM_MEM,
       MUX_4to1_in2 => EXE_FW_ALU_FROM_WB,
       MUX_4to1_in3 => EXE_FW_MEM_FROM_WB,
@@ -163,7 +163,7 @@ begin
     )
     port map(
       ALU_command  => EXE_CU_ALU_CONTROL,
-      ALU_operand1 => s_top_fw_mux_out,
+      ALU_operand1 => s_top_mux_out,
       ALU_operand2 => s_bot_fw_mux_out,
       ALU_result   => s_alu_out
     );
@@ -178,12 +178,14 @@ begin
       COMP_RES => s_wrong_target
     );
 
+
+
   ZERO_COMP : EQ_COMPARATOR
     generic map(
       COMP_NBIT => EXE_ALU_NBIT
     )
     port map(
-      COMP_A   => EXE_RF_IN1,
+      COMP_A   => s_top_fw_mux_out,
       COMP_B   => (others => '0'),
       COMP_RES => s_zero_comp_out
     );
