@@ -1,0 +1,62 @@
+
+SHIFTER
+
+The main idea under the mshifter design is to have (given an N-bit shifter) N multiplexer, each takes N
+bits as input and drives a single output bit, such that the amount of shift is given throught the selection
+signal of the multiplexer.
+This is done both for left shift and for right shift, such that a 2 to 1 multiplexer choose the correct
+result to produce, given a left_not_right signal as selection.
+
+Below a simple example for a small 4 bit implementation.
+[...]
+
+In order to provide both logical and arithmetical shift, a signal is set, which specifies the value of
+the bit (0 or 1) to use for filled MSB of the result in case a right shift is requested; this is multiplexer
+is a simple 2 to 1 multiplexer that choose beetween the MSB of the operand to shift and 0, given the 
+logic_not_arith control signal, provided as input to the shifter.
+
+COMPARATOR
+
+In our MIPS implementation, the comparator is an independent circuit which does not imply the usage of an adder.
+It is made by a group of simpler 1 bit comparator arranged in a tree structure.
+
+The single bit comparator, from now on called BIT_COMP, receives as inputs the two operand bits, and two more signals
+that takes into account the fact that the comparation beetween two more significant bits already allows to give the
+result of the comparation. As output two bits are provided, each of them is 1 if the result of the first input bit is 
+greater than the second or (viceversa) if it is lesser than. The two bits are 0 if and only if the two bits in input
+are equal and the two input signals are both zero.
+
+Below a rapresentation of the BIT_COMP is given.
+[...]
+
+Now we're in a situation very similar to the design of an adder: we have designed a sort of "full adder", a unit that
+compute a small part of the final result, given its local input and the results of the previous units that worked
+on different bits. 
+
+From now on we can develop the comparator by following the same principle used when developing an adder: we
+could connect all BIT_COMP in a row, by emulating a sort of "ripple comparator", which would correspond to 
+a min-resources, max-delay implementation", or we can arrange out BIT_COMPs in a sort of "tree" fashion, that 
+required much more resources to be realized, but allows faster implementation. That's what we've done in our MIPS.
+
+[...]
+
+In order to make things easier, we will use a simple 2 bits example.
+[...]
+
+As you can see from the example, as a first step, each BIT_COMPARATOR makes its computation independently from
+the others. The second step compute the final result, on the basis of the following assumption: the result of 
+the computation is always given by the LESS significant bits, UNLESS a computation performed on a most significant
+couple of bits gave a result different than equal.
+This simple example can be generalized on more bits, for example, the 4 bit resulting circuit would be the following:
+[...]
+
+In our implementation of DLX, a circuit like that ensures a 32 bits comparation in logarithmic time, without 
+implying any subtraction !
+
+The circuit described right now only provides three results: greater_than, lesser than and equal, but obviouly other 
+results such as lesser_equal_than, greater_equal_than, not_equal are easily computable by the former three.
+
+As a last comment notice than this circuit as it is only provides an unsigned comparation, but it can be converted in 
+a signed/unsigned comparator on the basis of a simple last circuit, which use the following observation: if the result
+of an unsigned comparation is not "equal" or "not_equal", the result of the signed comparation is simply the opposite
+of the one computed, if and only if the two most significant bits of the operands are different.
