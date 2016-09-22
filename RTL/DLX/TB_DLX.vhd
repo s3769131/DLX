@@ -122,7 +122,7 @@ begin
 
   IROM : ROM
     generic map(
-      ROM_FILE_PATH => "./test_programs/store/store_dump.txt",
+      ROM_FILE_PATH => "./test_programs/full_arithmetic/full_arithmetic_dump.txt",
       ROM_ENTRIES   => c_ROM_ENTRIES,
       ROM_WORD_SIZE => c_DATA_NBIT
     )
