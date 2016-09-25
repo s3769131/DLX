@@ -19,7 +19,7 @@ architecture TEST of TB_writeback is
       WB_DATA_TO_RF     : out std_logic_vector(WB_NBIT - 1 downto 0)
     );
   end component writeback;
-  
+
   constant c_NBIT : integer := 32;
 
   signal s_IR_IN          : std_logic_vector(c_NBIT - 1 downto 0) := (others => '0');
@@ -31,7 +31,7 @@ architecture TEST of TB_writeback is
   signal s_IR_OUT         : std_logic_vector(c_NBIT - 1 downto 0);
   signal s_DATA_TO_RF     : std_logic_vector(c_NBIT - 1 downto 0);
 begin
-  
+
   UUT : writeback
     generic map(
       WB_NBIT => c_NBIT

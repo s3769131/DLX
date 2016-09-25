@@ -140,15 +140,10 @@ architecture STR of DLX is
   signal s_EXMEM_CLR          : std_logic;
   signal s_MEMWB_EN           : std_logic;
   signal s_MEMWB_CLR          : std_logic;
-  --  signal s_DRAM_INTERFACE     : std_logic;
-  --  signal s_DRAM_ADDRESS       : std_logic;
-  --  signal s_ROM_INTERFACE      : std_logic;
-  --  signal s_ROM_ADDRESS        : std_logic;
   signal s_IF_PC_EN           : std_logic;
   signal s_IF_PC_CLR          : std_logic;
   signal s_ID_destination_sel : std_logic_vector(1 downto 0);
   signal s_ID_rf_write_en     : std_logic;
-  -- signal s_ID_sigext_signed   : std_logic;
   signal s_ID_sigext_op       : std_logic_vector(1 downto 0);
   signal s_ID_read1_en        : std_logic;
   signal s_ID_read2_en        : std_logic;
@@ -210,7 +205,6 @@ begin
       CU_IF_PC_CLR          => s_IF_PC_CLR,
       CU_ID_destination_sel => s_ID_destination_sel,
       CU_ID_rf_write_en     => s_ID_rf_write_en,
-      --CU_ID_sigext_signed   => s_ID_sigext_signed,
       CU_ID_sigext_op       => s_ID_sigext_op,
       CU_ID_read1_en        => s_ID_read1_en,
       CU_ID_read2_en        => s_ID_read2_en,

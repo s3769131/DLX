@@ -9,10 +9,10 @@ entity writeback is
     WB_DATA_NBIT : positive := 32);
   port(
     WB_IR_IN          : in  std_logic_vector(WB_IR_NBIT - 1 downto 0); -- Instruction register in
-    WB_NPC_IN         : in  std_logic_vector(WB_PC_NBIT - 1 downto 0); -- Next program counter (it can be the speculated)
+    WB_NPC_IN         : in  std_logic_vector(WB_PC_NBIT - 1 downto 0); -- Next program counter
 
     WB_IR_OUT         : out std_logic_vector(WB_IR_NBIT - 1 downto 0); -- Instruction register out
-    WB_NPC_OUT        : out std_logic_vector(WB_PC_NBIT - 1 downto 0); -- Next program counter (it can be the speculated)
+    WB_NPC_OUT        : out std_logic_vector(WB_PC_NBIT - 1 downto 0); -- Next program counter
 
     WB_DATA_FROM_MEM  : in  std_logic_vector(WB_DATA_NBIT - 1 downto 0);
     WB_DATA_FROM_ALU  : in  std_logic_vector(WB_DATA_NBIT - 1 downto 0);

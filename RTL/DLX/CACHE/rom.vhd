@@ -33,8 +33,6 @@ architecture BHV of ROM is
   signal data_out : std_logic_vector(ROM_WORD_SIZE - 1 downto 0);
   signal valid    : std_logic;
 
--- signal count : integer;               -- range 0 to (ROM_DATA_DELAY + 1) := 0;
-
 begin
   process(ROM_RST, ROM_CLK, ROM_ADDRESS, ROM_ENABLE)
   begin                                 -- process FILL_MEM_P
@@ -42,10 +40,10 @@ begin
     else
      -- if ROM_CLK'event and ROM_CLK = '1' then
         if (ROM_ENABLE = '1') then
-          
+
           for i in 0 to ROM_WORD_SIZE / 8 - 1 loop
             for j in 0 to 7 loop
-              data_out(i * 8 + j) <= ROM(to_integer(unsigned(ROM_ADDRESS) + i), j); --to_integer(unsigned(ROM_ADDRESS)
+              data_out(i * 8 + j) <= ROM(to_integer(unsigned(ROM_ADDRESS) + i), j);
             end loop;
           end loop;
 
@@ -53,7 +51,6 @@ begin
         else
           valid <= '0';
         end if;
-    --  end if;
     end if;
   end process;
 
@@ -66,4 +63,3 @@ configuration CFG_ROM_BHV of rom is
   for BHV
   end for;
 end configuration CFG_ROM_BHV;
-

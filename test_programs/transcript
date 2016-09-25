@@ -1,0 +1,15 @@
+ls
+# arithmetic_forward
+# assembler.bin
+# assembler.sh
+# conditional_branch
+# full_arithmetic
+# jump
+# store
+# sw_multiplication
+# transcript
+../compile_and_start.tcl
+# ../compile_and_start.tcl: 1: ../compile_and_start.tcl: source: not found
+# ../compile_and_start.tcl: 2: ../compile_and_start.tcl: Syntax error: "(" unexpected
+source ../compile_and_start.tcl
+# couldn't read file "vcom_compile.tcl": no such file or directory

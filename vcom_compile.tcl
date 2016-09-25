@@ -72,7 +72,6 @@ vcom \
 ./RTL/DLX/BTB/simo/btb.vhd \
 ./RTL/DLX/CORE/2_DECODE/decode.vhd \
 ./RTL/DLX/MISC/COUNTER/TB_sat_counter.vhd \
-./RTL/DLX/CU/TB_forwarding_unit.vhd \
 ./RTL/DLX/MISC/sign_extention/TB_sign_extention_decode.vhd \
 ./RTL/DLX/CORE/3_EXECUTE/ALU/ALU_control/ALU_control.vhd \
 ./RTL/DLX/CU/cu.vhd \
@@ -101,4 +100,5 @@ vcom \
 ./RTL/DLX/CORE/3_EXECUTE/TB_execute.vhd \
 ./RTL/DLX/DLX.vhd \
 ./RTL/DLX/CORE/TB_core.vhd \
+./RTL/DLX/CU/TB_forwarding_unit.vhd \
 ./RTL/DLX/TB_DLX.vhd

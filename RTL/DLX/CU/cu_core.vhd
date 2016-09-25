@@ -478,7 +478,7 @@ begin
         CU_writeback_write_en  <= '1';  --  write to rf
         CU_writeback_mux       <= "01"; --  write data from ALU
       when dlx_andi =>
-        CU_decode_signed_ext   <= "00"; --  extend as 16 bits unsigned immedaite
+        CU_decode_signed_ext   <= "10"; --  extend as 16 bits signed immedaite
         CU_decode_dest_sel     <= "01"; --  use rt as destination
         CU_decode_read1_en     <= '1';  --  read
         CU_decode_read2_en     <= '1';  --  read
@@ -493,7 +493,7 @@ begin
         CU_writeback_write_en  <= '1';  --  write to rf
         CU_writeback_mux       <= "01"; --  write data from ALU
       when dlx_ori =>
-        CU_decode_signed_ext   <= "00"; --  extend as 16 bits unsigned immedaite
+        CU_decode_signed_ext   <= "10"; --  extend as 16 bits signed immedaite
         CU_decode_dest_sel     <= "01"; --  use rt as destination
         CU_decode_read1_en     <= '1';  --  read
         CU_decode_read2_en     <= '1';  --  read
@@ -508,7 +508,7 @@ begin
         CU_writeback_write_en  <= '1';  --  write to rf
         CU_writeback_mux       <= "01"; --  write data from ALU
       when dlx_xori =>
-        CU_decode_signed_ext   <= "00"; --  extend as 16 bits unsigned immedaite
+        CU_decode_signed_ext   <= "10"; --  extend as 16 bits signed immedaite
         CU_decode_dest_sel     <= "01"; --  use rt as destination
         CU_decode_read1_en     <= '1';  --  read
         CU_decode_read2_en     <= '1';  --  read

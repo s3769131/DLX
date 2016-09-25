@@ -10,11 +10,11 @@ entity memory is
     MEM_ADDR_NBIT : integer := 32
   );
   port(
-    MEM_IR_IN           : in    std_logic_vector(MEM_IR_NBIT - 1 downto 0); -- Instruction register in 
-    MEM_NPC_IN          : in    std_logic_vector(MEM_PC_NBIT - 1 downto 0); -- Next program counter (it can be the speculated) 
+    MEM_IR_IN           : in    std_logic_vector(MEM_IR_NBIT - 1 downto 0); -- Instruction register in
+    MEM_NPC_IN          : in    std_logic_vector(MEM_PC_NBIT - 1 downto 0); -- Next program counter
 
-    MEM_IR_OUT          : out   std_logic_vector(MEM_IR_NBIT - 1 downto 0); -- Instruction register out 
-    MEM_NPC_OUT         : out   std_logic_vector(MEM_PC_NBIT - 1 downto 0); -- Next program counter (it can be the speculated) 
+    MEM_IR_OUT          : out   std_logic_vector(MEM_IR_NBIT - 1 downto 0); -- Instruction register out
+    MEM_NPC_OUT         : out   std_logic_vector(MEM_PC_NBIT - 1 downto 0); -- Next program counter
 
     MEM_ADDRESS_IN      : in    std_logic_vector(MEM_ADDR_NBIT - 1 downto 0); --
     MEM_ADDRESS_OUT     : out   std_logic_vector(MEM_ADDR_NBIT - 1 downto 0); --
@@ -135,4 +135,3 @@ configuration CFG_MEMORY_STR of MEMORY is
     end for;
   end for;
 end configuration CFG_MEMORY_STR;
-

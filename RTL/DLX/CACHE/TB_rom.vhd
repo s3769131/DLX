@@ -36,7 +36,7 @@ architecture TEST of TB_rom is
 
   signal s_DATA_READY : std_logic;
   signal s_DATA_OUT   : std_logic_vector(c_WORD_SIZE - 1 downto 0);
-  
+
 begin
   UUT : component ROM
     generic map(

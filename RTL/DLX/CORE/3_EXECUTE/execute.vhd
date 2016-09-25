@@ -9,11 +9,11 @@ entity execute is
     EXE_ALU_NBIT : integer := 32
   );
   port(
-    EXE_IR_IN           : in  std_logic_vector(EXE_IR_NBIT - 1 downto 0); -- Instruction register in 
-    EXE_NPC_IN          : in  std_logic_vector(EXE_PC_NBIT - 1 downto 0); -- Next program counter (it can be the speculated) 
+    EXE_IR_IN           : in  std_logic_vector(EXE_IR_NBIT - 1 downto 0); -- Instruction register in
+    EXE_NPC_IN          : in  std_logic_vector(EXE_PC_NBIT - 1 downto 0); -- Next program counter
 
-    EXE_IR_OUT          : out std_logic_vector(EXE_IR_NBIT - 1 downto 0); -- Instruction register out 
-    EXE_NPC_OUT         : out std_logic_vector(EXE_PC_NBIT - 1 downto 0); -- Next program counter (it can be the speculated) 
+    EXE_IR_OUT          : out std_logic_vector(EXE_IR_NBIT - 1 downto 0); -- Instruction register out
+    EXE_NPC_OUT         : out std_logic_vector(EXE_PC_NBIT - 1 downto 0); -- Next program counter
 
     EXE_RF_IN1          : in  std_logic_vector(EXE_ALU_NBIT - 1 downto 0); -- Data coming from out port 1 of register file
     EXE_IMM_IN          : in  std_logic_vector(EXE_ALU_NBIT - 1 downto 0); -- Immediated with sign extended
@@ -29,7 +29,7 @@ entity execute is
     EXE_WRONG_COND      : out std_logic; -- Signal to identify the condition in which the predicted branch condition is wrong (may be useless)
     EXE_WRONG_TARGET    : out std_logic; -- Signal to identify the condition in which the predicted branch target is wrong (may be useless)
     EXE_ALU_OUT         : out std_logic_vector(EXE_ALU_NBIT - 1 downto 0); -- Output of ALU logic
-    
+
     EXE_CU_is_jump : in std_logic;
     EXE_CU_IS_BRANCH    : in  std_logic; -- Signal from CU to identify if the current instruction is a branch (0 is not a branch)
     EXE_CU_BRANCH_TYPE  : in  std_logic; -- Identify the type of branch under execution (0 for bz, 1 for bnz)
@@ -106,8 +106,8 @@ architecture STR of execute is
   signal s_cond_mux_out           : std_logic;
   signal s_wrong_target           : std_logic;
   signal s_cond_mux_out_is_branch : std_logic;
-  
-  
+
+
 begin
   TOP_MUX : mux_2to1
     generic map(
@@ -204,22 +204,6 @@ begin
   s_internal_npc <= EXE_NPC_IN;
    EXE_NPC_OUT    <= s_internal_npc;
 
-
- --s_cond_mux_out_is_branch <= s_cond_mux_out and EXE_CU_IS_BRANCH;
--- NPC_MUX : mux_2to1
---   generic map(
---     MUX_2to1_NBIT => EXE_PC_NBIT
---   )
---   port map(
---     MUX_2to1_in0 => EXE_NPC_IN,
---     MUX_2to1_in1 => s_alu_out,
---     MUX_2to1_sel => s_cond_mux_out_is_branch,
---     MUX_2to1_out => s_NPC_OUT
---   );
---
--- EXE_NPC_OUT <= s_NPC_OUT when EXE_CU_is_jump = '0' else s_alu_out;
-
-
   EXE_ALU_OUT <= s_alu_out;
 
   s_zero_comp_out_inv <= not s_zero_comp_out;
@@ -250,4 +234,3 @@ configuration CFG_EXECUTE_STR of EXECUTE is
     end for;
   end for;
 end configuration CFG_EXECUTE_STR;
-

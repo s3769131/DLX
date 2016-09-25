@@ -21,10 +21,10 @@ entity core is
     CORE_IFID_CLR         : in    std_logic; ---Clear signal (Sync) for pipeling register IF/ID
     CORE_IDEX_EN          : in    std_logic; ---Enable signal for pipeling register ID/EX
     CORE_IDEX_CLR         : in    std_logic; ---Clear signal (Sync) for pipeling register ID/EX
-    CORE_EXMEM_EN         : in    std_logic; ---Enable signal for pipeling register EX/MEM            
-    CORE_EXMEM_CLR        : in    std_logic; ---Clear signal (Sync) for pipeling register EX/MEM   
-    CORE_MEMWB_EN         : in    std_logic; ---Enable signal for pipeling register MEM/WB         
-    CORE_MEMWB_CLR        : in    std_logic; ---Clear signal (Sync) for pipeling register MEM/WB  
+    CORE_EXMEM_EN         : in    std_logic; ---Enable signal for pipeling register EX/MEM
+    CORE_EXMEM_CLR        : in    std_logic; ---Clear signal (Sync) for pipeling register EX/MEM
+    CORE_MEMWB_EN         : in    std_logic; ---Enable signal for pipeling register MEM/WB
+    CORE_MEMWB_CLR        : in    std_logic; ---Clear signal (Sync) for pipeling register MEM/WB
 
     CORE_DRAM_INTERFACE   : inout std_logic_vector(CORE_DATA_NBIT - 1 downto 0); --
     CORE_DRAM_ADDRESS     : out   std_logic_vector(CORE_ADDR_NBIT - 1 downto 0); --
@@ -217,14 +217,6 @@ architecture STR of core is
       DFF_nq  : out std_logic);
   end component d_ff;
 
-  -- constant c_program_counter_nbit        : integer := 32;
-  -- constant c_instruction_register_nbit   : integer := 32;
-  -- constant c_register_file_nregister : integer := 32;
-  -- constant c_register_file_register_nbit : integer := 32;
-  -- constant c_register_file_address_nbit  : integer := log2ceil(c_register_file_nregister);
-  --constant c_immediate_nbit          : integer := 16;
-  -- constant c_opcode_nbit : integer := 6;
-
   ---Signal to FETCH from ROM
   signal s_IF_IN_IR_IN : std_logic_vector(CORE_IR_NBIT - 1 downto 0);
 
@@ -281,7 +273,7 @@ architecture STR of core is
   signal ps_IDEX_pc             : std_logic_vector(CORE_PC_NBIT - 1 downto 0);
   signal ps_IDEX_BTB_TARGET_OUT : std_logic_vector(CORE_PC_NBIT - 1 downto 0);
 
-  --- Signals from EXECUTE to EX/MEM pipelining registers  
+  --- Signals from EXECUTE to EX/MEM pipelining registers
   signal s_EX_OUT_IR_OUT       : std_logic_vector(CORE_IR_NBIT - 1 downto 0);
   signal s_EX_OUT_NPC_OUT      : std_logic_vector(CORE_PC_NBIT - 1 downto 0);
   signal s_EX_OUT_CALC_COND    : std_logic;
@@ -317,7 +309,7 @@ architecture STR of core is
   signal s_MEM_OUT_ADDRESS_OUT : std_logic_vector(CORE_ADDR_NBIT - 1 downto 0);
   signal s_MEM_OUT_DATA_OUT    : std_logic_vector(CORE_DATA_NBIT - 1 downto 0);
 
-  --- Interface signal for DRAM 
+  --- Interface signal for DRAM
   signal s_DRAM_DLX_OUT : std_logic_vector(CORE_DATA_NBIT - 1 downto 0);
   signal s_DRAM_INTERFACE : std_logic_vector(CORE_DATA_NBIT - 1 downto 0);
 
@@ -508,7 +500,7 @@ begin
       REG_data_out => ps_IDEX_NPC_IN
     );
 
-  --- Pipeline register ID/EX for RF read data at port 1 
+  --- Pipeline register ID/EX for RF read data at port 1
   IDEX_RF_IN1 : d_register
     generic map(
       REG_NBIT => CORE_ALU_NBIT
@@ -522,7 +514,7 @@ begin
       REG_data_out => ps_IDEX_RF_IN1
     );
 
-  --- Pipeline register ID/EX for immediate    
+  --- Pipeline register ID/EX for immediate
   IDEX_IMM_IN : d_register
     generic map(
       REG_NBIT => CORE_DATA_NBIT
@@ -725,7 +717,7 @@ begin
     );
 
   CORE_DRAM_ADDRESS   <= s_MEM_OUT_ADDRESS_OUT;
-  
+
   --CORE_DRAM_INTERFACE <= s_DRAM_INTERFACE; ---??
 
  s_DRAM_DLX_OUT <= CORE_DRAM_INTERFACE when  s_CU_MEM_READNOTWRITE = '1' else (others => 'Z');
@@ -885,4 +877,3 @@ configuration CFG_CORE_STR of CORE is
     end for;
   end for;
 end configuration CFG_CORE_STR;
-

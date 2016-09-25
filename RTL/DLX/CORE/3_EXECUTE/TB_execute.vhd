@@ -32,9 +32,9 @@ architecture TEST of TB_execute is
       EXE_CU_FW_BOT_MUX   : in  std_logic_vector(1 downto 0)
     );
   end component execute;
-  
+
   constant c_NBIT : integer := 32;
-  
+
   signal     s_IR_IN           : std_logic_vector(c_NBIT - 1 downto 0) := (others => '0');
   signal     s_NPC_IN          : std_logic_vector(c_NBIT - 1 downto 0) := (others => '0');
   signal     s_RF_IN1          : std_logic_vector(c_NBIT - 1 downto 0) := (others => '0');
@@ -50,7 +50,7 @@ architecture TEST of TB_execute is
   signal     s_PRED_COND       : std_logic := '0';
   signal     s_CU_TOP_MUX      : std_logic := '0';
   signal     s_CU_BOT_MUX      : std_logic := '0';
-  
+
   signal     s_CALC_COND       : std_logic;
   signal     s_WRONG_COND      : std_logic;
   signal     s_WRONG_TARGET    : std_logic;

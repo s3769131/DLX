@@ -53,5 +53,3 @@ configuration CFG_INSTRUCTION_TYPE_DECODER_BHV of INSTRUCTION_TYPE_DECODER is
   for BHV
   end for;
 end configuration CFG_INSTRUCTION_TYPE_DECODER_BHV;
-
-

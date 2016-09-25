@@ -1,0 +1,14 @@
+ line   address	contents
+    4  00000000  8c010000	lw	R1,0( R0 )
+    6  00000004  8c020000	lw	R2,4(R0)
+    8  00000008  00631826	xor 	R3,R3,R3
+   10  0000000c  00842026	xor	R4,R4,R4
+   11  00000010          	main_loop:
+   12  00000010  00822828	seq	R5,R4,R2
+   13  00000014  14a0000c	bnez	R5,end_loop
+   14  00000018  00611820	add	R3,R3,R1
+   15  0000001c  20840001	addi	R4,R4,1
+   16  00000020  0bffffec	j	main_loop
+   17  00000024          	end_loop:
+   18  00000024          	# stores result in memory
+   19  00000024  ac000000	sw	R3,8(R0)

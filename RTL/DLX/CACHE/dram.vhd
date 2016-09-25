@@ -34,25 +34,13 @@ begin
   WR_PROCESS : process(DRAM_CLK, DRAM_RST, DRAM, DRAM_ADDRESS, DRAM_ENABLE, DRAM_INOUT_DATA, DRAM_READNOTWRITE)
   begin                                 -- process
     if DRAM_RST = '0' then              -- asynchronous reset (active low)
-      -- for index in 0 to DRAM_ENTRIES * DRAM_WORDSIZE / 8 - 1 loop
-      --   for i in 0 to 7 loop
-      --     DRAM(index, i) <= '0';
-      --   end loop;
-      -- end loop;
-
       int_data_ready <= '0';
       mem_ready      <= '0';
-
-    -- elsif DRAM_CLK'event and DRAM_CLK = '1' then -- rising clock edge
     elsif (DRAM_ENABLE = '1') then
       if (DRAM_READNOTWRITE = '0') then
-        --for i in 0 to DRAM_WORDSIZE - 1 loop
-        --  DRAM(to_integer(unsigned(DRAM_ADDRESS)), i) <= DRAM_INOUT_DATA(i);
-        --end loop;
-
         for i in 0 to (DRAM_WORDSIZE / 8) - 1 loop
           for j in 0 to 7 loop
-            DRAM(to_integer(unsigned(DRAM_ADDRESS) + i), j) <= DRAM_INOUT_DATA(i * 8 + j); --to_integer(unsigned(ROM_ADDRESS)
+            DRAM(to_integer(unsigned(DRAM_ADDRESS) + i), j) <= DRAM_INOUT_DATA(i * 8 + j);
           end loop;
         end loop;
         mem_ready <= '1';
@@ -60,7 +48,7 @@ begin
       elsif (DRAM_READNOTWRITE = '1') then
         for i in 0 to (DRAM_WORDSIZE / 8) - 1 loop
           for j in 0 to 7 loop
-            tmp_data(i * 8 + j) <= DRAM(to_integer(unsigned(DRAM_ADDRESS) + i), j); --to_integer(unsigned(ROM_ADDRESS)
+            tmp_data(i * 8 + j) <= DRAM(to_integer(unsigned(DRAM_ADDRESS) + i), j);
           end loop;
         end loop;
 
@@ -86,5 +74,3 @@ configuration CFG_DRAM_BHV of DRAM is
   for BHV
   end for;
 end configuration CFG_DRAM_BHV;
-
-

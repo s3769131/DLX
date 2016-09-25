@@ -94,7 +94,7 @@ architecture TEST of TB_core is
   signal s_TARGET_IN          : std_logic_vector(C_PC_NBIT - 1 downto 0);
 
 begin
-  
+
 UUT : core
   generic map(
     CORE_PC_NBIT   => c_PC_NBIT,
