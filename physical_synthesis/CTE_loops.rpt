@@ -1,0 +1,418 @@
+--> WARNING: A timing loop was found in the design. <TA-112>.
+    Info:    Description of timing loop follows: <TA-114>.
+     +-----------------------------------------------------+ 
+     |                    Pin                    |  Cell   | 
+     |-------------------------------------------+---------| 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[23] /A | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[23] /Z | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[23] /A | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[23] /Z | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[23] /A | TBUF_X1 | 
+     +-----------------------------------------------------+ 
+--> WARNING: The arc from '\core_inst/s_DRAM_DLX_OUT_tri[23] /Z' to '\core_inst/
+             CORE_DRAM_INTERFACE_tri[23] /A' has been cut  <TA-113>.
+--> WARNING: A timing loop was found in the design. <TA-112>.
+    Info:    Description of timing loop follows: <TA-114>.
+     +----------------------------------------------------+ 
+     |                   Pin                    |  Cell   | 
+     |------------------------------------------+---------| 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[7] /Z | TBUF_X2 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[7] /A | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[7] /Z | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[7] /A | TBUF_X2 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[7] /Z | TBUF_X2 | 
+     +----------------------------------------------------+ 
+--> WARNING: The arc from '\core_inst/s_DRAM_DLX_OUT_tri[7] /A' to '\core_inst/
+             s_DRAM_DLX_OUT_tri[7] /Z' has been cut  <TA-113>.
+--> WARNING: A timing loop was found in the design. <TA-112>.
+    Info:    Description of timing loop follows: <TA-114>.
+     +-----------------------------------------------------+ 
+     |                    Pin                    |  Cell   | 
+     |-------------------------------------------+---------| 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[15] /Z | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[15] /A | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[15] /Z | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[15] /A | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[15] /Z | TBUF_X1 | 
+     +-----------------------------------------------------+ 
+--> WARNING: The arc from '\core_inst/s_DRAM_DLX_OUT_tri[15] /A' to '\core_inst/
+             s_DRAM_DLX_OUT_tri[15] /Z' has been cut  <TA-113>.
+--> WARNING: A timing loop was found in the design. <TA-112>.
+    Info:    Description of timing loop follows: <TA-114>.
+     +-----------------------------------------------------+ 
+     |                    Pin                    |  Cell   | 
+     |-------------------------------------------+---------| 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[24] /Z | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[24] /A | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[24] /Z | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[24] /A | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[24] /Z | TBUF_X1 | 
+     +-----------------------------------------------------+ 
+--> WARNING: The arc from '\core_inst/s_DRAM_DLX_OUT_tri[24] /A' to '\core_inst/
+             s_DRAM_DLX_OUT_tri[24] /Z' has been cut  <TA-113>.
+--> WARNING: A timing loop was found in the design. <TA-112>.
+    Info:    Description of timing loop follows: <TA-114>.
+     +-----------------------------------------------------+ 
+     |                    Pin                    |  Cell   | 
+     |-------------------------------------------+---------| 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[28] /Z | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[28] /A | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[28] /Z | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[28] /A | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[28] /Z | TBUF_X1 | 
+     +-----------------------------------------------------+ 
+--> WARNING: The arc from '\core_inst/s_DRAM_DLX_OUT_tri[28] /A' to '\core_inst/
+             s_DRAM_DLX_OUT_tri[28] /Z' has been cut  <TA-113>.
+--> WARNING: A timing loop was found in the design. <TA-112>.
+    Info:    Description of timing loop follows: <TA-114>.
+     +-----------------------------------------------------+ 
+     |                    Pin                    |  Cell   | 
+     |-------------------------------------------+---------| 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[29] /A | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[29] /Z | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[29] /A | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[29] /Z | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[29] /A | TBUF_X1 | 
+     +-----------------------------------------------------+ 
+--> WARNING: The arc from '\core_inst/s_DRAM_DLX_OUT_tri[29] /Z' to '\core_inst/
+             CORE_DRAM_INTERFACE_tri[29] /A' has been cut  <TA-113>.
+--> WARNING: A timing loop was found in the design. <TA-112>.
+    Info:    Description of timing loop follows: <TA-114>.
+     +-----------------------------------------------------+ 
+     |                    Pin                    |  Cell   | 
+     |-------------------------------------------+---------| 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[18] /A | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[18] /Z | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[18] /A | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[18] /Z | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[18] /A | TBUF_X1 | 
+     +-----------------------------------------------------+ 
+--> WARNING: The arc from '\core_inst/s_DRAM_DLX_OUT_tri[18] /Z' to '\core_inst/
+             CORE_DRAM_INTERFACE_tri[18] /A' has been cut  <TA-113>.
+--> WARNING: A timing loop was found in the design. <TA-112>.
+    Info:    Description of timing loop follows: <TA-114>.
+     +-----------------------------------------------------+ 
+     |                    Pin                    |  Cell   | 
+     |-------------------------------------------+---------| 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[30] /A | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[30] /Z | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[30] /A | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[30] /Z | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[30] /A | TBUF_X1 | 
+     +-----------------------------------------------------+ 
+--> WARNING: The arc from '\core_inst/s_DRAM_DLX_OUT_tri[30] /Z' to '\core_inst/
+             CORE_DRAM_INTERFACE_tri[30] /A' has been cut  <TA-113>.
+--> WARNING: A timing loop was found in the design. <TA-112>.
+    Info:    Description of timing loop follows: <TA-114>.
+     +-----------------------------------------------------+ 
+     |                    Pin                    |  Cell   | 
+     |-------------------------------------------+---------| 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[17] /A | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[17] /Z | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[17] /A | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[17] /Z | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[17] /A | TBUF_X1 | 
+     +-----------------------------------------------------+ 
+--> WARNING: The arc from '\core_inst/s_DRAM_DLX_OUT_tri[17] /Z' to '\core_inst/
+             CORE_DRAM_INTERFACE_tri[17] /A' has been cut  <TA-113>.
+--> WARNING: A timing loop was found in the design. <TA-112>.
+    Info:    Description of timing loop follows: <TA-114>.
+     +-----------------------------------------------------+ 
+     |                    Pin                    |  Cell   | 
+     |-------------------------------------------+---------| 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[31] /A | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[31] /Z | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[31] /A | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[31] /Z | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[31] /A | TBUF_X1 | 
+     +-----------------------------------------------------+ 
+--> WARNING: The arc from '\core_inst/s_DRAM_DLX_OUT_tri[31] /Z' to '\core_inst/
+             CORE_DRAM_INTERFACE_tri[31] /A' has been cut  <TA-113>.
+--> WARNING: A timing loop was found in the design. <TA-112>.
+    Info:    Description of timing loop follows: <TA-114>.
+     +-----------------------------------------------------+ 
+     |                    Pin                    |  Cell   | 
+     |-------------------------------------------+---------| 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[16] /Z | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[16] /A | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[16] /Z | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[16] /A | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[16] /Z | TBUF_X1 | 
+     +-----------------------------------------------------+ 
+--> WARNING: The arc from '\core_inst/s_DRAM_DLX_OUT_tri[16] /A' to '\core_inst/
+             s_DRAM_DLX_OUT_tri[16] /Z' has been cut  <TA-113>.
+--> WARNING: A timing loop was found in the design. <TA-112>.
+    Info:    Description of timing loop follows: <TA-114>.
+     +-----------------------------------------------------+ 
+     |                    Pin                    |  Cell   | 
+     |-------------------------------------------+---------| 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[19] /A | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[19] /Z | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[19] /A | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[19] /Z | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[19] /A | TBUF_X1 | 
+     +-----------------------------------------------------+ 
+--> WARNING: The arc from '\core_inst/s_DRAM_DLX_OUT_tri[19] /Z' to '\core_inst/
+             CORE_DRAM_INTERFACE_tri[19] /A' has been cut  <TA-113>.
+--> WARNING: A timing loop was found in the design. <TA-112>.
+    Info:    Description of timing loop follows: <TA-114>.
+     +-----------------------------------------------------+ 
+     |                    Pin                    |  Cell   | 
+     |-------------------------------------------+---------| 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[20] /A | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[20] /Z | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[20] /A | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[20] /Z | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[20] /A | TBUF_X1 | 
+     +-----------------------------------------------------+ 
+--> WARNING: The arc from '\core_inst/s_DRAM_DLX_OUT_tri[20] /Z' to '\core_inst/
+             CORE_DRAM_INTERFACE_tri[20] /A' has been cut  <TA-113>.
+--> WARNING: A timing loop was found in the design. <TA-112>.
+    Info:    Description of timing loop follows: <TA-114>.
+     +-----------------------------------------------------+ 
+     |                    Pin                    |  Cell   | 
+     |-------------------------------------------+---------| 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[22] /A | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[22] /Z | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[22] /A | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[22] /Z | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[22] /A | TBUF_X1 | 
+     +-----------------------------------------------------+ 
+--> WARNING: The arc from '\core_inst/s_DRAM_DLX_OUT_tri[22] /Z' to '\core_inst/
+             CORE_DRAM_INTERFACE_tri[22] /A' has been cut  <TA-113>.
+--> WARNING: A timing loop was found in the design. <TA-112>.
+    Info:    Description of timing loop follows: <TA-114>.
+     +-----------------------------------------------------+ 
+     |                    Pin                    |  Cell   | 
+     |-------------------------------------------+---------| 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[27] /A | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[27] /Z | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[27] /A | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[27] /Z | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[27] /A | TBUF_X1 | 
+     +-----------------------------------------------------+ 
+--> WARNING: The arc from '\core_inst/s_DRAM_DLX_OUT_tri[27] /Z' to '\core_inst/
+             CORE_DRAM_INTERFACE_tri[27] /A' has been cut  <TA-113>.
+--> WARNING: A timing loop was found in the design. <TA-112>.
+    Info:    Description of timing loop follows: <TA-114>.
+     +-----------------------------------------------------+ 
+     |                    Pin                    |  Cell   | 
+     |-------------------------------------------+---------| 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[25] /A | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[25] /Z | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[25] /A | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[25] /Z | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[25] /A | TBUF_X1 | 
+     +-----------------------------------------------------+ 
+--> WARNING: The arc from '\core_inst/s_DRAM_DLX_OUT_tri[25] /Z' to '\core_inst/
+             CORE_DRAM_INTERFACE_tri[25] /A' has been cut  <TA-113>.
+--> WARNING: A timing loop was found in the design. <TA-112>.
+    Info:    Description of timing loop follows: <TA-114>.
+     +-----------------------------------------------------+ 
+     |                    Pin                    |  Cell   | 
+     |-------------------------------------------+---------| 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[21] /A | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[21] /Z | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[21] /A | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[21] /Z | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[21] /A | TBUF_X1 | 
+     +-----------------------------------------------------+ 
+--> WARNING: The arc from '\core_inst/s_DRAM_DLX_OUT_tri[21] /Z' to '\core_inst/
+             CORE_DRAM_INTERFACE_tri[21] /A' has been cut  <TA-113>.
+--> WARNING: A timing loop was found in the design. <TA-112>.
+    Info:    Description of timing loop follows: <TA-114>.
+     +-----------------------------------------------------+ 
+     |                    Pin                    |  Cell   | 
+     |-------------------------------------------+---------| 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[26] /Z | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[26] /A | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[26] /Z | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[26] /A | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[26] /Z | TBUF_X1 | 
+     +-----------------------------------------------------+ 
+--> WARNING: The arc from '\core_inst/s_DRAM_DLX_OUT_tri[26] /A' to '\core_inst/
+             s_DRAM_DLX_OUT_tri[26] /Z' has been cut  <TA-113>.
+--> WARNING: A timing loop was found in the design. <TA-112>.
+    Info:    Description of timing loop follows: <TA-114>.
+     +-----------------------------------------------------+ 
+     |                    Pin                    |  Cell   | 
+     |-------------------------------------------+---------| 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[13] /A | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[13] /Z | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[13] /A | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[13] /Z | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[13] /A | TBUF_X1 | 
+     +-----------------------------------------------------+ 
+--> WARNING: The arc from '\core_inst/s_DRAM_DLX_OUT_tri[13] /Z' to '\core_inst/
+             CORE_DRAM_INTERFACE_tri[13] /A' has been cut  <TA-113>.
+--> WARNING: A timing loop was found in the design. <TA-112>.
+    Info:    Description of timing loop follows: <TA-114>.
+     +----------------------------------------------------+ 
+     |                   Pin                    |  Cell   | 
+     |------------------------------------------+---------| 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[0] /A | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[0] /Z | TBUF_X1 | 
+     |                                U19805/A1 | AND2_X1 | 
+     |                                U19805/ZN | AND2_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[0] /A | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[0] /Z | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[0] /A | TBUF_X1 | 
+     +----------------------------------------------------+ 
+--> WARNING: The arc from '\core_inst/s_DRAM_DLX_OUT_tri[0] /Z' to '\core_inst/
+             CORE_DRAM_INTERFACE_tri[0] /A' has been cut  <TA-113>.
+--> WARNING: A timing loop was found in the design. <TA-112>.
+    Info:    Description of timing loop follows: <TA-114>.
+     +----------------------------------------------------+ 
+     |                   Pin                    |  Cell   | 
+     |------------------------------------------+---------| 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[2] /Z | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[2] /A | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[2] /Z | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[2] /A | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[2] /Z | TBUF_X1 | 
+     +----------------------------------------------------+ 
+--> WARNING: The arc from '\core_inst/s_DRAM_DLX_OUT_tri[2] /A' to '\core_inst/
+             s_DRAM_DLX_OUT_tri[2] /Z' has been cut  <TA-113>.
+--> WARNING: A timing loop was found in the design. <TA-112>.
+    Info:    Description of timing loop follows: <TA-114>.
+     +----------------------------------------------------+ 
+     |                   Pin                    |  Cell   | 
+     |------------------------------------------+---------| 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[3] /A | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[3] /Z | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[3] /A | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[3] /Z | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[3] /A | TBUF_X1 | 
+     +----------------------------------------------------+ 
+--> WARNING: The arc from '\core_inst/s_DRAM_DLX_OUT_tri[3] /Z' to '\core_inst/
+             CORE_DRAM_INTERFACE_tri[3] /A' has been cut  <TA-113>.
+--> WARNING: A timing loop was found in the design. <TA-112>.
+    Info:    Description of timing loop follows: <TA-114>.
+     +----------------------------------------------------+ 
+     |                   Pin                    |  Cell   | 
+     |------------------------------------------+---------| 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[4] /A | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[4] /Z | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[4] /A | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[4] /Z | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[4] /A | TBUF_X1 | 
+     +----------------------------------------------------+ 
+--> WARNING: The arc from '\core_inst/s_DRAM_DLX_OUT_tri[4] /Z' to '\core_inst/
+             CORE_DRAM_INTERFACE_tri[4] /A' has been cut  <TA-113>.
+--> WARNING: A timing loop was found in the design. <TA-112>.
+    Info:    Description of timing loop follows: <TA-114>.
+     +----------------------------------------------------+ 
+     |                   Pin                    |  Cell   | 
+     |------------------------------------------+---------| 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[5] /Z | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[5] /A | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[5] /Z | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[5] /A | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[5] /Z | TBUF_X1 | 
+     +----------------------------------------------------+ 
+--> WARNING: The arc from '\core_inst/s_DRAM_DLX_OUT_tri[5] /A' to '\core_inst/
+             s_DRAM_DLX_OUT_tri[5] /Z' has been cut  <TA-113>.
+--> WARNING: A timing loop was found in the design. <TA-112>.
+    Info:    Description of timing loop follows: <TA-114>.
+     +----------------------------------------------------+ 
+     |                   Pin                    |  Cell   | 
+     |------------------------------------------+---------| 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[6] /Z | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[6] /A | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[6] /Z | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[6] /A | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[6] /Z | TBUF_X1 | 
+     +----------------------------------------------------+ 
+--> WARNING: The arc from '\core_inst/s_DRAM_DLX_OUT_tri[6] /A' to '\core_inst/
+             s_DRAM_DLX_OUT_tri[6] /Z' has been cut  <TA-113>.
+--> WARNING: A timing loop was found in the design. <TA-112>.
+    Info:    Description of timing loop follows: <TA-114>.
+     +----------------------------------------------------+ 
+     |                   Pin                    |  Cell   | 
+     |------------------------------------------+---------| 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[8] /Z | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[8] /A | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[8] /Z | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[8] /A | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[8] /Z | TBUF_X1 | 
+     +----------------------------------------------------+ 
+--> WARNING: The arc from '\core_inst/s_DRAM_DLX_OUT_tri[8] /A' to '\core_inst/
+             s_DRAM_DLX_OUT_tri[8] /Z' has been cut  <TA-113>.
+--> WARNING: A timing loop was found in the design. <TA-112>.
+    Info:    Description of timing loop follows: <TA-114>.
+     +-----------------------------------------------------+ 
+     |                    Pin                    |  Cell   | 
+     |-------------------------------------------+---------| 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[10] /A | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[10] /Z | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[10] /A | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[10] /Z | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[10] /A | TBUF_X1 | 
+     +-----------------------------------------------------+ 
+--> WARNING: The arc from '\core_inst/s_DRAM_DLX_OUT_tri[10] /Z' to '\core_inst/
+             CORE_DRAM_INTERFACE_tri[10] /A' has been cut  <TA-113>.
+--> WARNING: A timing loop was found in the design. <TA-112>.
+    Info:    Description of timing loop follows: <TA-114>.
+     +-----------------------------------------------------+ 
+     |                    Pin                    |  Cell   | 
+     |-------------------------------------------+---------| 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[12] /A | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[12] /Z | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[12] /A | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[12] /Z | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[12] /A | TBUF_X1 | 
+     +-----------------------------------------------------+ 
+--> WARNING: The arc from '\core_inst/s_DRAM_DLX_OUT_tri[12] /Z' to '\core_inst/
+             CORE_DRAM_INTERFACE_tri[12] /A' has been cut  <TA-113>.
+--> WARNING: A timing loop was found in the design. <TA-112>.
+    Info:    Description of timing loop follows: <TA-114>.
+     +-----------------------------------------------------+ 
+     |                    Pin                    |  Cell   | 
+     |-------------------------------------------+---------| 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[11] /A | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[11] /Z | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[11] /A | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[11] /Z | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[11] /A | TBUF_X1 | 
+     +-----------------------------------------------------+ 
+--> WARNING: The arc from '\core_inst/s_DRAM_DLX_OUT_tri[11] /Z' to '\core_inst/
+             CORE_DRAM_INTERFACE_tri[11] /A' has been cut  <TA-113>.
+--> WARNING: A timing loop was found in the design. <TA-112>.
+    Info:    Description of timing loop follows: <TA-114>.
+     +-----------------------------------------------------+ 
+     |                    Pin                    |  Cell   | 
+     |-------------------------------------------+---------| 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[14] /Z | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[14] /A | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[14] /Z | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[14] /A | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[14] /Z | TBUF_X1 | 
+     +-----------------------------------------------------+ 
+--> WARNING: The arc from '\core_inst/s_DRAM_DLX_OUT_tri[14] /A' to '\core_inst/
+             s_DRAM_DLX_OUT_tri[14] /Z' has been cut  <TA-113>.
+--> WARNING: A timing loop was found in the design. <TA-112>.
+    Info:    Description of timing loop follows: <TA-114>.
+     +----------------------------------------------------+ 
+     |                   Pin                    |  Cell   | 
+     |------------------------------------------+---------| 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[9] /Z | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[9] /A | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[9] /Z | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[9] /A | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[9] /Z | TBUF_X1 | 
+     +----------------------------------------------------+ 
+--> WARNING: The arc from '\core_inst/s_DRAM_DLX_OUT_tri[9] /A' to '\core_inst/
+             s_DRAM_DLX_OUT_tri[9] /Z' has been cut  <TA-113>.
+--> WARNING: A timing loop was found in the design. <TA-112>.
+    Info:    Description of timing loop follows: <TA-114>.
+     +----------------------------------------------------+ 
+     |                   Pin                    |  Cell   | 
+     |------------------------------------------+---------| 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[1] /Z | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[1] /A | TBUF_X1 | 
+     | \core_inst/CORE_DRAM_INTERFACE_tri[1] /Z | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[1] /A | TBUF_X1 | 
+     |      \core_inst/s_DRAM_DLX_OUT_tri[1] /Z | TBUF_X1 | 
+     +----------------------------------------------------+ 
+--> WARNING: The arc from '\core_inst/s_DRAM_DLX_OUT_tri[1] /A' to '\core_inst/
+             s_DRAM_DLX_OUT_tri[1] /Z' has been cut  <TA-113>.

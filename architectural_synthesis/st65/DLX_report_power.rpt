@@ -1,0 +1,120 @@
+Information: Propagating switching activity (high effort zero delay simulation). (PWR-6)
+Warning: Design has unannotated primary inputs. (PWR-414)
+Warning: Design has unannotated sequential cell outputs. (PWR-415)
+ 
+****************************************
+Report : power
+        -analysis_effort high
+Design : DLX
+Version: Z-2007.03-SP1
+Date   : Wed Sep 21 15:12:36 2016
+****************************************
+
+
+Library(s) Used:
+
+    CORE65LPLVT (File: /home/ms16.21/DLX/tech/STcmos65/CORE65LPLVT_nom_1.00V_25C.db)
+    CORE65LPHVT (File: /home/ms16.21/DLX/tech/STcmos65/CORE65LPHVT_nom_1.00V_25C.db)
+
+
+Operating Conditions: nom_1.00V_25C   Library: CORE65LPLVT
+Wire Load Model Mode: enclosed
+
+Design        Wire Load Model            Library
+------------------------------------------------
+DLX                    area_0Kto1K       CORE65LPLVT
+SNPS_CLOCK_GATE_HIGH_DLX_0
+                       area_0Kto1K       CORE65LPLVT
+SNPS_CLOCK_GATE_HIGH_DLX_37
+                       area_0Kto1K       CORE65LPLVT
+SNPS_CLOCK_GATE_HIGH_DLX_36
+                       area_0Kto1K       CORE65LPLVT
+SNPS_CLOCK_GATE_HIGH_DLX_35
+                       area_0Kto1K       CORE65LPLVT
+SNPS_CLOCK_GATE_HIGH_DLX_34
+                       area_0Kto1K       CORE65LPLVT
+SNPS_CLOCK_GATE_HIGH_DLX_33
+                       area_0Kto1K       CORE65LPLVT
+SNPS_CLOCK_GATE_HIGH_DLX_32
+                       area_0Kto1K       CORE65LPLVT
+SNPS_CLOCK_GATE_HIGH_DLX_31
+                       area_0Kto1K       CORE65LPLVT
+SNPS_CLOCK_GATE_HIGH_DLX_30
+                       area_0Kto1K       CORE65LPLVT
+SNPS_CLOCK_GATE_HIGH_DLX_29
+                       area_0Kto1K       CORE65LPLVT
+SNPS_CLOCK_GATE_HIGH_DLX_28
+                       area_0Kto1K       CORE65LPLVT
+SNPS_CLOCK_GATE_HIGH_DLX_27
+                       area_0Kto1K       CORE65LPLVT
+SNPS_CLOCK_GATE_HIGH_DLX_26
+                       area_0Kto1K       CORE65LPLVT
+SNPS_CLOCK_GATE_HIGH_DLX_25
+                       area_0Kto1K       CORE65LPLVT
+SNPS_CLOCK_GATE_HIGH_DLX_24
+                       area_0Kto1K       CORE65LPLVT
+SNPS_CLOCK_GATE_HIGH_DLX_23
+                       area_0Kto1K       CORE65LPLVT
+SNPS_CLOCK_GATE_HIGH_DLX_22
+                       area_0Kto1K       CORE65LPLVT
+SNPS_CLOCK_GATE_HIGH_DLX_21
+                       area_0Kto1K       CORE65LPLVT
+SNPS_CLOCK_GATE_HIGH_DLX_20
+                       area_0Kto1K       CORE65LPLVT
+SNPS_CLOCK_GATE_HIGH_DLX_19
+                       area_0Kto1K       CORE65LPLVT
+SNPS_CLOCK_GATE_HIGH_DLX_18
+                       area_0Kto1K       CORE65LPLVT
+SNPS_CLOCK_GATE_HIGH_DLX_17
+                       area_0Kto1K       CORE65LPLVT
+SNPS_CLOCK_GATE_HIGH_DLX_16
+                       area_0Kto1K       CORE65LPLVT
+SNPS_CLOCK_GATE_HIGH_DLX_15
+                       area_0Kto1K       CORE65LPLVT
+SNPS_CLOCK_GATE_HIGH_DLX_14
+                       area_0Kto1K       CORE65LPLVT
+SNPS_CLOCK_GATE_HIGH_DLX_13
+                       area_0Kto1K       CORE65LPLVT
+SNPS_CLOCK_GATE_HIGH_DLX_12
+                       area_0Kto1K       CORE65LPLVT
+SNPS_CLOCK_GATE_HIGH_DLX_11
+                       area_0Kto1K       CORE65LPLVT
+SNPS_CLOCK_GATE_HIGH_DLX_10
+                       area_0Kto1K       CORE65LPLVT
+SNPS_CLOCK_GATE_HIGH_DLX_9
+                       area_0Kto1K       CORE65LPLVT
+SNPS_CLOCK_GATE_HIGH_DLX_8
+                       area_0Kto1K       CORE65LPLVT
+SNPS_CLOCK_GATE_HIGH_DLX_7
+                       area_0Kto1K       CORE65LPLVT
+SNPS_CLOCK_GATE_HIGH_DLX_6
+                       area_0Kto1K       CORE65LPLVT
+SNPS_CLOCK_GATE_HIGH_DLX_5
+                       area_0Kto1K       CORE65LPLVT
+SNPS_CLOCK_GATE_HIGH_DLX_4
+                       area_0Kto1K       CORE65LPLVT
+SNPS_CLOCK_GATE_HIGH_DLX_3
+                       area_0Kto1K       CORE65LPLVT
+SNPS_CLOCK_GATE_HIGH_DLX_2
+                       area_0Kto1K       CORE65LPLVT
+SNPS_CLOCK_GATE_HIGH_DLX_1
+                       area_0Kto1K       CORE65LPLVT
+
+
+Global Operating Voltage = 1    
+Power-specific unit information :
+    Voltage Units = 1V
+    Capacitance Units = 1.000000pf
+    Time Units = 1ns
+    Dynamic Power Units = 1mW    (derived from V,C,T units)
+    Leakage Power Units = 1mW
+
+
+  Cell Internal Power  =   7.2549 mW   (79%)
+  Net Switching Power  =   1.8754 mW   (21%)
+                         ---------
+Total Dynamic Power    =   9.1303 mW  (100%)
+
+Cell Leakage Power     =  32.0460 uW
+
+1

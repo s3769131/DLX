@@ -100,6 +100,16 @@ begin
       FW_TOP_ALU <= SOURCE_NO;
       FW_BOT_ALU <= SOURCE_NO;
 
+-- Source (MEMWB) is reg-to-reg and Dest is immediate
+    elsif s_it_MEMWB = IT_REG_REG and (s_it_IDEX = IT_IMM or s_it_IDEX = IT_BR_J or s_it_IDEX = IT_LD_ST) then
+      if s_MEMWB_IR_rd = s_IDEX_IR_rs then
+        FW_TOP_ALU <= SOURCE_ALU2;
+        FW_BOT_ALU <= SOURCE_NO;
+      else
+        FW_TOP_ALU <= SOURCE_NO;
+        FW_BOT_ALU <= SOURCE_NO;
+      end if;
+
     -- Source (EXMEM) is reg-to-reg and Dest is reg-to-reg
     elsif s_it_EXMEM = IT_REG_REG and s_it_IDEX = IT_REG_REG then
       if s_EXMEM_IR_rd = s_IDEX_IR_rs then
@@ -159,6 +169,7 @@ begin
         FW_BOT_ALU <= SOURCE_NO;
       end if;
 
+<<<<<<< Updated upstream
     -- Source (MEMWB) is reg-to-reg and Dest is immediate
     elsif s_it_MEMWB = IT_REG_REG and (s_it_IDEX = IT_IMM or s_it_IDEX = IT_BR_J or s_it_IDEX = IT_LD_ST) then
       if s_MEMWB_IR_rd = s_IDEX_IR_rs then
@@ -168,6 +179,9 @@ begin
         FW_TOP_ALU <= SOURCE_NO;
         FW_BOT_ALU <= SOURCE_NO;
       end if;
+=======
+    
+>>>>>>> Stashed changes
 
     -- Source (MEMWB) is Imm and Dest is reg-to-reg
     elsif s_it_MEMWB = IT_IMM and s_it_IDEX = IT_REG_REG then

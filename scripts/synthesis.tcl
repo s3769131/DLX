@@ -23,6 +23,7 @@ suppress_message UID-401
 suppress_message LINK-14
 suppress_message TIM-134
 suppress_message VER-130
+suppress_message OPT-170
 ######################################################################
 ##
 ## READ DESIGN

@@ -14,3 +14,7 @@ tech/STcmos65/.CORE65LPLVT_nom_1.00V_25C.lib.swp
 *.lib
 
 tech/STcmos65/*.v
+.project
+.library_mapping*
+.settings
+

@@ -1,0 +1,111 @@
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 1
+Design : DLX
+Version: Z-2007.03-SP1
+Date   : Wed Sep 21 02:44:27 2016
+****************************************
+
+ # A fanout number of 1000 was used for high fanout net computations.
+
+Operating Conditions: typical   Library: NangateOpenCellLibrary
+Wire Load Model Mode: top
+
+  Startpoint: core_inst/MEMWB_IR/DFF_29/data_reg
+              (rising edge-triggered flip-flop clocked by DLX_CLK)
+  Endpoint: core_inst/IDEX_RF_IN2/DFF_20/data_reg
+            (rising edge-triggered flip-flop clocked by DLX_CLK)
+  Path Group: DLX_CLK
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  DLX                5K_hvratio_1_1        NangateOpenCellLibrary
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock DLX_CLK (rise edge)                               0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  core_inst/MEMWB_IR/DFF_29/data_reg/CK (DFFR_X1)         0.00 #     0.00 r
+  core_inst/MEMWB_IR/DFF_29/data_reg/QN (DFFR_X1)         0.07       0.07 r
+  U16000/ZN (XNOR2_X1)                                    0.07       0.14 r
+  U15999/ZN (NAND3_X1)                                    0.04       0.18 f
+  U15995/ZN (AOI22_X1)                                    0.06       0.24 r
+  U15982/ZN (AND3_X1)                                     0.06       0.30 r
+  U15979/ZN (NAND3_X1)                                    0.04       0.34 f
+  U15972/ZN (NOR2_X1)                                     0.05       0.40 r
+  U15971/ZN (NOR3_X1)                                     0.03       0.43 f
+  U15977/ZN (AND2_X1)                                     0.05       0.48 f
+  U16052/ZN (NAND2_X1)                                    0.03       0.51 r
+  U16050/ZN (OAI211_X1)                                   0.04       0.55 f
+  U16046/ZN (NOR2_X1)                                     0.05       0.60 r
+  U16043/ZN (NAND2_X1)                                    0.04       0.64 f
+  U16042/ZN (INV_X1)                                      0.04       0.68 r
+  U16044/ZN (NAND2_X1)                                    0.04       0.71 f
+  U16155/ZN (NOR2_X1)                                     0.05       0.76 r
+  U16152/Z (BUF_X1)                                       0.05       0.80 r
+  U16123/ZN (AOI22_X1)                                    0.04       0.85 f
+  U16122/ZN (NAND4_X1)                                    0.04       0.88 r
+  U16121/ZN (OAI21_X1)                                    0.03       0.91 f
+  U16113/ZN (NOR2_X1)                                     0.04       0.95 r
+  U16085/ZN (OAI211_X1)                                   0.05       1.00 f
+  U16081/ZN (NOR4_X1)                                     0.10       1.10 r
+  U16086/ZN (NAND3_X1)                                    0.04       1.14 f
+  U16263/ZN (NOR3_X1)                                     0.06       1.20 r
+  U16260/ZN (NAND4_X1)                                    0.05       1.25 f
+  U16257/ZN (OAI21_X1)                                    0.05       1.30 r
+  U16254/ZN (AND2_X1)                                     0.06       1.37 r
+  U16253/Z (BUF_X1)                                       0.05       1.41 r
+  U16249/ZN (INV_X1)                                      0.05       1.46 f
+  U16248/ZN (NAND2_X1)                                    0.04       1.50 r
+  U16217/ZN (OAI21_X1)                                    0.03       1.53 f
+  core_inst/IDEX_RF_IN2/DFF_20/data_reg/D (DFFRS_X1)      0.01       1.54 f
+  data arrival time                                                  1.54
+
+  clock DLX_CLK (rise edge)                               1.00       1.00
+  clock network delay (ideal)                             0.00       1.00
+  core_inst/IDEX_RF_IN2/DFF_20/data_reg/CK (DFFRS_X1)     0.00       1.00 r
+  library setup time                                     -0.04       0.96
+  data required time                                                 0.96
+  --------------------------------------------------------------------------
+  data required time                                                 0.96
+  data arrival time                                                 -1.54
+  --------------------------------------------------------------------------
+  slack (VIOLATED)                                                  -0.58
+
+
+  Startpoint: DRAM_INTERFACE[0]
+              (input port)
+  Endpoint: DRAM_INTERFACE[0]
+            (output port)
+  Path Group: default
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  DLX                5K_hvratio_1_1        NangateOpenCellLibrary
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  input external delay                                    0.00       0.00 f
+  DRAM_INTERFACE[0] (inout)                               0.00       0.00 f
+  U19805/ZN (AND2_X1)                                     0.03       0.03 f
+  core_inst/s_DRAM_DLX_OUT_tri[0]/Z (TBUF_X1)             0.06       0.09 f
+  core_inst/CORE_DRAM_INTERFACE_tri[0]/Z (TBUF_X1)        0.07       0.16 f
+  DRAM_INTERFACE[0] (inout)                               0.00       0.16 f
+  data arrival time                                                  0.16
+
+  max_delay                                               0.00       0.00
+  output external delay                                   0.00       0.00
+  data required time                                                 0.00
+  --------------------------------------------------------------------------
+  data required time                                                 0.00
+  data arrival time                                                 -0.16
+  --------------------------------------------------------------------------
+  slack (VIOLATED)                                                  -0.16
+
+
+1

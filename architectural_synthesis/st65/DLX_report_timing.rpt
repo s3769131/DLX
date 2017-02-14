@@ -1,0 +1,92 @@
+Information: Updating design information... (UID-85)
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 1
+Design : DLX
+Version: Z-2007.03-SP1
+Date   : Wed Sep 21 15:12:32 2016
+****************************************
+
+ # A fanout number of 1000 was used for high fanout net computations.
+
+Operating Conditions: nom_1.00V_25C   Library: CORE65LPLVT
+Wire Load Model Mode: enclosed
+
+  Startpoint: core_inst/IDEX_IR/DFF_28/data_reg
+              (rising edge-triggered flip-flop clocked by DLX_CLK)
+  Endpoint: core_inst/IDEX_IMM_IN/DFF_21/data_reg
+            (rising edge-triggered flip-flop clocked by DLX_CLK)
+  Path Group: DLX_CLK
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  DLX                area_0Kto1K           CORE65LPLVT
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock DLX_CLK (rise edge)                               0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  core_inst/IDEX_IR/DFF_28/data_reg/CP (HS65_LL_DFPRQX9)
+                                                          0.00       0.00 r
+  core_inst/IDEX_IR/DFF_28/data_reg/Q (HS65_LL_DFPRQX9)
+                                                          0.12       0.12 f
+  U9611/Z (HS65_LL_NAND2X7)                               0.05       0.17 r
+  U9609/Z (HS65_LL_XNOR2X18)                              0.07       0.24 f
+  U9604/Z (HS65_LL_NOR2X38)                               0.03       0.27 r
+  U9599/Z (HS65_LL_AOI21X23)                              0.03       0.29 f
+  U9597/Z (HS65_LL_CNIVX31)                               0.02       0.31 r
+  U9593/Z (HS65_LL_OAI211X5)                              0.04       0.35 f
+  U9586/Z (HS65_LL_NOR2X13)                               0.04       0.39 r
+  U9575/Z (HS65_LL_CB4I1X27)                              0.06       0.45 r
+  U9589/Z (HS65_LL_BFX106)                                0.05       0.50 r
+  U9667/Z (HS65_LL_NOR2X50)                               0.02       0.52 f
+  U9665/Z (HS65_LL_AND2X18)                               0.04       0.56 f
+  U9658/Z (HS65_LL_OR4X29)                                0.07       0.62 f
+  U9652/Z (HS65_LL_OAI22X17)                              0.04       0.66 r
+  U9650/Z (HS65_LL_NAND2X29)                              0.04       0.70 f
+  U9649/Z (HS65_LL_IVX13)                                 0.03       0.73 r
+  U9651/Z (HS65_LL_NOR3X26)                               0.02       0.75 f
+  U9733/Z (HS65_LL_NAND4ABX25)                            0.02       0.77 r
+  U9726/Z (HS65_LL_NAND2X29)                              0.03       0.80 f
+  U9724/Z (HS65_LL_IVX31)                                 0.02       0.83 r
+  U9716/Z (HS65_LL_NAND4ABX13)                            0.04       0.86 f
+  U9708/Z (HS65_LL_AOI13X15)                              0.04       0.90 r
+  U9710/Z (HS65_LL_IVX18)                                 0.02       0.92 f
+  U9709/Z (HS65_LL_NAND2AX21)                             0.02       0.94 r
+  U9701/Z (HS65_LL_NAND2X29)                              0.02       0.96 f
+  U9700/Z (HS65_LL_CNIVX17)                               0.02       0.97 r
+  U9698/Z (HS65_LL_OAI12X18)                              0.02       0.99 f
+  U9705/Z (HS65_LL_MUXI21X15)                             0.04       1.04 r
+  U9818/Z (HS65_LL_NOR4ABX18)                             0.08       1.12 r
+  U9816/Z (HS65_LL_NAND2X29)                              0.03       1.15 f
+  U9815/Z (HS65_LL_CNIVX14)                               0.02       1.17 r
+  U9810/Z (HS65_LL_NAND3AX19)                             0.02       1.19 f
+  U9809/Z (HS65_LL_CNIVX21)                               0.02       1.21 r
+  U9805/Z (HS65_LL_NOR2X19)                               0.01       1.23 f
+  U9796/Z (HS65_LL_CBI4I6X18)                             0.03       1.26 r
+  U9795/Z (HS65_LL_IVX27)                                 0.02       1.28 f
+  U9794/Z (HS65_LL_CNIVX27)                               0.02       1.30 r
+  U9791/Z (HS65_LL_OAI31X4)                               0.03       1.33 f
+  core_inst/IDEX_IMM_IN/DFF_21/data_reg/D (HS65_LL_DFPRQX35)
+                                                          0.00       1.33 f
+  data arrival time                                                  1.33
+
+  clock DLX_CLK (rise edge)                               1.00       1.00
+  clock network delay (ideal)                             0.00       1.00
+  clock uncertainty                                      -0.01       0.99
+  core_inst/IDEX_IMM_IN/DFF_21/data_reg/CP (HS65_LL_DFPRQX35)
+                                                          0.00       0.99 r
+  library setup time                                     -0.09       0.90
+  data required time                                                 0.90
+  --------------------------------------------------------------------------
+  data required time                                                 0.90
+  data arrival time                                                 -1.33
+  --------------------------------------------------------------------------
+  slack (VIOLATED)                                                  -0.43
+
+
+1
